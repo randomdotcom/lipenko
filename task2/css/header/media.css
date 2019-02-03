@@ -1,0 +1,21 @@
+@media only screen and (max-width: 472px) {
+    .nav-menu {
+        padding-right: 10vw;
+    }
+}
+
+@media only screen and (max-width: 472px) {
+    .header-title {
+        padding-left: 2vw;
+    }
+
+    .header-title__logo {
+        margin-top: 5px;
+        font-size: 0.9rem;
+    }
+
+    .header-title__slogan {
+        display: none;
+        margin-bottom: 40px;
+    }
+}
