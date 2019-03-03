@@ -13,5 +13,8 @@ router.get('/', (req, res) => {
 
 router.use('/clients', require('./api/clients').router)
 router.use('/companies', require('./api/companies').router)
+router.use('/admin', require('./api/admin').router)
+router.use('/orders', require('./api/orders').router)
+
 
 module.exports = router;

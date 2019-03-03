@@ -1,4 +1,4 @@
 module.exports = {
-    router: require('./companies.routes'),
-    controller: require('./companies.controller')
+    router: require('./orders.routes'),
+    controller: require('./orders.controller')
 }

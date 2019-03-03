@@ -8,7 +8,6 @@ async function authenticate({ username, password }) {
       .select("+password")
       .exec();
     if (user === null) throw "User not found";
-    if (user.block) throw `User blocked, reason: ${user.block}`;
 
     let success = await user.comparePassword(password);
     if (success === false) throw "";
@@ -28,7 +27,7 @@ async function authenticate({ username, password }) {
       token
     };
   } catch (err) {
-    throw new Error(err);
+    throw new Error("Username or password is incorrect");
   }
 }
 
@@ -41,29 +40,8 @@ async function register({ username, password, email, phoneNumber }, role) {
   return user.save().then(({ _id }) => User.findById(_id));
 }
 
-async function getClients() {
-  return await User.find();
-}
-
-async function blockClient(data) {
-  return await User.findOneAndUpdate(
-    { "username": `${data.username}` },
-    { $set: { "block" : `${data.block}` } }
- );
-}
-
-async function unblockClient(data) {
-  return await User.findOneAndUpdate(
-    { "username": `${data.username}` },
-    { $unset: { "block": {$exist:true} } }
-  )
-}
-
 module.exports = {
   authenticate,
   logout,
-  register,
-  getClients,
-  blockClient,
-  unblockClient
+  register
 };

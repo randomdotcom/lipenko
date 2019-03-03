@@ -1,7 +1,7 @@
 const passport = require("passport");
 const { ExtractJwt, Strategy } = require("passport-jwt");
 const config = require("./environment");
-const usersMock = require("../../__mock__/users");
+const User = require("../models/user.model");
 
 function jwtStrategy() {
   const opts = {
@@ -9,11 +9,8 @@ function jwtStrategy() {
     secretOrKey: config.jwt.secret
   };
 
-  const strategy = new Strategy(opts, (token, done) => {
-    var user = usersMock.find(user => {
-      return user.id === token.sub;
-    });
-
+  const strategy = new Strategy(opts, async (token, done) => {
+    const user = await User.findOne({ _id: token.id });
     if (user) {
       return done(null, user);
     } else {
