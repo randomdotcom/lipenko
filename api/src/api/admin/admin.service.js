@@ -1,18 +1,18 @@
 const jwt = require("jsonwebtoken");
 const config = require("../../config/environment");
-const User = require("../../models/user.model");
+const Admin = require("../../models/admin.model");
 
 async function authenticate({ username, password }) {
   try {
-    const user = await User.findOne({ username })
+    const admin = await Admin.findOne({ username })
       .select("+password")
       .exec();
-    if (user === null) throw "User not found";
+    if (admin === null) throw "User not found";
 
-    let success = await user.comparePassword(password);
+    let success = await admin.comparePassword(password);
     if (success === false) throw "";
 
-    const data = user.toObject();
+    const data = admin.toObject();
 
     const token = jwt.sign(
       { id: data._id, role: data.role },
@@ -20,10 +20,10 @@ async function authenticate({ username, password }) {
       { expiresIn: config.jwt.expiration }
     );
 
-    const { password: userPassword, ...userWithoutPassword } = data;
+    const { password: adminPassword, ...adminWithoutPassword } = data;
 
     return {
-      ...userWithoutPassword,
+      ...adminWithoutPassword,
       token
     };
   } catch (err) {
@@ -35,9 +35,9 @@ async function logout({ token }) {
   return true;
 }
 
-async function register({ username, password, email, phoneNumber }, role) {
-  const user = new User({ username, password, email, phoneNumber, role });
-  return user.save().then(({ _id }) => User.findById(_id));
+async function register({ username, password}, role) {
+  const admin = new Admin({ username, password, role });
+  return admin.save().then(({ _id }) => Admin.findById(_id));
 }
 
 module.exports = {

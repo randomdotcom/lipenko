@@ -59,11 +59,32 @@ async function unblockCompany(data) {
   )
 }
 
+async function rateCompany(userId, data) {
+  const doc = await Executor.findOne({ "username" : `${data.username}` })
+  if (data.value > 5 | data.value < 0) throw "Неверная оценка";
+
+  if (doc) {
+    console.log(userId);
+    doc.ratingList[`${userId}`] = { "value": data.value, "review": data.review }
+
+    var rating = 0;
+    for (var key in doc.ratingList) {
+      rating += doc.ratingList[key].value
+    }
+    doc.rating = rating / Object.keys(doc.ratingList).length;
+
+    console.log(doc.ratingList)
+    await doc.save();
+  }
+}
+
+
 module.exports = {
   authenticate,
   logout,
   register,
   getCompanies,
   blockCompany,
-  unblockCompany
+  unblockCompany,
+  rateCompany
 };

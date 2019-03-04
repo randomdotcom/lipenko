@@ -18,7 +18,8 @@ const schema = new mongoose.Schema(
     description: { type: String, required: true },
     adress: { type: String, required: true },
     typesOfCleaning: { type: Object, required: true },
-    rating: { type: Object, required: false },
+    ratingList: { type: Object, required: false, default: {}},
+    rating: { type: Number, required: false, default: 0 },
     password: { type: String, required: true, select: false },
     email: {
       type: String,

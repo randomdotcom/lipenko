@@ -30,6 +30,7 @@ module.exports.signout = (req, res, next) => {
 ////
 
 module.exports.register = (req, res, next) => {
+  console.log('тут')
   userService
     .register(req.body, Role.Admin)
     .then(() => {
@@ -38,22 +39,22 @@ module.exports.register = (req, res, next) => {
     .catch(err => next(err));
 };
 
-module.exports.get = async (req, res) => {
-  res.send(`get collection of clients`);
-};
+// module.exports.get = async (req, res) => {
+//   res.send(`get collection of clients`);
+// };
 
-module.exports.getById = async (req, res) => {
-  res.send(`get client ${req.params.id}`);
-};
+// module.exports.getById = async (req, res) => {
+//   res.send(`get client ${req.params.id}`);
+// };
 
-module.exports.post = async (req, res) => {
-  res.send("create client");
-};
+// module.exports.post = async (req, res) => {
+//   res.send("create client");
+// };
 
-module.exports.put = async (req, res) => {
-  res.send("edit client");
-};
+// module.exports.put = async (req, res) => {
+//   res.send("edit client");
+// };
 
-module.exports.delete = async (req, res) => {
-  res.send("delete client");
-};
+// module.exports.delete = async (req, res) => {
+//   res.send("delete client");
+// };

@@ -45,7 +45,7 @@ module.exports.block = (req, res, next) => {
   service
     .blockCompany(req.body)
     .then(() => { 
-      res.status(httpStatus.OK).json(`Company ${req.body.username} is blocked`) 
+      res.status(httpStatus.OK).json(`Company ${req.body.username} blocked`) 
     })
     .catch(err => next(err));
 };
@@ -54,7 +54,16 @@ module.exports.unblock = (req, res, next) => {
   service
     .unblockCompany(req.body)
     .then(() => { 
-      res.status(httpStatus.OK).json(`Company ${req.body.username} is unblocked`) 
+      res.status(httpStatus.OK).json(`Company ${req.body.username} unblocked`) 
+    })
+    .catch(err => next(err));
+};
+
+module.exports.rate = (req, res, next) => {
+  service
+    .rateCompany(req.user.id, req.body)
+    .then(() => { 
+      res.status(httpStatus.OK).json(`Company ${req.body.username} rated`) 
     })
     .catch(err => next(err));
 };

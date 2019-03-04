@@ -1,7 +1,18 @@
 const Order = require("../../models/order.model");
 const Status = require("../../enums/status.enum");
+const httpStatus = require("http-status");
+const Role = require('../../enums/roles.enum')
 
-async function createOrder({ customer, executor, adress, typeOfCleaning, description, date, expectedTime, regularity }) {
+async function createOrder({
+  customer,
+  executor,
+  adress,
+  typeOfCleaning,
+  description,
+  date,
+  expectedTime,
+  regularity
+}) {
   const order = new Order({
     customer,
     executor,
@@ -17,37 +28,40 @@ async function createOrder({ customer, executor, adress, typeOfCleaning, descrip
   return order;
 }
 
-async function getOrders(userId) {
-  return await Order.find({ customer: userId })
-    .populate("customer")
-    .exec();
+async function getOrders(user) {
+  if (user.role == Role.User) {
+    return await Order.find({ customer: user.id })
+      // .populate("customer")
+      .exec();
+  } else if (user.role == Role.Executor) {
+    return await Order.find({ executor: user.id })
+      // .populate("executor")
+      .exec();
+  }
 }
 
 async function acceptOrder(orderId) {
-  Order.findById(orderId, (err, res) => {
-    if (res.status !== Status.New) throw "Заказ не новый"
-  })
-
-  return await Order.findByIdAndUpdate(
-    orderId,
-    { "status":  Status.Accepted })
-    .exec();
+  return await Order.findByIdAndUpdate(orderId, {
+    status: Status.Accepted
+  }).exec();
 }
 
 async function cancelOrder(orderId) {
-  Order.findById(orderId, (err, res) => {
-    if (res.status !== Status.New) throw "Заказ не новый"
-  })
+  return await Order.findByIdAndUpdate(orderId, {
+    status: Status.Canceled
+  }).exec();
+}
 
-  return await Order.findByIdAndUpdate(
-    orderId,
-    { "status":  Status.Canceled })
-    .exec();
+async function confirmOrder(userId, orderId) {
+  return await Order.findByIdAndUpdate(orderId, {
+    status: Status.Done
+  }).exec();
 }
 
 module.exports = {
   createOrder,
   getOrders,
   acceptOrder,
-  cancelOrder
+  cancelOrder,
+  confirmOrder
 };

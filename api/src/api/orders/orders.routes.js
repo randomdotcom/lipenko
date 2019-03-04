@@ -10,8 +10,9 @@ router.post('/create', permit(Role.Admin), controller.create);
 
 router.put('/accept', permit(Role.Executor), controller.accept);
 router.put('/cancel', controller.cancel);
+router.put('/confirm', permit(Role.User), controller.confirm);
 
-router.get('/', permit(Role.User), controller.get)
+router.get('/', permit([Role.User, Role.Executor]), controller.get)
 // router.get('/:id', controller.getById)
 // router.post('/', controller.post)
 // router.put('/:id', controller.put) // ?
