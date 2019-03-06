@@ -48,8 +48,8 @@ module.exports.get = (req, res, next) => {
 module.exports.block = (req, res, next) => {
   service
     .blockClient(req.body)
-    .then(() => { 
-      res.status(httpStatus.OK).json(`Client ${req.body.username} is blocked`) 
+    .then(() => {
+      res.status(httpStatus.OK).json(`Client ${req.body.username} blocked`);
     })
     .catch(err => next(err));
 };
@@ -57,24 +57,19 @@ module.exports.block = (req, res, next) => {
 module.exports.unblock = (req, res, next) => {
   service
     .unblockClient(req.body)
-    .then(() => { 
-      res.status(httpStatus.OK).json(`Client ${req.body.username} is unblocked`) 
+    .then(() => {
+      res.status(httpStatus.OK).json(`Client ${req.body.username} unblocked`);
     })
     .catch(err => next(err));
 };
 
-// module.exports.getById = async (req, res) => {
-//   res.send(`get client ${req.params.id}`);
-// };
-
-// module.exports.post = async (req, res) => {
-//   res.send("create client");
-// };
-
-// module.exports.put = async (req, res) => {
-//   res.send("edit client");
-// };
-
-// module.exports.delete = async (req, res) => {
-//   res.send("delete client");
-// };
+module.exports.edit = (req, res, next) => {
+  if (req.body.email && req.body.password && req.body.phoneNumber) {
+    service
+      .editProfile(req.user.id, req.body)
+      .then(() => {
+        res.status(httpStatus.OK).json(`Profile ${req.user.id} edited`);
+      })
+      .catch(err => next(err));
+  }
+};

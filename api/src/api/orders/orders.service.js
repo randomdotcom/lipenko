@@ -47,12 +47,13 @@ async function acceptOrder(orderId) {
 }
 
 async function cancelOrder(orderId) {
+  console.log(`orderId = ${orderId}`);
   return await Order.findByIdAndUpdate(orderId, {
     status: Status.Canceled
   }).exec();
 }
 
-async function confirmOrder(userId, orderId) {
+async function confirmOrder(orderId) {
   return await Order.findByIdAndUpdate(orderId, {
     status: Status.Done
   }).exec();

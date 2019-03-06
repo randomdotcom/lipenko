@@ -14,13 +14,13 @@ const validatePNumber = function(phoneNumber) {
 const schema = new mongoose.Schema(
   {
     username: { type: String, required: true, unique: true, lowercase: true },
+    password: { type: String, required: true, select: false },
     companyName: { type: String, required: true, unique: true },
     description: { type: String, required: true },
     adress: { type: String, required: true },
     typesOfCleaning: { type: Object, required: true },
     ratingList: { type: Object, required: false, default: {}},
     rating: { type: Number, required: false, default: 0 },
-    password: { type: String, required: true, select: false },
     email: {
       type: String,
       trim: true,

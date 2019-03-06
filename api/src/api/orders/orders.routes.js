@@ -6,10 +6,10 @@ const permit = require("../../middleware/permission");
 
 const Role = require("../../enums/roles.enum");
 
-router.post('/create', permit(Role.Admin), controller.create);
+router.post('/create', permit(Role.User), controller.create);
 
 router.put('/accept', permit(Role.Executor), controller.accept);
-router.put('/cancel', controller.cancel);
+router.put('/cancel', permit([Role.User, Role.Executor]), controller.cancel);
 router.put('/confirm', permit(Role.User), controller.confirm);
 
 router.get('/', permit([Role.User, Role.Executor]), controller.get)

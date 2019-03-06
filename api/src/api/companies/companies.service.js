@@ -8,7 +8,7 @@ async function authenticate({ username, password }) {
       .select("+password")
       .exec();
     if (executor === null) throw "Company not found";
-    if (executor.block) throw `Company is blocked, reason: ${executor.block}`
+    if (executor.block) throw `Company is blocked, reason: ${executor.block}`;
 
     let success = await executor.comparePassword(password);
     if (success === false) throw "";
@@ -36,48 +36,79 @@ async function logout({ token }) {
   return true;
 }
 
-async function register({ username, companyName, description, adress, typesOfCleaning, password, email, phoneNumber }, role) {
-  const executor = new Executor({ username, companyName, description, adress, typesOfCleaning, password, email, phoneNumber, role });
+async function register(
+  {
+    username,
+    companyName,
+    description,
+    adress,
+    typesOfCleaning,
+    password,
+    email,
+    phoneNumber
+  },
+  role
+) {
+  const executor = new Executor({
+    username,
+    companyName,
+    description,
+    adress,
+    typesOfCleaning,
+    password,
+    email,
+    phoneNumber,
+    role
+  });
   return executor.save().then(({ _id }) => Executor.findById(_id));
 }
 
 async function getCompanies() {
-  return await Executor.find()
+  return await Executor.find();
 }
 
 async function blockCompany(data) {
   return await Executor.findOneAndUpdate(
-    { "username": `${data.username}` },
-    { $set: { "block" : `${data.block}` } }
- );
+    { username: `${data.username}` },
+    { $set: { block: `${data.block}` } }
+  );
 }
 
 async function unblockCompany(data) {
   return await Executor.findOneAndUpdate(
-    { "username": `${data.username}` },
-    { $unset: { "block": {$exist:true} } }
-  )
+    { username: `${data.username}` },
+    { $unset: { block: { $exist: true } } }
+  );
 }
 
 async function rateCompany(userId, data) {
-  const doc = await Executor.findOne({ "username" : `${data.username}` })
-  if (data.value > 5 | data.value < 0) throw "Неверная оценка";
-
-  if (doc) {
-    console.log(userId);
-    doc.ratingList[`${userId}`] = { "value": data.value, "review": data.review }
-
-    var rating = 0;
-    for (var key in doc.ratingList) {
-      rating += doc.ratingList[key].value
+  const executor = await Executor.findOne(
+    { username: `${data.username}` },
+    err => {
+      if (err) res.send(err);
     }
-    doc.rating = rating / Object.keys(doc.ratingList).length;
+  );
+  
+  let ratingList = executor.ratingList;
+  ratingList[userId] = {
+    value: data.value,
+    review: data.review
+  };
 
-    console.log(doc.ratingList)
-    await doc.save();
+  let rating = 0;
+  for (var key in ratingList) {
+    rating += ratingList[key].value;
   }
-}
+  rating = rating / Object.keys(ratingList).length;
 
+  await Executor.findOneAndUpdate(
+    { username: `${data.username}` },
+    { $set: { rating: rating, ratingList: ratingList } },
+    err => {
+      if (err) res.send(err);
+    }
+  );
+}
 
 module.exports = {
   authenticate,

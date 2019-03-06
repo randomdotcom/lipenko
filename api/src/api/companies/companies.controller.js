@@ -60,6 +60,8 @@ module.exports.unblock = (req, res, next) => {
 };
 
 module.exports.rate = (req, res, next) => {
+  if ((req.body.value > 5) | (req.body.value < 0)) return res.send("Неверная оценка");
+
   service
     .rateCompany(req.user.id, req.body)
     .then(() => { 
@@ -67,19 +69,3 @@ module.exports.rate = (req, res, next) => {
     })
     .catch(err => next(err));
 };
-
-// module.exports.getById = async (req, res) => {
-//     res.send(`get company ${req.params.id}`)
-// }
-
-// module.exports.post = async (req, res) => {
-//     res.send('create company')
-// }
-
-// module.exports.put = async (req, res) => {
-//     res.send('edit company')
-// }
-
-// module.exports.delete = async (req, res) => {
-//     res.send('delete company')
-// }

@@ -47,16 +47,32 @@ async function getClients() {
 
 async function blockClient(data) {
   return await User.findOneAndUpdate(
-    { "username": `${data.username}` },
-    { $set: { "block" : `${data.block}` } }
- );
+    { username: `${data.username}` },
+    { $set: { block: `${data.block}` } }
+  );
 }
 
 async function unblockClient(data) {
   return await User.findOneAndUpdate(
-    { "username": `${data.username}` },
-    { $unset: { "block": {$exist:true} } }
-  )
+    { username: `${data.username}` },
+    { $unset: { block: { $exist: true } } }
+  );
+}
+
+async function editProfile(userId, data) {
+  return await User.findByIdAndUpdate(
+    userId,
+    {
+      $set: {
+        email: data.email,
+        password: data.password,
+        phoneNumber: data.phoneNumber
+      }
+    },
+    err => {
+      if (err) return res.send(err);
+    }
+  );
 }
 
 module.exports = {
@@ -65,5 +81,6 @@ module.exports = {
   register,
   getClients,
   blockClient,
-  unblockClient
+  unblockClient,
+  editProfile
 };
