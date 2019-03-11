@@ -4,8 +4,6 @@ const httpStatus = require("http-status");
 const userService = require(`./${entity}.service`);
 const Role = require("../../enums/roles.enum");
 
-///
-
 module.exports.signin = (req, res, next) => {
   userService
     .authenticate(req.body)
@@ -27,8 +25,6 @@ module.exports.signout = (req, res, next) => {
   });
 };
 
-////
-
 module.exports.register = (req, res, next) => {
   console.log('тут')
   userService
@@ -39,22 +35,14 @@ module.exports.register = (req, res, next) => {
     .catch(err => next(err));
 };
 
-// module.exports.get = async (req, res) => {
-//   res.send(`get collection of clients`);
-// };
+module.exports.edit = (req, res, next) => {
+  if (req.body.username && req.body.password) {
+    service
+      .editProfile(req.user.id, req.body)
+      .then(() => {
+        res.status(httpStatus.OK).json(`Profile ${req.user.id} edited`);
+      })
+      .catch(err => next(err));
+  } else res.send("Введены не все данные")
+};
 
-// module.exports.getById = async (req, res) => {
-//   res.send(`get client ${req.params.id}`);
-// };
-
-// module.exports.post = async (req, res) => {
-//   res.send("create client");
-// };
-
-// module.exports.put = async (req, res) => {
-//   res.send("edit client");
-// };
-
-// module.exports.delete = async (req, res) => {
-//   res.send("delete client");
-// };

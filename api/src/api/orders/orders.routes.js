@@ -12,10 +12,8 @@ router.put('/accept', permit(Role.Executor), controller.accept);
 router.put('/cancel', permit([Role.User, Role.Executor]), controller.cancel);
 router.put('/confirm', permit(Role.User), controller.confirm);
 
+router.get('/history', permit([Role.User, Role.Executor]), controller.history);
+
 router.get('/', permit([Role.User, Role.Executor]), controller.get)
-// router.get('/:id', controller.getById)
-// router.post('/', controller.post)
-// router.put('/:id', controller.put) // ?
-// router.delete('/:id', controller.delete) // ?
 
 module.exports = router;

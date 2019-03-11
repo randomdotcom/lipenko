@@ -15,8 +15,10 @@
     "jsonwebtoken": "^8.5.0",
     "mongoose": "^5.4.16",
     "morgan": "~1.9.0",
+    "nodemailer": "^5.1.1",
     "passport": "^0.4.0",
-    "passport-jwt": "^4.0.0"
+    "passport-jwt": "^4.0.0",
+    "rand-token": "^0.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.3.3",

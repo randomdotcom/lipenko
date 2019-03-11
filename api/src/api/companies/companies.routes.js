@@ -9,17 +9,16 @@ const Role = require("../../enums/roles.enum");
 router.get("/signin", controller.signin);
 router.get("/signout", controller.signout);
 router.post("/register", controller.register);
+router.put("/confirm", controller.confirm)
+
+router.put("/edit", permit(Role.Executor), controller.edit);
 
 router.get('/', controller.get); // get collection of companies
+router.get('/:id', controller.getById);
 
-router.put('/block', permit(Role.Admin), controller.block);
-router.put('/unblock', permit(Role.Admin), controller.unblock);
+router.put('/:id/block', permit(Role.Admin), controller.block);
+router.put('/:id/unblock', permit(Role.Admin), controller.unblock);
 
-router.put('/rate', permit(Role.User), controller.rate);
-
-// router.get('/:id', controller.getById)
-// router.post('/', controller.post)
-// router.put('/:id', controller.put) // ?
-// router.delete('/:id', controller.delete) // ?
+router.put('/:id/rate', permit(Role.User), controller.rate);
 
 module.exports = router;

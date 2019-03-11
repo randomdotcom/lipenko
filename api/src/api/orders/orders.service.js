@@ -1,7 +1,7 @@
 const Order = require("../../models/order.model");
 const Status = require("../../enums/status.enum");
 const httpStatus = require("http-status");
-const Role = require('../../enums/roles.enum')
+const Role = require("../../enums/roles.enum");
 
 async function createOrder({
   customer,
@@ -59,10 +59,29 @@ async function confirmOrder(orderId) {
   }).exec();
 }
 
+async function ordersHistory(user) {
+  if (user.role == Role.User) {
+    return await Order.find({
+      $or: [
+        { customer: user.id, status: "canceled" },
+        { customer: user.id, status: "done" }
+      ]
+    }).exec();
+  } else {
+    return await Order.find({
+      $or: [
+        { executor: user.id, status: "canceled" },
+        { executor: user.id, status: "done" }
+      ]
+    }).exec();
+  }
+}
+
 module.exports = {
   createOrder,
   getOrders,
   acceptOrder,
   cancelOrder,
-  confirmOrder
+  confirmOrder,
+  ordersHistory
 };

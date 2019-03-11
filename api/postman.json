@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "8b2bd7d6-b549-4df7-98b5-d82bdf7d3f40",
+		"_postman_id": "b201ac75-3d4b-4f77-adc7-f5876698a2e1",
 		"name": "Course",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -27,16 +27,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "e5a3388c-9731-4043-8b11-be602d8c8919",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -111,7 +101,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"useradmin\",\n  \"password\": \"123456\",\n  \"email\": \"hrviel1@ya.ru\",\n  \"phoneNumber\": \"332995310\"\n}\n"
+							"raw": "{\n  \"username\": \"olya\",\n  \"password\": \"123456\",\n  \"email\": \"hrviell@ya.ru\",\n  \"phoneNumber\": \"336995310\"\n}\n"
 						},
 						"url": {
 							"raw": "{{host}}/api/clients/register/",
@@ -130,6 +120,19 @@
 				},
 				{
 					"name": "signin olya",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4061f454-3a4e-435f-a7f6-9614dc66c1e3",
+								"exec": [
+									"var response = pm.response.json();",
+									"pm.environment.set(\"token\", response.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -145,7 +148,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"username\": \"olya\",\n\t\"password\": \"123456\"\n}"
+							"raw": "{\n\t\"username\": \"test\",\n\t\"password\": \"123456\"\n}"
 						},
 						"url": {
 							"raw": "{{host}}/api/clients/signin",
@@ -156,6 +159,162 @@
 								"api",
 								"clients",
 								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "rate company",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"value\":5,\n\t\"review\":\"GOVNO\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/companies/:id/rate",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"companies",
+								":id",
+								"rate"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "5c7fc52196ae7232c463322e"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "confirm order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"orderId\": \"5c7fdc2326857c1214875a65\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/orders/confirm",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"confirm"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"maksim\",\n\t\"password\": \"123456\",\n\t\"email\": \"maks.war@ya.ru\",\n\t\"phoneNumber\": \"336038205\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/clients/edit",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"clients",
+								"edit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "confirm email",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/clients/confirm?token=jWPP9RmnwMEcioK9",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"clients",
+								"confirm"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "jWPP9RmnwMEcioK9"
+								}
 							]
 						}
 					},
@@ -223,7 +382,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"executor\": \"5c7be6da1d1c3e0898c5bd06\",\n\t\"adress\": \"Беларусь, Могилёв, Пр.Шмидта 46а-67\",\n\t\"typeOfCleaning\": \"first\",\n\t\"description\": \"5 комнат, 100кв.м\",\n\t\"date\": \"2019-03-23T18:25:43.511Z\"\n}"
+							"raw": "{\n\t\"executor\": \"5c7fc52196ae7232c463322e\",\n\t\"adress\": \"Беларусь, Могилёв, Пр.Шмидта 46а-67\",\n\t\"typeOfCleaning\": \"first\",\n\t\"description\": \"5 комнат, 100кв.м\",\n\t\"date\": \"2019-03-23T18:25:43.511Z\"\n}"
 						},
 						"url": {
 							"raw": "{{host}}/api/orders/create",
@@ -234,6 +393,46 @@
 								"api",
 								"orders",
 								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "history",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/orders/history",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"history"
 							]
 						}
 					},
@@ -277,6 +476,19 @@
 				},
 				{
 					"name": "signin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "03c07fa7-6363-4c5b-9321-53789078cd56",
+								"exec": [
+									"var response = pm.response.json();",
+									"pm.environment.set(\"token\", response.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -332,7 +544,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"orderId\": \"5c7c02e35cadad34f033f794\"\n}"
+							"raw": "{\n\t\"orderId\": \"5c7fdc2326857c1214875a65\"\n}"
 						},
 						"url": {
 							"raw": "{{host}}/api/orders/accept",
@@ -351,6 +563,16 @@
 				{
 					"name": "cancel order",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [
 							{
@@ -362,7 +584,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"orderId\": \"5c7c02e35cadad34f033f794\"\n}"
+							"raw": "{\n\t\"orderId\": \"5c7fdc2326857c1214875a65\"\n}"
 						},
 						"url": {
 							"raw": "{{host}}/api/orders/cancel",
@@ -377,6 +599,104 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "edit profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"someCompany2\",\n\t\"password\": \"123456\",\n\t\"email\": \"test@ya.ru\",\n\t\"phoneNumber\": \"293333333\",\n\t\"companyName\": \"Some Company 2\",\n\t\"description\": \"ldaldldsadlsal\",\n\t\"adress\": \"USA\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/companies/edit",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"companies",
+								"edit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get company by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/companies/:id",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"companies",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "5c7fc52196ae7232c463322e"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "confirm email",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/companies/confirm?token=KkWULwGw4zvfamP9",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"companies",
+								"confirm"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "KkWULwGw4zvfamP9"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -386,6 +706,16 @@
 				{
 					"name": "get all clients",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"body": {
@@ -393,7 +723,14 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": ""
+							"raw": "{{host}}/api/clients",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"clients"
+							]
 						}
 					},
 					"response": []
@@ -428,7 +765,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"test\",\n  \"password\": \"123456\",\n  \"email\": \"test@ya.ru\",\n  \"phoneNumber\": \"332345310\"\n}\n"
+							"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"123456\",\n  \"email\": \"test@ya.ru\",\n  \"phoneNumber\": \"332345310\"\n}\n"
 						},
 						"url": {
 							"raw": "{{host}}/api/admin/register",
@@ -446,6 +783,19 @@
 				},
 				{
 					"name": "signin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f40b5caa-620f-4d40-a5b2-221aaa1664a8",
+								"exec": [
+									"var response = pm.response.json();",
+									"pm.environment.set(\"token\", response.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -461,7 +811,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"username\": \"useradmin\",\n\t\"password\": \"123456\"\n}"
+							"raw": "{\n\t\"username\": \"admin\",\n\t\"password\": \"123456\"\n}"
 						},
 						"url": {
 							"raw": "{{host}}/api/admin/signin",
@@ -520,7 +870,14 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": ""
+							"raw": "{{host}}/api/companies",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"companies"
+							]
 						}
 					},
 					"response": []
@@ -552,14 +909,21 @@
 							"raw": "{\n\t\"username\": \"olya\",\n\t\"block\": \"TEST\"\n}"
 						},
 						"url": {
-							"raw": "{{host}}/api/clients/block",
+							"raw": "{{host}}/api/clients/:id/block",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
 								"clients",
+								":id",
 								"block"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "5c7fc78296ae7232c463322f"
+								}
 							]
 						}
 					},
@@ -592,14 +956,21 @@
 							"raw": "{\n\t\"username\": \"olya\"\n}"
 						},
 						"url": {
-							"raw": "{{host}}/api/clients/unblock",
+							"raw": "{{host}}/api/clients/:id/unblock",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
 								"clients",
+								":id",
 								"unblock"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "5c7fc78296ae7232c463322f"
+								}
 							]
 						}
 					},
@@ -629,17 +1000,24 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"username\": \"somecompany\",\n\t\"block\": \"TEST\"\n}"
+							"raw": "{\n\t\"block\": \"TEST\"\n}"
 						},
 						"url": {
-							"raw": "{{host}}/api/companies/block",
+							"raw": "{{host}}/api/companies/:id/block",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
 								"companies",
+								":id",
 								"block"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "5c7fc52196ae7232c463322e"
+								}
 							]
 						}
 					},
@@ -669,17 +1047,57 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"username\": \"somecompany\"\n}"
+							"raw": ""
 						},
 						"url": {
-							"raw": "{{host}}/api/companies/unblock",
+							"raw": "{{host}}/api/companies/:id/unblock",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
 								"companies",
+								":id",
 								"unblock"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "5c7fc52196ae7232c463322e"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "test email",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/admin/test-email",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"test-email"
 							]
 						}
 					},

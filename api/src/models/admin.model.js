@@ -1,10 +1,24 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
+const validateEmail = function(email) {
+  const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  return re.test(email)
+};
+
 const schema = new mongoose.Schema(
   {
     username: { type: String, required: true, unique: true, lowercase: true },
     password: { type: String, required: true, select: false },
+    email: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      unique: true,
+      required: true,
+      validate: [validateEmail, 'Please fill a valid email address'],
+      match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
+    },
     role: { type: String, required: true, lowercase: true }
   },
   {

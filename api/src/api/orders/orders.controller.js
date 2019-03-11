@@ -99,29 +99,13 @@ module.exports.confirm = (req, res) => {
         });
     }
   );
-
-  // Order.findById(req.body.orderId, (err, doc) => {
-  //   if (err) return res.send(err);
-
-  //   if (doc.status !== "accepted") return res.send("Заказ не принят");
-  //   else if (req.user.id != doc.customer) return res.send("Нет доступа");
-  //   else {
-  //     service
-  //       .confirmOrder(req.user.id, req.body.orderId)
-  //       .then(() => {
-  //         res.status(httpStatus.OK).json("Order confirmed");
-  //       })
-  //       .catch(err => {
-  //         res.send(err);
-  //       });
-  //   }
-  // });
 };
 
-// module.exports.put = (req, res) => {
-//   res.send("put");
-// };
-
-// module.exports.delete = (req, res) => {
-//   res.send("delete");
-// };
+module.exports.history = (req, res, next) => {
+  service
+    .ordersHistory(req.user)
+    .then(orders => {
+      res.status(httpStatus.OK).json(orders);
+    })
+    .catch(err => next(err));
+};

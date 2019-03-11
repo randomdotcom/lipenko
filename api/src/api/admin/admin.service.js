@@ -10,7 +10,7 @@ async function authenticate({ username, password }) {
     if (admin === null) throw "User not found";
 
     let success = await admin.comparePassword(password);
-    if (success === false) throw "";
+    if (success === false) throw "Неверный пароль";
 
     const data = admin.toObject();
 
@@ -40,8 +40,20 @@ async function register({ username, password}, role) {
   return admin.save().then(({ _id }) => Admin.findById(_id));
 }
 
+async function editProfile(userId, data) {
+  return await User.findById(userId, (err, admin) => {
+    if (err) return res.send(err);
+
+    admin.username = data.username;
+    admin.password = data.password;
+
+    admin.save();
+  });
+}
+
 module.exports = {
   authenticate,
   logout,
-  register
+  register,
+  editProfile
 };
