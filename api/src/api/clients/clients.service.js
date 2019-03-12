@@ -50,7 +50,7 @@ async function register({ username, password, email, phoneNumber }, role) {
     html: `<div style="display: flex, justify-content: center"><h1>Подтвердите аккаунт <b>${username}</b></h1><h2><a href="http://${process.env.HOST}/api/clients/confirm?token=${verificationCode}">Подтвердить</a></h2></div>` // plain text body
   };
 
-  transporter.sendMail(mailOptions, function(err, info) {
+  transporter.sendMail(mailOptions, function (err, info) {
     if (err) res.send(err);
     else return res.send(info);
   });
@@ -64,10 +64,30 @@ async function getClients() {
   return await User.find();
 }
 
-async function confirmEmail(token) {
-  return await User.findOneAndUpdate({ verificationCode: token }, {new: true}, { $set: { isVerified: true }, $unset: { verificationCode: { $exist: true } } }, (err, user) => {
-    if (err) return res.send(err);
-  })
+async function confirmEmail(code) {
+  let user = await User.findOne({ verificationCode: code })
+    .select("+password")
+    .exec();
+
+  user.isVerified = true;
+  user.verificationCode = undefined;
+
+  user.save();
+
+  const data = user.toObject();
+
+  const token = jwt.sign(
+    { id: data._id, role: data.role },
+    config.jwt.secret,
+    { expiresIn: config.jwt.expiration }
+  );
+
+  const { password: userPassword, ...userWithoutPassword } = data;
+
+  return {
+    ...userWithoutPassword,
+    token
+  }
 }
 
 async function blockClient(userId, data) {

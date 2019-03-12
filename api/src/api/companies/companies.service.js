@@ -61,10 +61,10 @@ async function register(
     subject: "TEST API - Подтвердите регистрацию", // Subject line
     html: `<div style="display: flex, justify-content: center"><h1>Подтвердите аккаунт <b>${username}</b></h1><h2><a href="http://${
       process.env.HOST
-    }/api/clients/confirm?token=${verificationCode}">Подтвердить</a></h2></div>` // plain text body
+      }/api/clients/confirm?token=${verificationCode}">Подтвердить</a></h2></div>` // plain text body
   };
 
-  transporter.sendMail(mailOptions, function(err, info) {
+  transporter.sendMail(mailOptions, function (err, info) {
     if (err) res.send(err);
     else return res.send(info);
   });
@@ -84,19 +84,30 @@ async function register(
   return executor.save().then(({ _id }) => Executor.findById(_id));
 }
 
-async function confirmEmail(token) {
-  await Executor.findOneAndUpdate(
-    { verificationCode: token },
-    { new: true },
-    {
-      $set: { isVerified: true },
-      $unset: { verificationCode: { $exist: true } }
-    }, (err, user) => {
-      if (err) console.log(err)
+async function confirmEmail(code) {
+  let user = await Executor.findOne({ verificationCode: code })
+    .select("+password")
+    .exec();
 
-      return user;
-    }
+  user.isVerified = true;
+  user.verificationCode = undefined;
+
+  user.save();
+
+  const data = user.toObject();
+
+  const token = jwt.sign(
+    { id: data._id, role: data.role },
+    config.jwt.secret,
+    { expiresIn: config.jwt.expiration }
   );
+
+  const { password: userPassword, ...userWithoutPassword } = data;
+
+  return {
+    ...userWithoutPassword,
+    token
+  }
 }
 
 async function getCompanies() {
