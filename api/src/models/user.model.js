@@ -14,7 +14,7 @@ const validatePNumber = function(phoneNumber) {
 const schema = new mongoose.Schema(
   {
     username: { type: String, required: true, unique: true, lowercase: true },
-    password: { type: String, required: true, select: false },
+    password: { type: String, select: false },
     email: {
       type: String,
       trim: true,
@@ -35,12 +35,14 @@ const schema = new mongoose.Schema(
       type: String,
       trim: true,
       unique: true,
-      required: true,
       validate: [validatePNumber, 'Please fill a valid phone number'],
       match: [/^(29|33|44|25)\d{7}$/, 'Please fill a valid phone number']
     },
     block: { type: String, default: "" },
-    role: { type: String, required: true, lowercase: true }
+    role: { type: String, required: true, lowercase: true },
+    googleId: { type: String },
+    vkontakteId: { type: String },
+    githubId: { type: String }
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" }
@@ -50,6 +52,7 @@ const schema = new mongoose.Schema(
 schema.pre("save", function(next) {
   bcrypt.hash(this.password, 10, (err, hash) => {
     this.password = hash;
+    console.log('presave password: '+ this.password)
     next();
   });
 });

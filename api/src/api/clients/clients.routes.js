@@ -4,12 +4,23 @@ const router = require('express').Router();
 const controller = require(`./${entity}.controller`);
 const permit = require("../../middleware/permission");
 
+const { authenticateGoogle, authenticateVKontakte, authenticateGitHub } = require('../../config/passport');
+
 const Role = require("../../enums/roles.enum");
 
 router.get("/signin", controller.signin);
 router.get("/signout", controller.signout);
 router.post("/register", controller.register);
-router.put("/confirm", controller.confirm)
+router.put("/confirm", controller.confirm);
+
+router.get("/google", authenticateGoogle());
+router.get("/google/callback", authenticateGoogle(), controller.authSocialNetwork);
+
+router.get("/github", authenticateGitHub());
+router.get("/github/callback", authenticateGitHub(), controller.authSocialNetwork);
+
+router.get("/vk", authenticateVKontakte());
+router.get("/vk/callback", authenticateVKontakte(), controller.authSocialNetwork);
 
 router.put('/edit', permit(Role.User), controller.edit);
 

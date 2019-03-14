@@ -1,9 +1,9 @@
-const jwt = require("jsonwebtoken");
-const config = require("../../config/environment");
+const { createToken } = require("../../config/passport");
 const User = require("../../models/user.model");
-const { transporter } = require("../../config/nodemailer");
+const { sendConfirmationMessage } = require("../../config/nodemailer");
 
-var randtoken = require('rand-token');
+
+const randtoken = require("rand-token");
 
 async function authenticate({ username, password }) {
   try {
@@ -12,18 +12,14 @@ async function authenticate({ username, password }) {
       .exec();
     if (user === null) throw "User not found";
     if (user.block) throw `User blocked, reason: ${user.block}`;
-    if (user.isVerified === false) throw `Пользователь не подтвердил почту`
+    if (user.isVerified === false) throw `Пользователь не подтвердил почту`;
 
     let success = await user.comparePassword(password);
     if (success === false) throw "Неверный пароль";
 
     const data = user.toObject();
 
-    const token = jwt.sign(
-      { id: data._id, role: data.role },
-      config.jwt.secret,
-      { expiresIn: config.jwt.expiration }
-    );
+    const token = createToken(data);
 
     const { password: userPassword, ...userWithoutPassword } = data;
 
@@ -43,19 +39,16 @@ async function logout({ token }) {
 async function register({ username, password, email, phoneNumber }, role) {
   var verificationCode = randtoken.generate(16);
 
-  const mailOptions = {
-    from: `${process.env.EMAIL}`, // sender address
-    to: `${email}`, // list of receivers
-    subject: "TEST API - Подтвердите регистрацию", // Subject line
-    html: `<div style="display: flex, justify-content: center"><h1>Подтвердите аккаунт <b>${username}</b></h1><h2><a href="http://${process.env.HOST}/api/clients/confirm?token=${verificationCode}">Подтвердить</a></h2></div>` // plain text body
-  };
+  sendConfirmationMessage(email, username, verificationCode);
 
-  transporter.sendMail(mailOptions, function (err, info) {
-    if (err) res.send(err);
-    else return res.send(info);
+  const user = new User({
+    username,
+    password,
+    email,
+    verificationCode,
+    phoneNumber,
+    role
   });
-
-  const user = new User({ username, password, email, verificationCode, phoneNumber, role });
 
   return user.save().then(({ _id }) => User.findById(_id));
 }
@@ -65,29 +58,24 @@ async function getClients() {
 }
 
 async function confirmEmail(code) {
-  let user = await User.findOne({ verificationCode: code })
-    .select("+password")
-    .exec();
-
-  user.isVerified = true;
-  user.verificationCode = undefined;
-
-  user.save();
+  const user = await User.findOneAndUpdate(
+    { verificationCode: code },
+    {
+      $set: { isVerified: true },
+      $unset: { verificationCode: { $exist: true } }
+    }
+  );
 
   const data = user.toObject();
 
-  const token = jwt.sign(
-    { id: data._id, role: data.role },
-    config.jwt.secret,
-    { expiresIn: config.jwt.expiration }
-  );
+  const token = createToken(data);
 
   const { password: userPassword, ...userWithoutPassword } = data;
 
   return {
     ...userWithoutPassword,
     token
-  }
+  };
 }
 
 async function blockClient(userId, data) {
@@ -106,13 +94,31 @@ async function editProfile(userId, data) {
   return await User.findById(userId, (err, user) => {
     if (err) return res.send(err);
 
-    user.username = data.username;
     user.password = data.password;
     user.email = data.email;
     user.phoneNumber = data.phoneNumber;
 
     user.save();
   });
+}
+
+async function authSocialNetwork(data) {
+  console.log(`authSocialNetwork: ${data}`);
+  if (data.isVerified) {
+    const token = createToken(data);
+
+    return {
+      data,
+      token
+    };
+  } else {
+    const token = data.verificationCode;
+    console.log(`authSocialNetwork, verification code: ${token}`);
+
+    sendConfirmationMessage(data.email, data.username, data.verificationCode);
+
+    throw new Error("Требуется подтверждение почты");
+  }
 }
 
 module.exports = {
@@ -123,5 +129,6 @@ module.exports = {
   blockClient,
   unblockClient,
   editProfile,
-  confirmEmail
+  confirmEmail,
+  authSocialNetwork
 };

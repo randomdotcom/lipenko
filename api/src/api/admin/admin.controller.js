@@ -36,7 +36,7 @@ module.exports.register = (req, res, next) => {
 };
 
 module.exports.edit = (req, res, next) => {
-  if (req.body.username && req.body.password) {
+  if (req.body.password) {
     service
       .editProfile(req.user.id, req.body)
       .then(() => {

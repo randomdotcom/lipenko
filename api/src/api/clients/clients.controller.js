@@ -72,7 +72,6 @@ module.exports.unblock = (req, res, next) => {
 
 module.exports.edit = (req, res, next) => {
   if (
-    req.body.username &&
     req.body.email &&
     req.body.password &&
     req.body.phoneNumber
@@ -85,3 +84,10 @@ module.exports.edit = (req, res, next) => {
       .catch(err => next(err));
   } else res.send("Введены не все данные");
 };
+
+module.exports.authSocialNetwork = (req,res,next)=>{
+  service
+      .authSocialNetwork(req.user)
+      .then(data => res.status(httpStatus.OK).json(data))
+      .catch(err => next(err));
+}

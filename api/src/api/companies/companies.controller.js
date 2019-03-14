@@ -87,7 +87,7 @@ module.exports.rate = (req, res, next) => {
 };
 
 module.exports.edit = (req, res, next) => {
-  if (req.body.username && req.body.email && req.body.password && req.body.phoneNumber && req.body.companyName && req.body.description && req.body.adress ) {
+  if (req.body.email && req.body.password && req.body.phoneNumber && req.body.companyName && req.body.description && req.body.adress ) {
     service
       .editProfile(req.user.id, req.body)
       .then(() => {

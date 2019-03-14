@@ -1,5 +1,4 @@
-const jwt = require("jsonwebtoken");
-const config = require("../../config/environment");
+const { createToken } = require("../../config/passport")
 const Admin = require("../../models/admin.model");
 
 async function authenticate({ username, password }) {
@@ -14,11 +13,7 @@ async function authenticate({ username, password }) {
 
     const data = admin.toObject();
 
-    const token = jwt.sign(
-      { id: data._id, role: data.role },
-      config.jwt.secret,
-      { expiresIn: config.jwt.expiration }
-    );
+    const token = createToken(data);
 
     const { password: adminPassword, ...adminWithoutPassword } = data;
 
@@ -44,7 +39,6 @@ async function editProfile(userId, data) {
   return await User.findById(userId, (err, admin) => {
     if (err) return res.send(err);
 
-    admin.username = data.username;
     admin.password = data.password;
 
     admin.save();

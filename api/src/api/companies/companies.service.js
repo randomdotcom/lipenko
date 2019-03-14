@@ -1,8 +1,7 @@
-const jwt = require("jsonwebtoken");
-const config = require("../../config/environment");
+const { createToken } = require("../../config/passport")
 const Executor = require("../../models/executor.model");
 
-const { transporter } = require("../../config/nodemailer");
+const { sendConfirmationMessage } = require("../../config/nodemailer");
 
 var randtoken = require("rand-token");
 
@@ -19,11 +18,8 @@ async function authenticate({ username, password }) {
     if (success === false) throw "пароль неверный";
 
     const data = executor.toObject();
-    const token = jwt.sign(
-      { id: data._id, role: data.role },
-      config.jwt.secret,
-      { expiresIn: config.jwt.expiration }
-    );
+
+    const token = createToken(data);
 
     const { password: executorPassword, ...executorWithoutPassword } = data;
 
@@ -55,19 +51,7 @@ async function register(
 ) {
   var verificationCode = randtoken.generate(16);
 
-  const mailOptions = {
-    from: `${process.env.EMAIL}`, // sender address
-    to: `${email}`, // list of receivers
-    subject: "TEST API - Подтвердите регистрацию", // Subject line
-    html: `<div style="display: flex, justify-content: center"><h1>Подтвердите аккаунт <b>${username}</b></h1><h2><a href="http://${
-      process.env.HOST
-      }/api/clients/confirm?token=${verificationCode}">Подтвердить</a></h2></div>` // plain text body
-  };
-
-  transporter.sendMail(mailOptions, function (err, info) {
-    if (err) res.send(err);
-    else return res.send(info);
-  });
+  sendConfirmationMessage(email, username, verificationCode);
 
   const executor = new Executor({
     username,
@@ -85,29 +69,24 @@ async function register(
 }
 
 async function confirmEmail(code) {
-  let user = await Executor.findOne({ verificationCode: code })
-    .select("+password")
-    .exec();
-
-  user.isVerified = true;
-  user.verificationCode = undefined;
-
-  user.save();
+  const user = await Executor.findOneAndUpdate(
+    { verificationCode: code },
+    {
+      $set: { isVerified: true },
+      $unset: { verificationCode: { $exist: true } }
+    }
+  );
 
   const data = user.toObject();
 
-  const token = jwt.sign(
-    { id: data._id, role: data.role },
-    config.jwt.secret,
-    { expiresIn: config.jwt.expiration }
-  );
+  const token = createToken(data);
 
   const { password: userPassword, ...userWithoutPassword } = data;
 
   return {
     ...userWithoutPassword,
     token
-  }
+  };
 }
 
 async function getCompanies() {
@@ -163,7 +142,6 @@ async function editProfile(userId, data) {
     company.companyName = data.companyName;
     company.description = data.description;
     company.adress = data.adress;
-    company.username = data.username;
     company.password = data.password;
     company.email = data.email;
     company.phoneNumber = data.phoneNumber;

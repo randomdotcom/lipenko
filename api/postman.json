@@ -101,7 +101,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"olya\",\n  \"password\": \"123456\",\n  \"email\": \"hrviell@ya.ru\",\n  \"phoneNumber\": \"336995310\"\n}\n"
+							"raw": "{\n  \"username\": \"maksik\",\n  \"password\": \"123456\",\n  \"email\": \"maks.war@yandex.ru\",\n  \"phoneNumber\": \"336995310\"\n}\n"
 						},
 						"url": {
 							"raw": "{{host}}/api/clients/register/",
@@ -148,7 +148,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"username\": \"test\",\n\t\"password\": \"123456\"\n}"
+							"raw": "{\n  \"username\": \"maksik\",\n  \"password\": \"123456\"\n}"
 						},
 						"url": {
 							"raw": "{{host}}/api/clients/signin",
@@ -301,7 +301,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{host}}/api/clients/confirm?token=jWPP9RmnwMEcioK9",
+							"raw": "{{host}}/api/clients/confirm?token=1D5IxksKAIbhK8ae",
 							"host": [
 								"{{host}}"
 							],
@@ -313,7 +313,7 @@
 							"query": [
 								{
 									"key": "token",
-									"value": "jWPP9RmnwMEcioK9"
+									"value": "1D5IxksKAIbhK8ae"
 								}
 							]
 						}
@@ -679,7 +679,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{host}}/api/companies/confirm?token=KkWULwGw4zvfamP9",
+							"raw": "{{host}}/api/companies/confirm?token=eSzvyP3on5PMFc95",
 							"host": [
 								"{{host}}"
 							],
@@ -691,7 +691,7 @@
 							"query": [
 								{
 									"key": "token",
-									"value": "KkWULwGw4zvfamP9"
+									"value": "eSzvyP3on5PMFc95"
 								}
 							]
 						}
