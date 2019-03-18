@@ -1,8 +1,10 @@
 const passport = require("passport");
+
 const { ExtractJwt, Strategy } = require("passport-jwt");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const VKontakteStrategy = require("passport-vkontakte").Strategy;
 const GitHubStrategy = require("passport-github").Strategy;
+
 const randtoken = require("rand-token");
 const jwt = require("jsonwebtoken");
 

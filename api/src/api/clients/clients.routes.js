@@ -4,12 +4,12 @@ const router = require('express').Router();
 const controller = require(`./${entity}.controller`);
 const permit = require("../../middleware/permission");
 
-const { authenticateGoogle, authenticateVKontakte, authenticateGitHub } = require('../../config/passport');
+const { authenticateGoogle, authenticateVKontakte, authenticateGitHub} = require('../../config/passport');
 
 const Role = require("../../enums/roles.enum");
 
-router.get("/signin", controller.signin);
-router.get("/signout", controller.signout);
+router.post("/signin", controller.signin);
+router.post("/signout", controller.signout);
 router.post("/register", controller.register);
 router.put("/confirm", controller.confirm);
 

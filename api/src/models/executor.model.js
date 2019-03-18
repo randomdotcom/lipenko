@@ -45,7 +45,8 @@ const schema = new mongoose.Schema(
       validate: [validatePNumber, 'Please fill a valid phone number'],
       match: [/^(29|33|44|25)\d{7}$/, 'Please fill a valid phone number']
     },
-    block: { type: String, default: "" },
+    isBlocked: { type: Boolean, default: false },
+    blockReason: { type: String },
     role: { type: String, required: true, lowercase: true }
   },
   {

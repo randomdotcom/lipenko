@@ -1,7 +1,10 @@
 const { createToken } = require("../../config/passport");
 const User = require("../../models/user.model");
-const { sendConfirmationMessage } = require("../../config/nodemailer");
-
+const {
+  sendConfirmationMessage,
+  sendProfileBlockMessage,
+  sendProfileUnblockMessage
+} = require("../../config/nodemailer");
 
 const randtoken = require("rand-token");
 
@@ -11,7 +14,7 @@ async function authenticate({ username, password }) {
       .select("+password")
       .exec();
     if (user === null) throw "User not found";
-    if (user.block) throw `User blocked, reason: ${user.block}`;
+    if (user.isBlocked) throw `User blocked, reason: ${user.block}`;
     if (user.isVerified === false) throw `Пользователь не подтвердил почту`;
 
     let success = await user.comparePassword(password);
@@ -79,20 +82,36 @@ async function confirmEmail(code) {
 }
 
 async function blockClient(userId, data) {
-  return await User.findByIdAndUpdate(userId, {
-    $set: { block: `${data.block}` }
-  });
+  return await User.findByIdAndUpdate(
+    userId,
+    {
+      $set: { isBlocked: true, blockReason: `${data.blockReason}` }
+    },
+    (err, user) => {
+      console.log('BLOCKED')
+      if (err) throw new Error(err);
+      sendProfileBlockMessage(user.email, user.username, data.blockReason);
+    }
+  );
 }
 
 async function unblockClient(userId) {
-  return await User.findByIdAndUpdate(userId, {
-    $unset: { block: { $exist: true } }
-  });
+  return await User.findByIdAndUpdate(
+    userId,
+    {
+      $set: { isBlocked: false },
+      $unset: { blockReason: { $exist: true } }
+    },
+    (err, user) => {
+      if (err) throw new Error(err);
+      sendProfileUnblockMessage(user.email, user.username);
+    }
+  );
 }
 
 async function editProfile(userId, data) {
   return await User.findById(userId, (err, user) => {
-    if (err) return res.send(err);
+    if (err) throw new Error(err);
 
     user.password = data.password;
     user.email = data.email;

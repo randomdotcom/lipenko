@@ -3,6 +3,8 @@ const Status = require("../../enums/status.enum");
 const httpStatus = require("http-status");
 const Role = require("../../enums/roles.enum");
 
+const { sendOrderStatusMessage } = require("../../config/nodemailer")
+
 async function createOrder({
   customer,
   executor,
@@ -43,6 +45,10 @@ async function getOrders(user) {
 async function acceptOrder(orderId) {
   return await Order.findByIdAndUpdate(orderId, {
     status: Status.Accepted
+  }, (err, order) => {
+    const user = User.findById(order.customer)
+
+    sendOrderStatusMessage(user.email, orderId, Status.Accepted)
   }).exec();
 }
 
@@ -50,12 +56,22 @@ async function cancelOrder(orderId) {
   console.log(`orderId = ${orderId}`);
   return await Order.findByIdAndUpdate(orderId, {
     status: Status.Canceled
+  }, (err, order) => {
+    const user = User.findById(order.customer);
+    const executor = Executor.findById(order.executor);
+
+    sendOrderStatusMessage(user.email, orderId, Status.Canceled)
+    sendOrderStatusMessage(executor.email, orderId, Status.Canceled)
   }).exec();
 }
 
 async function confirmOrder(orderId) {
   return await Order.findByIdAndUpdate(orderId, {
     status: Status.Done
+  }, (err, order) => {
+    const executor = Executor.findById(order.executor);
+
+    sendOrderStatusMessage(executor.email, orderId, Status.Done)
   }).exec();
 }
 

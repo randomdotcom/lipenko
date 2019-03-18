@@ -7,8 +7,8 @@ const { transporter, from } = require("../../config/nodemailer");
 
 const Role = require("../../enums/roles.enum");
 
-router.get("/signin", controller.signin);
-router.get("/signout", controller.signout);
+router.post("/signin", controller.signin);
+router.post("/signout", controller.signout);
 router.post("/register", permit(Role.Admin), controller.register);
 router.put("/edit", permit(Role.Admin), controller.edit);
 

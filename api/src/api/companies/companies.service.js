@@ -11,7 +11,7 @@ async function authenticate({ username, password }) {
       .select("+password")
       .exec();
     if (executor === null) throw "Company not found";
-    if (executor.block) throw `Company is blocked, reason: ${executor.block}`;
+    if (executor.isBlocked) throw `Company is blocked, reason: ${executor.block}`;
     if (executor.isVerified === false) throw `Пользователь не подтвердил почту`;
 
     let success = await executor.comparePassword(password);
@@ -97,16 +97,32 @@ async function getCompanyById(companyId) {
   return await Executor.find({ _id: companyId });
 }
 
-async function blockCompany(companyId, data) {
-  return await Executor.findByIdAndUpdate(companyId, {
-    $set: { block: `${data.block}` }
-  });
+async function blockCompany(userId, data) {
+  return await Executor.findByIdAndUpdate(
+    userId,
+    {
+      $set: { isBlocked: true, blockReason: `${data.blockReason}` }
+    },
+    (err, user) => {
+      console.log('BLOCKED')
+      if (err) throw new Error(err);
+      sendProfileBlockMessage(user.email, user.username, data.blockReason);
+    }
+  );
 }
 
-async function unblockCompany(companyId) {
-  return await Executor.findByIdAndUpdate(companyId, {
-    $unset: { block: { $exist: true } }
-  });
+async function unblockCompany(userId) {
+  return await Executor.findByIdAndUpdate(
+    userId,
+    {
+      $set: { isBlocked: false },
+      $unset: { blockReason: { $exist: true } }
+    },
+    (err, user) => {
+      if (err) throw new Error(err);
+      sendProfileUnblockMessage(user.email, user.username);
+    }
+  );
 }
 
 async function rateCompany(userId, data, companyId) {
