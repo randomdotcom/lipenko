@@ -6,7 +6,7 @@ async function authenticate({ username, password }) {
     const admin = await Admin.findOne({ username })
       .select("+password")
       .exec();
-    if (admin === null) throw "User not found";
+    if (admin === null) throw "Пользователь не найден";
 
     let success = await admin.comparePassword(password);
     if (success === false) throw "Неверный пароль";
@@ -22,7 +22,7 @@ async function authenticate({ username, password }) {
       token
     };
   } catch (err) {
-    throw new Error("Username or password is incorrect");
+    throw new Error(err);
   }
 }
 

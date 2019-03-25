@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import TextField from "@material-ui/core/TextField";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
-import { withSnackbar } from 'notistack';
+import { withSnackbar } from "notistack";
 
 class SignIn extends Component {
   constructor(props) {
@@ -22,7 +22,7 @@ class SignIn extends Component {
   handleChange = name => event => {
     this.setState({ [name]: event.target.value });
   };
-  
+
   handleMessage = (msg, variant) => {
     this.props.enqueueSnackbar(msg, { variant });
   };
@@ -38,13 +38,19 @@ class SignIn extends Component {
         "Content-Type": "application/json"
       }
     })
-      .then(res => res.json())
-      .then(json => { 
-        console.log(json);
-        this.handleMessage('Вход успешный!', 'success')
+      .then(res => {
+        console.log(res);
+        return res.json();
       })
-      .catch(() => this.handleMessage('Неверные данные', 'error'))
-  }
+      .then(json => {
+        if (json.error) {
+          this.handleMessage(json.error, "error");
+        } else {
+          this.handleMessage("Вход успешный!", "success");
+        }
+      })
+      .catch(() => this.handleMessage("Неизвестная ошибка", "error"));
+  };
 
   render() {
     const { classes } = this.props;
@@ -82,7 +88,7 @@ class SignIn extends Component {
 
 SignIn.propTypes = {
   classes: PropTypes.object.isRequired,
-  enqueueSnackbar: PropTypes.func.isRequired,
+  enqueueSnackbar: PropTypes.func.isRequired
 };
 
 const styles = theme => ({

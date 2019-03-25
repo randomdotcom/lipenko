@@ -13,8 +13,8 @@ async function authenticate({ username, password }) {
     const user = await User.findOne({ username })
       .select("+password")
       .exec();
-    if (user === null) throw "User not found";
-    if (user.isBlocked) throw `User blocked, reason: ${user.block}`;
+    if (user === null) throw "Пользователь не найден";
+    if (user.isBlocked) throw `Пользователь заблокирован, причина: ${user.block}`;
     if (user.isVerified === false) throw `Пользователь не подтвердил почту`;
 
     let success = await user.comparePassword(password);

@@ -10,12 +10,12 @@ async function authenticate({ username, password }) {
     const executor = await Executor.findOne({ username })
       .select("+password")
       .exec();
-    if (executor === null) throw "Company not found";
-    if (executor.isBlocked) throw `Company is blocked, reason: ${executor.block}`;
+    if (executor === null) throw "Пользователь не найден";
+    if (executor.isBlocked) throw `Пользователь заблокирован, причина: ${executor.block}`;
     if (executor.isVerified === false) throw `Пользователь не подтвердил почту`;
 
     let success = await executor.comparePassword(password);
-    if (success === false) throw "пароль неверный";
+    if (success === false) throw "Неверный пароль";
 
     const data = executor.toObject();
 
@@ -104,7 +104,6 @@ async function blockCompany(userId, data) {
       $set: { isBlocked: true, blockReason: `${data.blockReason}` }
     },
     (err, user) => {
-      console.log('BLOCKED')
       if (err) throw new Error(err);
       sendProfileBlockMessage(user.email, user.username, data.blockReason);
     }

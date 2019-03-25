@@ -4,26 +4,28 @@ const httpStatus = require("http-status");
 const service = require(`./${entity}.service`);
 const Role = require("../../enums/roles.enum");
 
-var randtoken = require('rand-token');
-
 module.exports.signin = (req, res, next) => {
   service
     .authenticate(req.body)
     .then(user =>
       user
-        ? res.json(user)
+        ? res.status(httpStatus.OK).json(user)
         : res
             .status(httpStatus.UNAUTHORIZED)
-            .json({ message: "Username or password is incorrect" })
+            .json({ error: "Username or password is incorrect" })
     )
-    .catch(err => next(err));
+    .catch(err => {
+      res.status(httpStatus.UNAUTHORIZED).json({ error: `${err.message}` });
+    });
 };
 
 module.exports.signout = (req, res, next) => {
   service.logout(req.body).then(result => {
     result
       ? res.status(httpStatus.OK).json("Ok")
-      : res.status(httpStatus.INTERNAL_SERVER_ERROR).json("Internal Error");
+      : res
+          .status(httpStatus.INTERNAL_SERVER_ERROR)
+          .json({ error: `Внутренняя ошибка сервера` });
   });
 };
 
@@ -33,7 +35,7 @@ module.exports.register = (req, res, next) => {
     .then(() => {
       res.status(httpStatus.CREATED).json("Created");
     })
-    .catch(err => next(err));
+    .catch(err => res.json({ error: `${err.message}` }));
 };
 
 module.exports.confirm = (req, res, next) => {
@@ -42,52 +44,52 @@ module.exports.confirm = (req, res, next) => {
     .then(user => {
       res.status(httpStatus.CREATED).json(user);
     })
-    .catch(err => next(err));
+    .catch(err => res.json({ error: `${err.message}` }));
 };
 
 module.exports.get = (req, res, next) => {
   service
     .getClients()
     .then(companies => res.status(httpStatus.OK).json(companies))
-    .catch(err => next(err));
+    .catch(err => res.json({ error: `${err.message}` }));
 };
 
 module.exports.block = (req, res, next) => {
   service
     .blockClient(req.params.id, req.body)
     .then(() => {
-      res.status(httpStatus.OK).json(`Client ${req.params.id} blocked`);
+      res
+        .status(httpStatus.OK)
+        .json(`Пользователь ${req.params.id} заблокирован`);
     })
-    .catch(err => next(err));
+    .catch(err => res.json({ error: `${err.message}` }));
 };
 
 module.exports.unblock = (req, res, next) => {
   service
     .unblockClient(req.params.id)
     .then(() => {
-      res.status(httpStatus.OK).json(`Client ${req.params.id} unblocked`);
+      res
+        .status(httpStatus.OK)
+        .json(`Пользователь ${req.params.id} разблокирован`);
     })
-    .catch(err => next(err));
+    .catch(err => res.json({ error: `${err.message}` }));
 };
 
 module.exports.edit = (req, res, next) => {
-  if (
-    req.body.email &&
-    req.body.password &&
-    req.body.phoneNumber
-  ) {
+  if (req.body.email && req.body.password && req.body.phoneNumber) {
     service
       .editProfile(req.user.id, req.body)
       .then(() => {
         res.status(httpStatus.OK).json(`Profile ${req.user.id} edited`);
       })
-      .catch(err => next(err));
-  } else res.send("Введены не все данные");
+      .catch(err => res.json({ error: `${err.message}` }));
+  } else res.json({ error: `Введены не все данные` });
 };
 
-module.exports.authSocialNetwork = (req,res,next)=>{
+module.exports.authSocialNetwork = (req, res, next) => {
   service
-      .authSocialNetwork(req.user)
-      .then(data => res.status(httpStatus.OK).json(data))
-      .catch(err => next(err));
-}
+    .authSocialNetwork(req.user)
+    .then(data => res.status(httpStatus.OK).json(data))
+    .catch(err => res.json({ error: `${err.message}` }));
+};
