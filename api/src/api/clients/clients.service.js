@@ -13,12 +13,12 @@ async function authenticate({ username, password }) {
     const user = await User.findOne({ username })
       .select("+password")
       .exec();
-    if (user === null) throw "Пользователь не найден";
-    if (user.isBlocked) throw `Пользователь заблокирован, причина: ${user.block}`;
-    if (user.isVerified === false) throw `Пользователь не подтвердил почту`;
+    if (user === null) throw "The user is not found";
+    if (user.isBlocked) throw `The user is blocked, reason: ${user.block}`;
+    if (user.isVerified === false) throw `Email confirmation required`;
 
     let success = await user.comparePassword(password);
-    if (success === false) throw "Неверный пароль";
+    if (success === false) throw "The password is incorrect";
 
     const data = user.toObject();
 
@@ -136,7 +136,7 @@ async function authSocialNetwork(data) {
 
     sendConfirmationMessage(data.email, data.username, data.verificationCode);
 
-    throw new Error("Требуется подтверждение почты");
+    throw new Error("Email confirmation required");
   }
 }
 

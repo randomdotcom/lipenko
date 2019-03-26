@@ -6,10 +6,10 @@ async function authenticate({ username, password }) {
     const admin = await Admin.findOne({ username })
       .select("+password")
       .exec();
-    if (admin === null) throw "Пользователь не найден";
+    if (admin === null) throw "The user is not found";
 
     let success = await admin.comparePassword(password);
-    if (success === false) throw "Неверный пароль";
+    if (success === false) throw "Password is incorrect";
 
     const data = admin.toObject();
 

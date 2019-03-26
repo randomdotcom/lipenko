@@ -10,12 +10,12 @@ async function authenticate({ username, password }) {
     const executor = await Executor.findOne({ username })
       .select("+password")
       .exec();
-    if (executor === null) throw "Пользователь не найден";
-    if (executor.isBlocked) throw `Пользователь заблокирован, причина: ${executor.block}`;
-    if (executor.isVerified === false) throw `Пользователь не подтвердил почту`;
+    if (executor === null) throw "The user is not found";
+    if (executor.isBlocked) throw `The user is blocked, reason: ${executor.block}`;
+    if (executor.isVerified === false) throw `Email confirmation required`;
 
     let success = await executor.comparePassword(password);
-    if (success === false) throw "Неверный пароль";
+    if (success === false) throw "The password is incorrect";
 
     const data = executor.toObject();
 

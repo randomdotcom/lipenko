@@ -12,30 +12,32 @@ class SignIn extends Component {
 
     this.state = {
       username: "",
-      usernameError: '',
+      usernameError: "",
       password: "",
-      passwordError: ''
+      passwordError: ""
     };
   }
 
-  validate = () => {
-    let usernameError = '';
-    let passwordError = '';
+  validate = (afterSetState) => {
+    let usernameError = "";
+    let passwordError = "";
 
     if (!this.state.username) {
-      usernameError = 'Field is empty'
-    } else if (!this.state.username.indexOf(' ') === -1) {
-      usernameError = `Username can't consist of spaces`
+      usernameError = "Field is required";
+    } else if (this.state.username.indexOf(" ") !== -1) {
+      usernameError = "The username cannot contain spaces";
+    } else if (this.state.username.length < 4) {
+      usernameError = "Username length should be 4 symbols or more"
     }
 
     if (!this.state.password) {
-      passwordError = 'Field is empty'
-    } else if (this.state.password.length < 6) {
-      passwordError = 'Password length should be 6 symbols or more'
+      passwordError = "Field is required";
+    } else if (this.state.password.length < 5) {
+      passwordError = "Password length should be 5 symbols or more";
     }
 
-    this.setState({ usernameError, passwordError });
-  }
+    this.setState({ usernameError, passwordError }, afterSetState);
+  };
 
   handleChange = name => event => {
     this.setState({ [name]: event.target.value });
@@ -46,34 +48,32 @@ class SignIn extends Component {
   };
 
   handleSubmit = () => {
-    this.validate();
-
-    if (!this.state.usernameError & !this.state.passwordError) {
-      fetch("http://localhost:3002/api/clients/signin", {
-        method: "POST",
-        body: JSON.stringify({
-          username: this.state.username,
-          password: this.state.password
-        }),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-        .then(res => {
-          console.log('handleSubmit')
-          console.log(res);
-          return res.json();
-        })
-        .then(json => {
-          if (json.error) {
-            this.handleMessage(json.error, "error");
-          } else {
-            this.handleMessage("Вход успешный!", "success");
-            console.log(json);
+    this.validate(() => {
+      if (!this.state.usernameError & !this.state.passwordError) {
+        fetch(`http://localhost:3002/api/clients/signin`, {
+          method: "POST",
+          body: JSON.stringify({
+            username: this.state.username,
+            password: this.state.password
+          }),
+          headers: {
+            "Content-Type": "application/json"
           }
         })
-        .catch(() => this.handleMessage("Неизвестная ошибка", "error"));
-    }
+          .then(res => {
+            return res.json();
+          })
+          .then(json => {
+            if (json.error) {
+              this.handleMessage(json.error, "error");
+            } else {
+              this.handleMessage("Вход успешный!", "success");
+              console.log(json);
+            }
+          })
+          .catch(() => this.handleMessage("Неизвестная ошибка", "error"));
+      }
+    });
   };
 
   render() {
@@ -82,6 +82,7 @@ class SignIn extends Component {
       <form className={classes.container} noValidate autoComplete="off">
         <TextField
           label="Username"
+          autoComplete="username"
           className={classes.textField}
           onChange={this.handleChange("username")}
           helperText={this.state.usernameError}
@@ -91,6 +92,7 @@ class SignIn extends Component {
         />
         <TextField
           label="Password"
+          autoComplete="current-password"
           className={classes.textField}
           onChange={this.handleChange("password")}
           margin="normal"
@@ -107,7 +109,7 @@ class SignIn extends Component {
           size="large"
           className={classes.button}
         >
-          Sign In
+        SIGN IN
         </Button>
       </form>
     );
