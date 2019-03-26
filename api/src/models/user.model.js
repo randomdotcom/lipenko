@@ -7,7 +7,7 @@ const validateEmail = function(email) {
 };
 
 const validatePNumber = function(phoneNumber) {
-  const re = /^(29|33|44|25)\d{7}$/;
+  const re = /^375(29|33|44|25)\d{7}$/;
   return re.test(phoneNumber)
 };
 
@@ -21,8 +21,7 @@ const schema = new mongoose.Schema(
       lowercase: true,
       unique: true,
       required: true,
-      validate: [validateEmail, 'Please fill a valid email address'],
-      match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
+      validate: [validateEmail, 'Please fill a valid email address']
     },
     isVerified: {
       type: Boolean,
@@ -35,8 +34,7 @@ const schema = new mongoose.Schema(
       type: String,
       trim: true,
       unique: true,
-      validate: [validatePNumber, 'Please fill a valid phone number'],
-      match: [/^(29|33|44|25)\d{7}$/, 'Please fill a valid phone number']
+      validate: [validatePNumber, 'Please fill a valid phone number']
     },
     isBlocked: { type: Boolean, default: false },
     blockReason: { type: String },

@@ -42,8 +42,6 @@ async function logout({ token }) {
 async function register({ username, password, email, phoneNumber }, role) {
   var verificationCode = randtoken.generate(16);
 
-  sendConfirmationMessage(email, username, verificationCode);
-
   const user = new User({
     username,
     password,
@@ -53,7 +51,9 @@ async function register({ username, password, email, phoneNumber }, role) {
     role
   });
 
-  return user.save().then(({ _id }) => User.findById(_id));
+  return user.save().then(() => {
+    email, username, verificationCode;
+  });
 }
 
 async function getClients() {
@@ -88,7 +88,7 @@ async function blockClient(userId, data) {
       $set: { isBlocked: true, blockReason: `${data.blockReason}` }
     },
     (err, user) => {
-      console.log('BLOCKED')
+      console.log("BLOCKED");
       if (err) throw new Error(err);
       sendProfileBlockMessage(user.email, user.username, data.blockReason);
     }

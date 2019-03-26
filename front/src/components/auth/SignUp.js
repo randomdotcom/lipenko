@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import TextField from "@material-ui/core/TextField";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
+import { withSnackbar } from "notistack";
 
 import PhoneMask from "./PhoneMask";
 
@@ -62,13 +63,26 @@ class SignUp extends Component {
     }
 
     if (
-      this.state.phoneNumber.length > 0 &
-      this.state.phoneNumber.length < 13
+      (this.state.phoneNumber.length > 0) &
+      (this.state.phoneNumber.length < 13)
     ) {
       phoneNumberError = "Phone number is incorrect";
     }
 
-    this.setState({ usernameError, passwordError, confirmPasswordError, emailError, phoneNumberError }, afterSetState);
+    this.setState(
+      {
+        usernameError,
+        passwordError,
+        confirmPasswordError,
+        emailError,
+        phoneNumberError
+      },
+      afterSetState
+    );
+  };
+
+  handleMessage = (msg, variant) => {
+    this.props.enqueueSnackbar(msg, { variant });
   };
 
   handleSubmit = () => {
@@ -80,28 +94,30 @@ class SignUp extends Component {
         !this.state.emailError &
         !this.state.phoneNumberError
       ) {
-        // fetch(`http://localhost:3002/api/clients/signin`, {
-        //   method: "POST",
-        //   body: JSON.stringify({
-        //     username: this.state.username,
-        //     password: this.state.password
-        //   }),
-        //   headers: {
-        //     "Content-Type": "application/json"
-        //   }
-        // })
-        //   .then(res => {
-        //     return res.json();
-        //   })
-        //   .then(json => {
-        //     if (json.error) {
-        //       this.handleMessage(json.error, "error");
-        //     } else {
-        //       this.handleMessage("Вход успешный!", "success");
-        //       console.log(json);
-        //     }
-        //   })
-        //   .catch(() => this.handleMessage("Неизвестная ошибка", "error"));
+        fetch(`http://localhost:3002/api/clients/register`, {
+          method: "POST",
+          body: JSON.stringify({
+            username: this.state.username,
+            password: this.state.password,
+            email: this.state.email,
+            phoneNumber: this.state.phoneNumber
+          }),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+          .then(res => {
+            return res.json();
+          })
+          .then(json => {
+            if (json.error) {
+              this.handleMessage(json.error, "error");
+            } else {
+              this.handleMessage("Регистрация успешна, подтвердите электронную почту!", "success");
+              console.log(json);
+            }
+          })
+          .catch(() => this.handleMessage("Неизвестная ошибка", "error"));
       }
     });
   };
@@ -218,4 +234,4 @@ const styles = theme => ({
   }
 });
 
-export default withStyles(styles)(SignUp);
+export default withStyles(styles)(withSnackbar(SignUp));
