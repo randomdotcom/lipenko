@@ -12,11 +12,29 @@ class SignIn extends Component {
 
     this.state = {
       username: "",
-      password: ""
+      usernameError: '',
+      password: "",
+      passwordError: ''
     };
+  }
 
-    //this.handleChange = this.handleChange.bind(this);
-    //this.handleSubmit = this.handleSubmit.bind(this);
+  validate = () => {
+    let usernameError = '';
+    let passwordError = '';
+
+    if (!this.state.username) {
+      usernameError = 'Field is empty'
+    } else if (!this.state.username.indexOf(' ') === -1) {
+      usernameError = `Username can't consist of spaces`
+    }
+
+    if (!this.state.password) {
+      passwordError = 'Field is empty'
+    } else if (this.state.password.length < 6) {
+      passwordError = 'Password length should be 6 symbols or more'
+    }
+
+    this.setState({ usernameError, passwordError });
   }
 
   handleChange = name => event => {
@@ -28,28 +46,34 @@ class SignIn extends Component {
   };
 
   handleSubmit = () => {
-    fetch("http://localhost:3002/api/clients/signin", {
-      method: "POST",
-      body: JSON.stringify({
-        username: this.state.username,
-        password: this.state.password
-      }),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => {
-        console.log(res);
-        return res.json();
-      })
-      .then(json => {
-        if (json.error) {
-          this.handleMessage(json.error, "error");
-        } else {
-          this.handleMessage("Вход успешный!", "success");
+    this.validate();
+
+    if (!this.state.usernameError & !this.state.passwordError) {
+      fetch("http://localhost:3002/api/clients/signin", {
+        method: "POST",
+        body: JSON.stringify({
+          username: this.state.username,
+          password: this.state.password
+        }),
+        headers: {
+          "Content-Type": "application/json"
         }
       })
-      .catch(() => this.handleMessage("Неизвестная ошибка", "error"));
+        .then(res => {
+          console.log('handleSubmit')
+          console.log(res);
+          return res.json();
+        })
+        .then(json => {
+          if (json.error) {
+            this.handleMessage(json.error, "error");
+          } else {
+            this.handleMessage("Вход успешный!", "success");
+            console.log(json);
+          }
+        })
+        .catch(() => this.handleMessage("Неизвестная ошибка", "error"));
+    }
   };
 
   render() {
@@ -60,6 +84,8 @@ class SignIn extends Component {
           label="Username"
           className={classes.textField}
           onChange={this.handleChange("username")}
+          helperText={this.state.usernameError}
+          error={Boolean(this.state.usernameError)}
           margin="normal"
           variant="outlined"
         />
@@ -69,6 +95,8 @@ class SignIn extends Component {
           onChange={this.handleChange("password")}
           margin="normal"
           variant="outlined"
+          helperText={this.state.passwordError}
+          error={Boolean(this.state.passwordError)}
           type="password"
           fullWidth
         />
