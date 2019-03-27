@@ -7,7 +7,7 @@ const validateEmail = function(email) {
 };
 
 const validatePNumber = function(phoneNumber) {
-  const re = /^375(29|33|44|25)\d{7}$/;
+  const re = /^(29|33|44|25)\d{7}$/;
   return re.test(phoneNumber)
 };
 

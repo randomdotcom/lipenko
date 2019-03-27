@@ -62,9 +62,10 @@ class SignUp extends Component {
       emailError = "Email is incorrect";
     }
 
-    if (
-      (this.state.phoneNumber.length > 0) &
-      (this.state.phoneNumber.length < 13)
+    if ((!this.state.phoneNumber)) {
+      phoneNumberError = "Field is required"
+    } else if (
+      (this.state.phoneNumber.length < 9)
     ) {
       phoneNumberError = "Phone number is incorrect";
     }
@@ -124,13 +125,11 @@ class SignUp extends Component {
 
   handleChange = name => event => {
     if (name === "phoneNumber") {
-      const value = event.target.value.replace(/[() ]*/g, "");
+      const value = event.target.value.replace(/(\+375|\s|\(|\))/g, '');
       this.setState({ [name]: value }, () => {
-        console.log(this.state[name]);
       });
     } else {
       this.setState({ [name]: event.target.value }, () => {
-        console.log(this.state[name]);
       });
     }
   };
