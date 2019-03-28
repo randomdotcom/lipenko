@@ -14,11 +14,11 @@ async function authenticate({ username, password }) {
       .select("+password")
       .exec();
     if (user === null) throw "The user is not found";
-    if (user.isBlocked) throw `The user is blocked, reason: ${user.block}`;
-    if (user.isVerified === false) throw `Email confirmation required`;
 
     let success = await user.comparePassword(password);
     if (success === false) throw "The password is incorrect";
+
+    if (user.isBlocked) throw `The user is blocked, reason: ${user.block}`;
 
     const data = user.toObject();
 
@@ -39,8 +39,30 @@ async function logout({ token }) {
   return true;
 }
 
+async function newVerificationCode({username, password}) {
+  var verificationCode = randtoken.generate(6);
+  
+  const user = await User.findOne({ username })
+    .select("+password")
+    .exec();
+  if (user === null) throw "The user is not found";
+
+  let success = await user.comparePassword(password);
+  if (success === false) throw "The password is incorrect";
+
+  if (user.isBlocked) throw `The user is blocked, reason: ${user.block}`;
+
+  await User.findOneAndUpdate({ username }, { $set: { verificationCode } });
+
+  return {
+    email: user.email,
+    username: user.username,
+    verificationCode
+  };
+}
+
 async function register({ username, password, email, phoneNumber }, role) {
-  var verificationCode = randtoken.generate(16);
+  var verificationCode = randtoken.generate(6);
 
   const user = new User({
     username,
@@ -71,6 +93,7 @@ async function confirmEmail(code) {
     }
   );
 
+  if (!user) throw new Error("Verification code is incorrect");
   const data = user.toObject();
 
   const token = createToken(data);
@@ -151,5 +174,6 @@ module.exports = {
   unblockClient,
   editProfile,
   confirmEmail,
-  authSocialNetwork
+  authSocialNetwork,
+  newVerificationCode
 };

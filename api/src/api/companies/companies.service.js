@@ -49,7 +49,7 @@ async function register(
   },
   role
 ) {
-  var verificationCode = randtoken.generate(16);
+  var verificationCode = randtoken.generate(6);
 
   sendConfirmationMessage(email, username, verificationCode);
 

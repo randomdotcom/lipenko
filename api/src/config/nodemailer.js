@@ -12,10 +12,10 @@ const sendConfirmationMessage = (to, username, token) => {
   const mailOptions = {
     from: `TEST API`, // sender address
     to: `${to}`, // list of receivers
-    subject: "TEST API - Подтвердите регистрацию", // Subject line
-    html: `<div style="width: 100%, display: flex, justify-content: center"><h1>Подтвердите аккаунт <b>${username}</b></h1><h2><a href="http://${
+    subject: "TEST API - Код для подтверждения регистрации", // Subject line
+    html: `<div style="width: 100%, display: flex, justify-content: center"><h1>Введите этот код при регистрации <b>${username}</b></h1><h2>
       process.env.HOST
-    }/api/clients/confirm?token=${token}">Подтвердить</a></h2></div>` // plain text body
+    ${token}</h2></div>` // plain text body
   };
 
   transporter.sendMail(mailOptions);

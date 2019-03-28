@@ -9,13 +9,17 @@ const { sendConfirmationMessage } = require("../../config/nodemailer");
 module.exports.signin = (req, res, next) => {
   service
     .authenticate(req.body)
-    .then(user =>
-      user
-        ? res.status(httpStatus.OK).json(user)
-        : res
-            .status(httpStatus.UNAUTHORIZED)
-            .json({ error: "Username or password is incorrect" })
-    )
+    .then(user => {
+      if (user.isVerified === false) {
+        res.status(httpStatus.OK).json({ isVerified: user.isVerified });
+      } else if (user) {
+        res.status(httpStatus.OK).json(user);
+      } else {
+        res
+          .status(httpStatus.UNAUTHORIZED)
+          .json({ error: "Username or password is incorrect" });
+      }
+    })
     .catch(err => {
       res.status(httpStatus.UNAUTHORIZED).json({ error: `${err.message}` });
     });
@@ -34,6 +38,18 @@ module.exports.signout = (req, res, next) => {
 module.exports.register = (req, res, next) => {
   service
     .register(req.body, Role.User)
+    .then(({ email, username, verificationCode }) => {
+      return sendConfirmationMessage(email, username, verificationCode);
+    })
+    .then(() => {
+      res.status(httpStatus.CREATED).json("Created");
+    })
+    .catch(err => res.json({ error: `${err.message}` }));
+};
+
+module.exports.newVerificationCode = (req, res, next) => {
+  service
+    .newVerificationCode(req.body)
     .then(({ email, username, verificationCode }) => {
       return sendConfirmationMessage(email, username, verificationCode);
     })

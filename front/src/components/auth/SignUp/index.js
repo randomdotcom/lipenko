@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-
+import PhoneMask from "./PhoneMask";
+import VerificationCodeField from "../VerificationCodeField";
 import TextField from "@material-ui/core/TextField";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { withSnackbar } from "notistack";
-
-import PhoneMask from "./PhoneMask";
+import { fetchConfirmUser, fetchRegisterUser } from "../../../fetches/auth/";
 
 class SignUp extends Component {
   constructor(props) {
@@ -22,7 +22,9 @@ class SignUp extends Component {
       email: "",
       emailError: "",
       phoneNumber: "",
-      phoneNumberError: ""
+      phoneNumberError: "",
+      verificationCode: "",
+      isSended: false
     };
   }
 
@@ -61,11 +63,9 @@ class SignUp extends Component {
       emailError = "Email is incorrect";
     }
 
-    if ((!this.state.phoneNumber)) {
-      phoneNumberError = "Field is required"
-    } else if (
-      (this.state.phoneNumber.length < 9)
-    ) {
+    if (!this.state.phoneNumber) {
+      phoneNumberError = "Field is required";
+    } else if (this.state.phoneNumber.length < 9) {
       phoneNumberError = "Phone number is incorrect";
     }
 
@@ -86,51 +86,42 @@ class SignUp extends Component {
   };
 
   handleSubmit = () => {
-    this.validate(() => {
-      if (
-        !this.state.usernameError &
-        !this.state.passwordError &
-        !this.state.confirmPasswordError &
-        !this.state.emailError &
-        !this.state.phoneNumberError
-      ) {
-        fetch(`http://localhost:3002/api/clients/register`, {
-          method: "POST",
-          body: JSON.stringify({
+    if (!this.state.isSended) {
+      this.validate(() => {
+        if (
+          !this.state.usernameError &
+          !this.state.passwordError &
+          !this.state.confirmPasswordError &
+          !this.state.emailError &
+          !this.state.phoneNumberError
+        ) {
+          fetchRegisterUser.call(this, {
             username: this.state.username,
             password: this.state.password,
             email: this.state.email,
             phoneNumber: this.state.phoneNumber
-          }),
-          headers: {
-            "Content-Type": "application/json"
-          }
-        })
-          .then(res => {
-            return res.json();
-          })
-          .then(json => {
-            if (json.error) {
-              this.handleMessage(json.error, "error");
-            } else {
-              this.handleMessage("Регистрация успешна, подтвердите электронную почту!", "success");
-              console.log(json);
-            }
-          })
-          .catch(() => this.handleMessage("Неизвестная ошибка", "error"));
-      }
-    });
+          });
+        }
+      });
+    } else {
+      fetchConfirmUser.call(this, this.state.verificationCode);
+    }
   };
 
   handleChange = name => event => {
+    console.log("вызов");
     if (name === "phoneNumber") {
-      const value = event.target.value.replace(/(\+375|\s|\(|\))/g, '');
-      this.setState({ [name]: value }, () => {
-      });
+      const value = event.target.value.replace(/(\+375|\s|\(|\))/g, "");
+      this.setState({ [name]: value });
     } else {
-      this.setState({ [name]: event.target.value }, () => {
-      });
+      this.setState({ [name]: event.target.value });
     }
+  };
+
+  handleVerificationCodeChange = verificationCode => {
+    this.setState({ verificationCode }, () =>
+      console.log(this.state.verificationCode)
+    );
   };
 
   render() {
@@ -144,6 +135,7 @@ class SignUp extends Component {
           autoComplete="username"
           helperText={this.state.usernameError}
           error={Boolean(this.state.usernameError)}
+          disabled={this.state.isSended}
           className={classes.textField}
           onChange={this.handleChange("username")}
           margin="normal"
@@ -154,6 +146,7 @@ class SignUp extends Component {
           autoComplete="new-password"
           helperText={this.state.passwordError}
           error={Boolean(this.state.passwordError)}
+          disabled={this.state.isSended}
           className={classes.textField}
           onChange={this.handleChange("password")}
           margin="normal"
@@ -165,6 +158,7 @@ class SignUp extends Component {
           autoComplete="new-password"
           helperText={this.state.confirmPasswordError}
           error={Boolean(this.state.confirmPasswordError)}
+          disabled={this.state.isSended}
           className={classes.textField}
           onChange={this.handleChange("confirmPassword")}
           margin="normal"
@@ -176,6 +170,7 @@ class SignUp extends Component {
           autoComplete="email"
           helperText={this.state.emailError}
           error={Boolean(this.state.emailError)}
+          disabled={this.state.isSended}
           className={classes.textField}
           onChange={this.handleChange("email")}
           margin="normal"
@@ -187,6 +182,7 @@ class SignUp extends Component {
           autoComplete="tel"
           helperText={this.state.phoneNumberError}
           error={Boolean(this.state.phoneNumberError)}
+          disabled={this.state.isSended}
           value={textmask}
           onChange={this.handleChange("phoneNumber")}
           className={classes.textField}
@@ -196,15 +192,23 @@ class SignUp extends Component {
             inputComponent: PhoneMask
           }}
         />
-        <Button
-          onClick={this.handleSubmit}
-          variant="contained"
-          color="primary"
-          size="large"
-          className={classes.button}
-        >
-          SIGN UP
-        </Button>
+        <div className={classes.VerifyAndConfirmContainer}>
+          {this.state.isSended && (
+            <VerificationCodeField
+              verificationCode={this.state.verificationCode}
+              handleChange={this.handleVerificationCodeChange}
+            />
+          )}
+          <Button
+            onClick={this.handleSubmit}
+            variant="contained"
+            color="primary"
+            size="large"
+            className={classes.button}
+          >
+            SIGN UP
+          </Button>
+        </div>
       </form>
     );
   }
@@ -225,10 +229,26 @@ const styles = theme => ({
   button: {
     margin: theme.spacing.unit
   },
+  margin: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 150
+  },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: 200
+    width: 250
+  },
+  verificationField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 150
+  },
+  VerifyAndConfirmContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center"
   }
 });
 
