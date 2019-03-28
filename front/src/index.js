@@ -6,7 +6,6 @@ import { Provider } from "react-redux";
 import { createStore } from "redux";
 import combinedReducers from "./reducers";
 import createHistory from "history/createBrowserHistory";
-import { syncHistoryWithStore } from "react-router-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 
 const store = createStore(
@@ -14,8 +13,7 @@ const store = createStore(
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 
-const history = syncHistoryWithStore(createHistory(), store);
-
+const history = createHistory()
 
 ReactDOM.render(
   <Provider store={store}>

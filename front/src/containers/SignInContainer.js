@@ -1,7 +1,6 @@
 import { connect } from "react-redux";
 import SignIn from "../components/auth/SignIn";
 import { signIn } from "../actions/userActions";
-import { withRouter } from 'react-router-dom'
 
 const mapStateToProps = state => ({
   user: state.user
@@ -13,11 +12,10 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const SignInContainer = withRouter(
+const SignInContainer =
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(SignIn)
-);
+  )(SignIn);
 
 export default SignInContainer;
