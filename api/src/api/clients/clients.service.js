@@ -51,9 +51,11 @@ async function register({ username, password, email, phoneNumber }, role) {
     role
   });
 
-  return user.save().then(() => {
-    email, username, verificationCode;
-  });
+  return user.save().then(() => ({
+    email,
+    username,
+    verificationCode
+  }));
 }
 
 async function getClients() {

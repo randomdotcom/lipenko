@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
+const mongoosePaginate = require('mongoose-paginate');
 
-const schema = new mongoose.Schema(
+var schema = new mongoose.Schema(
   {
     customer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     executor: { type: mongoose.Schema.Types.ObjectId, ref: 'Executor', required: true },
@@ -15,6 +16,9 @@ const schema = new mongoose.Schema(
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" }
   }
 );
+
+schema.plugin(mongoosePaginate);
+export const Orders = mongoose.model('Orders',  schema);
 
 schema.post("save", function(error, doc, next) {
   if (error.name === "MongoError" && error.code === 11000) {

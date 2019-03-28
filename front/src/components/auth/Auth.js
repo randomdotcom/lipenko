@@ -8,7 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import { SnackbarProvider } from "notistack";
 
 import SignUpContainer from "../../containers/SignUpContainer";
-import SignIn from "./SignIn";
+import SignInContainer from "../../containers/SignInContainer";
 
 function TabContainer(props) {
   return (
@@ -54,7 +54,7 @@ class Auth extends Component {
         {value === 0 && (
           <TabContainer>
             <SnackbarProvider maxSnack={3}>
-              <SignIn />
+              <SignInContainer />
             </SnackbarProvider>
           </TabContainer>
         )}

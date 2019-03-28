@@ -1,13 +1,12 @@
 import {
-    CREATE_USER
+    SIGN_IN
 } from '../actions/userActions'
 
 export default function userReducer(state = {}, action) {
     switch (action.type) {
-        case CREATE_USER:
+        case SIGN_IN:
             return Object.assign({}, state, {
                 username: action.username,
-                password: action.password,
                 email: action.email,
                 phoneNumber: action.phoneNumber
             })

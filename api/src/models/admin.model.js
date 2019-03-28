@@ -1,12 +1,13 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const mongoosePaginate = require('mongoose-paginate');
 
 const validateEmail = function(email) {
   const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   return re.test(email)
 };
 
-const schema = new mongoose.Schema(
+var schema = new mongoose.Schema(
   {
     username: { type: String, required: true, unique: true, lowercase: true },
     password: { type: String, required: true, select: false },
@@ -25,6 +26,9 @@ const schema = new mongoose.Schema(
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" }
   }
 );
+
+schema.plugin(mongoosePaginate);
+export const Admins = mongoose.model('Admins',  schema);
 
 schema.pre("save", function(next) {
   bcrypt.hash(this.password, 10, (err, hash) => {

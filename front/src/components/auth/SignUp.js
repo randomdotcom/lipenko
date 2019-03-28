@@ -52,7 +52,6 @@ class SignUp extends Component {
     } else if (this.state.password !== this.state.confirmPassword) {
       confirmPasswordError = "Passwords do not match";
     }
-
     if (!this.state.email) {
       emailError = "Field is required";
     } else if (

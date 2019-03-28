@@ -1,5 +1,8 @@
-export const CREATE_USER = 'CREATE_USER';
+export const SIGN_IN = "SIGN_IN";
 
-export const createUser = (username, password, email, phoneNumber) => {
-    return {  type: CREATE_USER, username, password, email, phoneNumber }
-}
+export const signIn = (user) => ({
+  type: SIGN_IN,
+  username: user.username,
+  email: user.email,
+  phoneNumber: user.phoneNumber
+});

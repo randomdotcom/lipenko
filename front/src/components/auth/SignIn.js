@@ -6,6 +6,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { withSnackbar } from "notistack";
 
+
 class SignIn extends Component {
   constructor(props) {
     super(props);
@@ -18,7 +19,7 @@ class SignIn extends Component {
     };
   }
 
-  validate = (afterSetState) => {
+  validate = afterSetState => {
     let usernameError = "";
     let passwordError = "";
 
@@ -27,7 +28,7 @@ class SignIn extends Component {
     } else if (this.state.username.indexOf(" ") !== -1) {
       usernameError = "The username cannot contain spaces";
     } else if (this.state.username.length < 4) {
-      usernameError = "Username length should be 4 symbols or more"
+      usernameError = "Username length should be 4 symbols or more";
     }
 
     if (!this.state.password) {
@@ -68,10 +69,20 @@ class SignIn extends Component {
               this.handleMessage(json.error, "error");
             } else {
               this.handleMessage("Вход успешный!", "success");
-              console.log(json);
+              localStorage.setItem("token", json.token);
+
+              return {
+                username: json.username,
+                email: json.email,
+                phoneNumber: json.phoneNumber,
+                role: json.role
+              };
             }
           })
-          .catch(() => this.handleMessage("Неизвестная ошибка", "error"));
+          .then(user => {
+            this.props.signIn(user);
+          })
+          .catch(err => this.handleMessage(err, "error"));
       }
     });
   };
@@ -109,7 +120,7 @@ class SignIn extends Component {
           size="large"
           className={classes.button}
         >
-        SIGN IN
+          SIGN IN
         </Button>
       </form>
     );

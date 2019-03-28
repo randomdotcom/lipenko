@@ -1,20 +1,11 @@
-import { connect } from 'react-redux'
-import { createUser } from '../actions/userActions'
-import SignUp from '../components/auth/SignUp'
+import { connect } from "react-redux";
+import SignUp from "../components/auth/SignUp";
+import { withRouter } from "react-router-dom";
 
 const mapStateToProps = state => ({
-    ...state
+  ...state
 });
 
-const mapDispatchToProps = dispatch => ({
-    createUser: user => dispatch(createUser(user))
-});
+const SignUpContainer = withRouter(connect(mapStateToProps)(SignUp));
 
-const SignUpContainer = connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(SignUp)
-
-export default SignUpContainer
-
-
+export default SignUpContainer;
