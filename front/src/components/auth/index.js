@@ -12,7 +12,7 @@ import SignInContainer from "../../containers/SignInContainer";
 
 function TabContainer(props) {
   return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
+    <Typography component="div" style={{ padding: 24, paddingTop: 4 }}>
       {props.children}
     </Typography>
   );

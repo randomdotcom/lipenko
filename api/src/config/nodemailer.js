@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-const sendConfirmationMessage = (to, username, token) => {
+const sendUserConfirmationMessage = (to, username, token) => {
   const mailOptions = {
     from: `TEST API`, // sender address
     to: `${to}`, // list of receivers
@@ -18,6 +18,22 @@ const sendConfirmationMessage = (to, username, token) => {
       <p>${username}, ваш код для регистрации:</p>
       <div style="display: flex;">
         <p style="background-color: #1f1f1f; border-radius: 15px; color: #f2f2f2; padding: 5px; padding-left: 8px; padding-right: 8px;">${token}</p>
+      </div>
+    </div>` // plain text body
+  };
+
+  transporter.sendMail(mailOptions);
+};
+const sendExecutorConfirmationMessage = (to, username, token) => {
+  const mailOptions = {
+    from: `TEST API`, // sender address
+    to: `${to}`, // list of receivers
+    subject: "TEST API - Код для подтверждения регистрации", // Subject line
+    html: `
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 30pt; font-family: 'Roboto', sans-serif;">
+      <p>${username}, ваш код для регистрации:</p>
+      <div style="display: flex;">
+        <a href="http://localhost:3000/auth/confirm?token=${token}">http://localhost:3000/auth/confirm?token=${token}</p>
       </div>
     </div>` // plain text body
   };
@@ -70,7 +86,8 @@ const sendOrderStatusMessage = (to, orderId, status) => {
 };
 
 module.exports = {
-  sendConfirmationMessage,
+  sendUserConfirmationMessage,
+  sendExecutorConfirmationMessage,
   sendProfileBlockMessage,
   sendProfileUnblockMessage,
   sendOrderStatusMessage

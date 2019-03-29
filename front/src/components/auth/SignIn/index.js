@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-
 import TextField from "@material-ui/core/TextField";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -8,11 +7,12 @@ import { withSnackbar } from "notistack";
 import VerificationCodeField from "../VerificationCodeField";
 import {
   fetchConfirmUser,
-  fetchNewVerificationCode
+  fetchNewVerificationCodeForUser,
+  fetchNewVerificationCodeForExecutor
 } from "../../../fetches/auth/";
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 class SignIn extends Component {
   constructor(props) {
@@ -26,7 +26,7 @@ class SignIn extends Component {
       isVerified: true,
       isSended: false,
       verificationCode: "",
-      selectedValue: 'user'
+      selectedForm: "user"
     };
   }
 
@@ -62,8 +62,51 @@ class SignIn extends Component {
   handleSubmit = () => {
     if (!this.state.isSended) {
       this.validate(() => {
-        if (!this.state.usernameError & !this.state.passwordError) {
-          fetch(`http://localhost:3002/api/clients/signin`, {
+        if (this.state.selectedForm === "user") {
+          if (!this.state.usernameError & !this.state.passwordError) {
+            fetch(`http://localhost:3002/api/clients/signin`, {
+              method: "POST",
+              body: JSON.stringify({
+                username: this.state.username,
+                password: this.state.password
+              }),
+              headers: {
+                "Content-Type": "application/json"
+              }
+            })
+              .then(res => {
+                return res.json();
+              })
+              .then(json => {
+                if (json.error) {
+                  throw json.error;
+                } else if (json.isVerified === false) {
+                  this.setState({ isVerified: false, isSended: true });
+                  fetchNewVerificationCodeForUser.call(this, {
+                    username: this.state.username,
+                    password: this.state.password
+                  });
+                  throw "Вы забыли подтвердить аккаунт, мы выслали вам ещё один код на почту!";
+                } else {
+                  localStorage.setItem("token", json.token);
+
+                  return {
+                    username: json.username,
+                    email: json.email,
+                    phoneNumber: json.phoneNumber,
+                    role: json.role
+                  };
+                }
+              })
+              .then(user => {
+                this.props.signIn(user);
+                this.handleMessage("Вход успешный!", "success");
+                console.log(user);
+              })
+              .catch(err => this.handleMessage(err, "error"));
+          }
+        } else if (this.state.selectedForm === "executor") {
+          fetch(`http://localhost:3002/api/companies/signin`, {
             method: "POST",
             body: JSON.stringify({
               username: this.state.username,
@@ -81,11 +124,11 @@ class SignIn extends Component {
                 throw json.error;
               } else if (json.isVerified === false) {
                 this.setState({ isVerified: false, isSended: true });
-                fetchNewVerificationCode.call(this, {
+                fetchNewVerificationCodeForExecutor.call(this, {
                   username: this.state.username,
                   password: this.state.password
                 });
-                throw "Вы забыли подтвердить аккаунт, мы выслали вам ещё один код на почту!";
+                throw "Вы забыли подтвердить аккаунт, мы выслали вам ещё одно сообщение на почту!";
               } else {
                 localStorage.setItem("token", json.token);
 
@@ -103,6 +146,8 @@ class SignIn extends Component {
               console.log(user);
             })
             .catch(err => this.handleMessage(err, "error"));
+        } else {
+          this.handleMessage('Не выбран ни один radiobutton??', "error");
         }
       });
     } else {
@@ -117,7 +162,7 @@ class SignIn extends Component {
   };
 
   handleChangeRadioButton = event => {
-    this.setState({ selectedValue: event.target.value });
+    this.setState({ selectedForm: event.target.value });
   };
 
   render() {
@@ -129,11 +174,21 @@ class SignIn extends Component {
           aria-label="Gender"
           name="gender1"
           className={classes.group}
-          value={this.state.selectedValue}
+          value={this.state.selectedForm}
           onChange={this.handleChangeRadioButton}
         >
-          <FormControlLabel value="user" control={<Radio />} labelPlacement="end" label="User" />
-          <FormControlLabel value="executor" control={<Radio />} labelPlacement="end" label="Executor" />
+          <FormControlLabel
+            value="user"
+            control={<Radio />}
+            labelPlacement="end"
+            label="User"
+          />
+          <FormControlLabel
+            value="executor"
+            control={<Radio />}
+            labelPlacement="end"
+            label="Executor"
+          />
         </RadioGroup>
         <TextField
           label="Username"

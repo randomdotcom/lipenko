@@ -1,7 +1,7 @@
-const { createToken } = require("../../config/passport")
+const { createToken } = require("../../config/passport");
 const Executor = require("../../models/executor.model");
 
-const { sendConfirmationMessage } = require("../../config/nodemailer");
+const { sendExecutorConfirmationMessage } = require("../../config/nodemailer");
 
 var randtoken = require("rand-token");
 
@@ -11,7 +11,8 @@ async function authenticate({ username, password }) {
       .select("+password")
       .exec();
     if (executor === null) throw "The user is not found";
-    if (executor.isBlocked) throw `The user is blocked, reason: ${executor.block}`;
+    if (executor.isBlocked)
+      throw `The user is blocked, reason: ${executor.block}`;
     if (executor.isVerified === false) throw `Email confirmation required`;
 
     let success = await executor.comparePassword(password);
@@ -51,7 +52,7 @@ async function register(
 ) {
   var verificationCode = randtoken.generate(6);
 
-  sendConfirmationMessage(email, username, verificationCode);
+  sendExecutorConfirmationMessage(email, username, verificationCode);
 
   const executor = new Executor({
     username,
@@ -86,6 +87,30 @@ async function confirmEmail(code) {
   return {
     ...userWithoutPassword,
     token
+  };
+}
+
+async function newVerificationCode({ username, password }) {
+  var verificationCode = randtoken.generate(6);
+
+  const user = await Executor.findOne({ username })
+    .select("+password")
+    .exec();
+  if (user === null) throw "The user is not found";
+
+  let success = await user.comparePassword(password);
+  if (success === false) throw "The password is incorrect";
+
+  if (user.isBlocked) throw `The user is blocked, reason: ${user.block}`;
+
+  await Executor.findOneAndUpdate({ username }, { $set: { verificationCode } });
+
+  sendExecutorConfirmationMessage(email, username, verificationCode);
+
+  return {
+    email: user.email,
+    username: user.username,
+    verificationCode
   };
 }
 
@@ -175,5 +200,6 @@ module.exports = {
   rateCompany,
   editProfile,
   getCompanyById,
-  confirmEmail
+  confirmEmail,
+  newVerificationCode
 };
