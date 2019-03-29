@@ -10,6 +10,9 @@ import {
   fetchConfirmUser,
   fetchNewVerificationCode
 } from "../../../fetches/auth/";
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 class SignIn extends Component {
   constructor(props) {
@@ -22,7 +25,8 @@ class SignIn extends Component {
       passwordError: "",
       isVerified: true,
       isSended: false,
-      verificationCode: ""
+      verificationCode: "",
+      selectedValue: 'user'
     };
   }
 
@@ -112,10 +116,25 @@ class SignIn extends Component {
     );
   };
 
+  handleChangeRadioButton = event => {
+    this.setState({ selectedValue: event.target.value });
+  };
+
   render() {
     const { classes } = this.props;
     return (
       <form className={classes.container} noValidate autoComplete="off">
+        <RadioGroup
+          row
+          aria-label="Gender"
+          name="gender1"
+          className={classes.group}
+          value={this.state.selectedValue}
+          onChange={this.handleChangeRadioButton}
+        >
+          <FormControlLabel value="user" control={<Radio />} labelPlacement="end" label="User" />
+          <FormControlLabel value="executor" control={<Radio />} labelPlacement="end" label="Executor" />
+        </RadioGroup>
         <TextField
           label="Username"
           autoComplete="username"
@@ -178,6 +197,9 @@ const styles = theme => ({
     flexDirection: "column",
     alignItems: "center",
     flexWrap: "wrap"
+  },
+  group: {
+    display: "flex"
   },
   button: {
     margin: theme.spacing.unit

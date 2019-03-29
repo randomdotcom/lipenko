@@ -6,7 +6,9 @@ const {
   sendProfileUnblockMessage
 } = require("../../config/nodemailer");
 
-const randtoken = require("rand-token");
+const randtoken = require("rand-token").generator({
+  chars: '0-9'
+});
 
 async function authenticate({ username, password }) {
   try {
