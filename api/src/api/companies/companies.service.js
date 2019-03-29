@@ -11,12 +11,13 @@ async function authenticate({ username, password }) {
       .select("+password")
       .exec();
     if (executor === null) throw "The user is not found";
-    if (executor.isBlocked)
-      throw `The user is blocked, reason: ${executor.block}`;
-    if (executor.isVerified === false) throw `Email confirmation required`;
 
     let success = await executor.comparePassword(password);
     if (success === false) throw "The password is incorrect";
+
+    if (executor.isBlocked)
+      throw `The user is blocked, reason: ${executor.block}`;
+    if (executor.isVerified === false) throw `Email confirmation required`;
 
     const data = executor.toObject();
 
@@ -52,9 +53,7 @@ async function register(
 ) {
   var verificationCode = randtoken.generate(6);
 
-  sendExecutorConfirmationMessage(email, username, verificationCode);
-
-  const executor = new Executor({
+  const user = new Executor({
     username,
     companyName,
     description,
@@ -66,7 +65,14 @@ async function register(
     phoneNumber,
     role
   });
-  return executor.save().then(({ _id }) => Executor.findById(_id));
+
+  return new Promise((resolve, reject) => {
+    user.save(err => {
+      if (err) reject(err);
+
+      resolve({ email, username, verificationCode });
+    });
+  });
 }
 
 async function confirmEmail(code) {
@@ -92,16 +98,17 @@ async function confirmEmail(code) {
 
 async function newVerificationCode({ username, password }) {
   var verificationCode = randtoken.generate(6);
-
+  console.log(username + " " + password);
   const user = await Executor.findOne({ username })
     .select("+password")
     .exec();
-  if (user === null) throw "The user is not found";
+  if (user === null) throw new Error("The user is not found");
 
   let success = await user.comparePassword(password);
-  if (success === false) throw "The password is incorrect";
+  if (success === false) throw new Error("The password is incorrect");
 
-  if (user.isBlocked) throw `The user is blocked, reason: ${user.block}`;
+  if (user.isBlocked)
+    throw new Error(`The user is blocked, reason: ${user.block}`);
 
   await Executor.findOneAndUpdate({ username }, { $set: { verificationCode } });
 

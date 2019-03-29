@@ -7,7 +7,7 @@ const {
 } = require("../../config/nodemailer");
 
 const randtoken = require("rand-token").generator({
-  chars: '0-9'
+  chars: "0-9"
 });
 
 async function authenticate({ username, password }) {
@@ -21,6 +21,7 @@ async function authenticate({ username, password }) {
     if (success === false) throw "The password is incorrect";
 
     if (user.isBlocked) throw `The user is blocked, reason: ${user.block}`;
+    if (executor.isVerified === false) throw `Email confirmation required`;
 
     const data = user.toObject();
 
@@ -41,9 +42,9 @@ async function logout({ token }) {
   return true;
 }
 
-async function newVerificationCode({username, password}) {
+async function newVerificationCode({ username, password }) {
   var verificationCode = randtoken.generate(6);
-  
+
   const user = await User.findOne({ username })
     .select("+password")
     .exec();
@@ -75,11 +76,13 @@ async function register({ username, password, email, phoneNumber }, role) {
     role
   });
 
-  return user.save().then(() => ({
-    email,
-    username,
-    verificationCode
-  }));
+  return new Promise((resolve, reject) => {
+    user.save(err => {
+      if (err) reject(err);
+
+      resolve({ email, username, verificationCode });
+    });
+  });
 }
 
 async function getClients() {

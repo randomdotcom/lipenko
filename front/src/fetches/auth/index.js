@@ -89,5 +89,5 @@ export function fetchRegisterUser({username, password, email, phoneNumber}) {
         this.setState({ isSended: true });
       }
     })
-    .catch(() => this.handleMessage("Неизвестная ошибка", "error"));
+    .catch(err => this.handleMessage(err, "error"));
 }

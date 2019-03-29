@@ -4,7 +4,7 @@ const httpStatus = require("http-status");
 const service = require(`./${entity}.service`);
 const Role = require("../../enums/roles.enum");
 
-const { sendConfirmationMessage } = require("../../config/nodemailer");
+const { sendUserConfirmationMessage } = require("../../config/nodemailer");
 
 module.exports.signin = (req, res, next) => {
   service
@@ -39,7 +39,7 @@ module.exports.register = (req, res, next) => {
   service
     .register(req.body, Role.User)
     .then(({ email, username, verificationCode }) => {
-      return sendConfirmationMessage(email, username, verificationCode);
+      return sendUserConfirmationMessage(email, username, verificationCode);
     })
     .then(() => {
       res.status(httpStatus.CREATED).json("Created");
@@ -51,7 +51,7 @@ module.exports.newVerificationCode = (req, res, next) => {
   service
     .newVerificationCode(req.body)
     .then(({ email, username, verificationCode }) => {
-      return sendConfirmationMessage(email, username, verificationCode);
+      return sendUserConfirmationMessage(email, username, verificationCode);
     })
     .then(() => {
       res.status(httpStatus.CREATED).json("Created");

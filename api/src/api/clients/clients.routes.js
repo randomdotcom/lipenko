@@ -17,11 +17,11 @@ router.put("/newVerificationCode", controller.newVerificationCode)
 router.get("/google", authenticateGoogle());
 router.get("/google/callback", authenticateGoogle(), controller.authSocialNetwork);
 
-router.get("/github", authenticateGitHub());
-router.get("/github/callback", authenticateGitHub(), controller.authSocialNetwork);
+// router.get("/github", authenticateGitHub());
+// router.get("/github/callback", authenticateGitHub(), controller.authSocialNetwork);
 
-router.get("/vk", authenticateVKontakte());
-router.get("/vk/callback", authenticateVKontakte(), controller.authSocialNetwork);
+// router.get("/vk", authenticateVKontakte());
+// router.get("/vk/callback", authenticateVKontakte(), controller.authSocialNetwork);
 
 router.put('/edit', permit(Role.User), controller.edit);
 

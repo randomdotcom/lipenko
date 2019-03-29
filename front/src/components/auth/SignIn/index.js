@@ -38,14 +38,14 @@ class SignIn extends Component {
       usernameError = "Field is required";
     } else if (this.state.username.indexOf(" ") !== -1) {
       usernameError = "The username cannot contain spaces";
-    } else if (this.state.username.length < 4) {
-      usernameError = "Username length should be 4 symbols or more";
+    } else if (this.state.username.length < 2 || this.state.username.length > 9) {
+      usernameError = "Username must be longer than 2 characters but less than 9";
     }
 
     if (!this.state.password) {
       passwordError = "Field is required";
-    } else if (this.state.password.length < 5) {
-      passwordError = "Password length should be 5 symbols or more";
+    } else if (this.state.password.length < 5 || this.state.password.length > 18) {
+      passwordError = "Password must be longer than 5 characters but less than 18";
     }
 
     this.setState({ usernameError, passwordError }, afterSetState);
@@ -120,6 +120,7 @@ class SignIn extends Component {
               return res.json();
             })
             .then(json => {
+              console.log(json)
               if (json.error) {
                 throw json.error;
               } else if (json.isVerified === false) {

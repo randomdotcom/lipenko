@@ -1,26 +1,106 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const mongoosePaginate = require('mongoose-paginate');
+const mongoosePaginate = require("mongoose-paginate");
 
 const validateEmail = function(email) {
   const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  return re.test(email)
+  return re.test(email);
 };
 
 const validatePNumber = function(phoneNumber) {
   const re = /^(29|33|44|25)\d{7}$/;
-  return re.test(phoneNumber)
+  return re.test(phoneNumber);
+};
+
+const validateUsername = function(username) {
+  const re = /^[a-zA-Z][a-zA-Z0-9-_\.]{1,9}$/;
+  return re.test(username);
+};
+
+const validatePassword = function(password) {
+  const re = /^[\S]{5,18}$/;
+  return re.test(password);
+};
+
+const validateCompanyName = function(companyName) {
+  const re = /^[.]{3,16}$/;
+  return re.test(companyName);
+};
+
+const validateCity = function(city) {
+  const re = /^[A-Za-z-]{3,16}$/;
+  return re.test(companyName);
 };
 
 var schema = new mongoose.Schema(
   {
-    username: { type: String, required: true, unique: true, lowercase: true },
-    password: { type: String, required: true, select: false },
-    companyName: { type: String, required: true, unique: true },
-    description: { type: String, required: true },
-    adress: { type: String, required: true },
-    typesOfCleaning: { type: Object, required: true },
-    ratingList: { type: Object, required: false, default: {}},
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      validate: [
+        validateUsername,
+        "The username can contain letters, numbers, -, ., _ and must be between 2 and 9 characters"
+      ]
+    },
+    password: {
+      type: String,
+      required: true,
+      select: false,
+      validate: [
+        validatePassword,
+        "The password cannot contain spaces and must be between 5 and 18 characters"
+      ]
+    },
+    companyName: {
+      type: String,
+      required: true,
+      unique: true,
+      validate: [
+        validateCompanyName,
+        "The company name must be between 5 and 16 characters"
+      ]
+    },
+    description: { type: String },
+    city: {
+      type: String,
+      required: true,
+      validate: [
+        validateCity,
+        "The city can contain only letters, -, numbers and must be between 3 and 12 characters"
+      ]
+    },
+    typesOfCleaning: {
+      standart: {
+        isAvaible: { type: Boolean, required: true },
+        toilet: { type: Number },
+        bigRoom: { type: Number },
+        smallRoom: { type: Number }
+      },
+      general: {
+        isAvaible: { type: Boolean, required: true },
+        toilet: { type: Number },
+        bigRoom: { type: Number },
+        smallRoom: { type: Number }
+      },
+      afterRepair: {
+        isAvaible: { type: Boolean, required: true },
+        toilet: { type: Number },
+        bigRoom: { type: Number },
+        smallRoom: { type: Number }
+      },
+      carpet: {
+        isAvaible: { type: Boolean, required: true },
+        bigCarpet: { type: Number },
+        smallCarpet: { type: Number }
+      },
+      office: { type: Number },
+      furniture: { type: Number },
+      industrial: { type: Number },
+      pool: { type: Number }
+    },
+    ratingList: { type: Object, required: false, default: {} },
     rating: { type: Number, required: false, default: 0 },
     email: {
       type: String,
@@ -28,8 +108,7 @@ var schema = new mongoose.Schema(
       lowercase: true,
       unique: true,
       required: true,
-      validate: [validateEmail, 'Please fill a valid email address'],
-      match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
+      validate: [validateEmail, "Please fill a valid email address"]
     },
     isVerified: {
       type: Boolean,
@@ -43,8 +122,7 @@ var schema = new mongoose.Schema(
       trim: true,
       unique: true,
       required: true,
-      validate: [validatePNumber, 'Please fill a valid phone number'],
-      match: [/^(29|33|44|25)\d{7}$/, 'Please fill a valid phone number']
+      validate: [validatePNumber, "Please fill a valid BY phone number"]
     },
     isBlocked: { type: Boolean, default: false },
     blockReason: { type: String },
@@ -56,7 +134,7 @@ var schema = new mongoose.Schema(
 );
 
 schema.plugin(mongoosePaginate);
-export const Executors = mongoose.model('Executors',  schema);
+export const Executors = mongoose.model("Executors", schema);
 
 schema.pre("save", function(next) {
   bcrypt.hash(this.password, 10, (err, hash) => {
