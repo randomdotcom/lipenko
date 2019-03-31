@@ -8,7 +8,7 @@ const validateEmail = function(email) {
 };
 
 const validatePNumber = function(phoneNumber) {
-  const re = /^(29|33|44|25)\d{7}$/;
+  const re = /^\+375(29|33|44|25)\d{7}$/;
   return re.test(phoneNumber);
 };
 
@@ -18,7 +18,7 @@ const validateUsername = function(username) {
 };
 
 const validatePassword = function(password) {
-  const re = /^[a-zA-Z0-9]{5,18}$/;
+  const re = /^[\S]{5,18}$/;
   return re.test(password);
 };
 

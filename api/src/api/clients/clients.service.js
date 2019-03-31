@@ -21,7 +21,7 @@ async function authenticate({ username, password }) {
     if (success === false) throw "The password is incorrect";
 
     if (user.isBlocked) throw `The user is blocked, reason: ${user.block}`;
-    if (executor.isVerified === false) throw `Email confirmation required`;
+    
 
     const data = user.toObject();
 

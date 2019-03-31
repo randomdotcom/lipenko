@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Auth from "./auth";
 import { Route, Switch, Link} from "react-router-dom";
-//import { Link } from "@material-ui/core";
 import Admin from './admin'
 
 class App extends Component {

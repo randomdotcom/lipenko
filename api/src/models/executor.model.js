@@ -8,7 +8,7 @@ const validateEmail = function(email) {
 };
 
 const validatePNumber = function(phoneNumber) {
-  const re = /^(29|33|44|25)\d{7}$/;
+  const re = /\+375(29|33|44|25)\d{7}$/;
   return re.test(phoneNumber);
 };
 
@@ -27,8 +27,13 @@ const validateCompanyName = function(companyName) {
   return re.test(companyName);
 };
 
+const validateDescription = function(description) {
+  const re = /^[.]{0,80}$/;
+  return re.test(description);
+};
+
 const validateCity = function(city) {
-  const re = /^[A-Za-z-]{3,16}$/;
+  const re = /^[A-Za-z-]{3,14}$/;
   return re.test(companyName);
 };
 
@@ -62,7 +67,13 @@ var schema = new mongoose.Schema(
         "The company name must be between 5 and 16 characters"
       ]
     },
-    description: { type: String },
+    description: {
+      type: String,
+      validate: [
+        validateDescription,
+        "Company description msut contain less then 80 characters"
+      ]
+    },
     city: {
       type: String,
       required: true,
@@ -74,31 +85,31 @@ var schema = new mongoose.Schema(
     typesOfCleaning: {
       standart: {
         isAvaible: { type: Boolean, required: true },
-        toilet: { type: Number },
-        bigRoom: { type: Number },
-        smallRoom: { type: Number }
+        toilet: { type: Number, required: true },
+        bigRoom: { type: Number, required: true },
+        smallRoom: { type: Number, required: true }
       },
       general: {
         isAvaible: { type: Boolean, required: true },
-        toilet: { type: Number },
-        bigRoom: { type: Number },
-        smallRoom: { type: Number }
+        toilet: { type: Number, required: true },
+        bigRoom: { type: Number, required: true },
+        smallRoom: { type: Number, required: true }
       },
       afterRepair: {
         isAvaible: { type: Boolean, required: true },
-        toilet: { type: Number },
-        bigRoom: { type: Number },
-        smallRoom: { type: Number }
+        toilet: { type: Number, required: true },
+        bigRoom: { type: Number, required: true },
+        smallRoom: { type: Number, required: true }
       },
       carpet: {
         isAvaible: { type: Boolean, required: true },
-        bigCarpet: { type: Number },
-        smallCarpet: { type: Number }
+        bigCarpet: { type: Number, required: true },
+        smallCarpet: { type: Number, required: true }
       },
-      office: { type: Number },
-      furniture: { type: Number },
-      industrial: { type: Number },
-      pool: { type: Number }
+      office: { type: Number, required: true },
+      furniture: { type: Number, required: true },
+      industrial: { type: Number, required: true },
+      pool: { type: Number, required: true }
     },
     ratingList: { type: Object, required: false, default: {} },
     rating: { type: Number, required: false, default: 0 },

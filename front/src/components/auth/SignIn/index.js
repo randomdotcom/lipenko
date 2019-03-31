@@ -7,22 +7,36 @@ import { withSnackbar } from "notistack";
 import VerificationCodeField from "../VerificationCodeField";
 import {
   fetchConfirmUser,
-  fetchNewVerificationCodeForUser,
-  fetchNewVerificationCodeForExecutor
+  fetchSignInUser,
+  fetchSignInExecutor
 } from "../../../fetches/auth/";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { Formik } from "formik";
+import { string, object } from "yup";
+
+const validationSchema = object().shape({
+  username: string()
+    .required("Username is required")
+    .min(2, "Username must contain atleast 2 characters")
+    .max(9, "Username must contain less then 9 characters")
+    .matches(
+      /^[a-zA-Z][a-zA-Z0-9-_.]{1,9}$/,
+      "The username can contain letters, numbers, -, ., _"
+    ),
+  password: string()
+    .required("Enter your password")
+    .min(5, "Password must contain atleast 5 characters")
+    .max(18, "Password must contain less then 18 characters")
+    .matches(/^[\S]{5,18}$/, "The password cannot contain spaces")
+});
 
 class SignIn extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      username: "",
-      usernameError: "",
-      password: "",
-      passwordError: "",
       isVerified: true,
       isSended: false,
       verificationCode: "",
@@ -30,130 +44,8 @@ class SignIn extends Component {
     };
   }
 
-  validate = afterSetState => {
-    let usernameError = "";
-    let passwordError = "";
-
-    if (!this.state.username) {
-      usernameError = "Field is required";
-    } else if (this.state.username.indexOf(" ") !== -1) {
-      usernameError = "The username cannot contain spaces";
-    } else if (this.state.username.length < 2 || this.state.username.length > 9) {
-      usernameError = "Username must be longer than 2 characters but less than 9";
-    }
-
-    if (!this.state.password) {
-      passwordError = "Field is required";
-    } else if (this.state.password.length < 5 || this.state.password.length > 18) {
-      passwordError = "Password must be longer than 5 characters but less than 18";
-    }
-
-    this.setState({ usernameError, passwordError }, afterSetState);
-  };
-
-  handleChange = name => event => {
-    this.setState({ [name]: event.target.value });
-  };
-
   handleMessage = (msg, variant) => {
     this.props.enqueueSnackbar(msg, { variant });
-  };
-
-  handleSubmit = () => {
-    if (!this.state.isSended) {
-      this.validate(() => {
-        if (this.state.selectedForm === "user") {
-          if (!this.state.usernameError & !this.state.passwordError) {
-            fetch(`http://localhost:3002/api/clients/signin`, {
-              method: "POST",
-              body: JSON.stringify({
-                username: this.state.username,
-                password: this.state.password
-              }),
-              headers: {
-                "Content-Type": "application/json"
-              }
-            })
-              .then(res => {
-                return res.json();
-              })
-              .then(json => {
-                if (json.error) {
-                  throw json.error;
-                } else if (json.isVerified === false) {
-                  this.setState({ isVerified: false, isSended: true });
-                  fetchNewVerificationCodeForUser.call(this, {
-                    username: this.state.username,
-                    password: this.state.password
-                  });
-                  throw "Вы забыли подтвердить аккаунт, мы выслали вам ещё один код на почту!";
-                } else {
-                  localStorage.setItem("token", json.token);
-
-                  return {
-                    username: json.username,
-                    email: json.email,
-                    phoneNumber: json.phoneNumber,
-                    role: json.role
-                  };
-                }
-              })
-              .then(user => {
-                this.props.signIn(user);
-                this.handleMessage("Вход успешный!", "success");
-                console.log(user);
-              })
-              .catch(err => this.handleMessage(err, "error"));
-          }
-        } else if (this.state.selectedForm === "executor") {
-          fetch(`http://localhost:3002/api/companies/signin`, {
-            method: "POST",
-            body: JSON.stringify({
-              username: this.state.username,
-              password: this.state.password
-            }),
-            headers: {
-              "Content-Type": "application/json"
-            }
-          })
-            .then(res => {
-              return res.json();
-            })
-            .then(json => {
-              console.log(json)
-              if (json.error) {
-                throw json.error;
-              } else if (json.isVerified === false) {
-                this.setState({ isVerified: false, isSended: true });
-                fetchNewVerificationCodeForExecutor.call(this, {
-                  username: this.state.username,
-                  password: this.state.password
-                });
-                throw "Вы забыли подтвердить аккаунт, мы выслали вам ещё одно сообщение на почту!";
-              } else {
-                localStorage.setItem("token", json.token);
-
-                return {
-                  username: json.username,
-                  email: json.email,
-                  phoneNumber: json.phoneNumber,
-                  role: json.role
-                };
-              }
-            })
-            .then(user => {
-              this.props.signIn(user);
-              this.handleMessage("Вход успешный!", "success");
-              console.log(user);
-            })
-            .catch(err => this.handleMessage(err, "error"));
-        } else {
-          this.handleMessage('Не выбран ни один radiobutton??', "error");
-        }
-      });
-    } else {
-      fetchConfirmUser.call(this, this.state.verificationCode);
-    }
   };
 
   handleVerificationCodeChange = verificationCode => {
@@ -167,13 +59,42 @@ class SignIn extends Component {
   };
 
   render() {
+    return (
+      <Formik
+        initialValues={{ username: "", password: "" }}
+        validationSchema={validationSchema}
+        onSubmit={(values, { setFieldError }) => {
+          try {
+            if (!this.state.isSended) {
+              if (this.state.selectedForm === "user") {
+                fetchSignInUser.call(this, values.username, values.password);
+              } else if (this.state.selectedForm === "executor") {
+                fetchSignInExecutor.call(this, values.username, values.password);
+              } else {
+                this.handleMessage("Не выбран ни один radiobutton??", "error");
+              }
+            } else {
+              fetchConfirmUser.call(this, this.state.verificationCode);
+            }
+          } catch (errors) {
+            errors.forEach(err => {
+              setFieldError(err.field, err.error);
+            });
+          }
+        }}
+        component={this.form}
+      />
+    );
+  }
+
+  form = ({ handleSubmit, handleChange, handleBlur, values, errors }) => {
     const { classes } = this.props;
     return (
-      <form className={classes.container} noValidate autoComplete="off">
+      <form className={classes.container} onSubmit={handleSubmit} noValidate>
         <RadioGroup
           row
           aria-label="Gender"
-          name="gender1"
+          name="type"
           className={classes.group}
           value={this.state.selectedForm}
           onChange={this.handleChangeRadioButton}
@@ -195,25 +116,30 @@ class SignIn extends Component {
           label="Username"
           autoComplete="username"
           className={classes.textField}
-          onChange={this.handleChange("username")}
-          helperText={this.state.usernameError}
-          error={Boolean(this.state.usernameError)}
           disabled={!this.state.isVerified}
           margin="normal"
           variant="outlined"
+          name="username"
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={values.username}
+          helperText={errors.username}
+          error={Boolean(errors.username)}
         />
         <TextField
           label="Password"
           autoComplete="current-password"
           className={classes.textField}
-          onChange={this.handleChange("password")}
           margin="normal"
           variant="outlined"
-          helperText={this.state.passwordError}
-          error={Boolean(this.state.passwordError)}
           disabled={!this.state.isVerified}
           type="password"
-          fullWidth
+          name="password"
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={values.password}
+          helperText={errors.password}
+          error={Boolean(errors.password)}
         />
         <div className={classes.VerifyAndConfirmContainer}>
           {this.state.isVerified === false && (
@@ -224,6 +150,8 @@ class SignIn extends Component {
           )}
           <Button
             onClick={this.handleSubmit}
+            type="submit"
+            key="submit"
             variant="contained"
             color="primary"
             size="large"
@@ -234,7 +162,7 @@ class SignIn extends Component {
         </div>
       </form>
     );
-  }
+  };
 }
 
 SignIn.propTypes = {
