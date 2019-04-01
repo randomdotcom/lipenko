@@ -22,6 +22,11 @@ const validatePassword = function(password) {
   return re.test(password);
 };
 
+const validateAdress = function(adress) {
+  const re = /^.{6,26}$/
+  return re.test(adress)
+}
+
 var schema = new mongoose.Schema(
   {
     username: {
@@ -43,6 +48,11 @@ var schema = new mongoose.Schema(
       unique: true,
       required: true,
       validate: [validateEmail, "Please fill a valid email address"]
+    },
+    adress: {
+      type: String,
+      required: true,
+      validate: [validateAdress, "Please fill a valid adress(City, street)"]
     },
     isVerified: {
       type: Boolean,

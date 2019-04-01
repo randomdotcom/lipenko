@@ -23,18 +23,18 @@ const validatePassword = function(password) {
 };
 
 const validateCompanyName = function(companyName) {
-  const re = /^[.]{3,16}$/;
+  const re = /^(.){3,20}$/;
   return re.test(companyName);
 };
 
 const validateDescription = function(description) {
-  const re = /^[.]{0,80}$/;
+  const re = /^(.){0,80}$/;
   return re.test(description);
 };
 
 const validateCity = function(city) {
   const re = /^[A-Za-z-]{3,14}$/;
-  return re.test(companyName);
+  return re.test(city);
 };
 
 var schema = new mongoose.Schema(
@@ -64,7 +64,7 @@ var schema = new mongoose.Schema(
       unique: true,
       validate: [
         validateCompanyName,
-        "The company name must be between 5 and 16 characters"
+        "The company name must be between 3 and 16 characters"
       ]
     },
     description: {
@@ -84,25 +84,25 @@ var schema = new mongoose.Schema(
     },
     typesOfCleaning: {
       standart: {
-        isAvaible: { type: Boolean, required: true },
-        toilet: { type: Number, required: true },
-        bigRoom: { type: Number, required: true },
-        smallRoom: { type: Number, required: true }
+        isAvailable: { type: Boolean, required: true },
+        standartBathRoom: { type: Number, required: true },
+        standartBigRoom: { type: Number, required: true },
+        standartSmallRoom: { type: Number, required: true }
       },
       general: {
-        isAvaible: { type: Boolean, required: true },
-        toilet: { type: Number, required: true },
-        bigRoom: { type: Number, required: true },
-        smallRoom: { type: Number, required: true }
+        isAvailable: { type: Boolean, required: true },
+        generalBathRoom: { type: Number, required: true },
+        generalBigRoom: { type: Number, required: true },
+        generalSmallRoom: { type: Number, required: true }
       },
       afterRepair: {
-        isAvaible: { type: Boolean, required: true },
-        toilet: { type: Number, required: true },
-        bigRoom: { type: Number, required: true },
-        smallRoom: { type: Number, required: true }
+        isAvailable: { type: Boolean, required: true },
+        afterRepairBathRoom: { type: Number, required: true },
+        afterRepairBigRoom: { type: Number, required: true },
+        afterRepairSmallRoom: { type: Number, required: true }
       },
       carpet: {
-        isAvaible: { type: Boolean, required: true },
+        isAvailable: { type: Boolean, required: true },
         bigCarpet: { type: Number, required: true },
         smallCarpet: { type: Number, required: true }
       },

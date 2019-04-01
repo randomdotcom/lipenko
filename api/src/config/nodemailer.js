@@ -33,7 +33,7 @@ const sendExecutorConfirmationMessage = (to, username, token) => {
     <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 30pt; font-family: 'Roboto', sans-serif;">
       <p>${username}, ваш код для регистрации:</p>
       <div style="display: flex;">
-        <a href="http://localhost:3000/auth/confirm?token=${token}">http://localhost:3000/auth/confirm?token=${token}</p>
+        <a href="http://localhost:3000/confirm?token=${token}">http://localhost:3000/confirm?token=${token}</p>
       </div>
     </div>` // plain text body
   };

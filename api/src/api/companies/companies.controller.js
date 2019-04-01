@@ -65,7 +65,10 @@ module.exports.confirm = (req, res, next) => {
     .then(user => {
       res.status(httpStatus.CREATED).json(user);
     })
-    .catch(err => next(err));
+    .catch(err => {
+      console.log('ERROR SENDED: ' + err);
+      return res.json({ error: err });
+    });
 };
 
 module.exports.newVerificationCode = (req, res, next) => {

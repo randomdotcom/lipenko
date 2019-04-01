@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
-import SignIn from "../components/auth/SignIn/"
-import { signInUser, signInExecutor } from "../actions/userActions";
+import ConfirmEmail from "../components/auth/ConfirmEmail"
+import { signInExecutor } from "../actions/userActions";
 
 const mapStateToProps = state => ({
   user: state.user
@@ -8,15 +8,14 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    signInUser: user => dispatch(signInUser(user)),
     signInExecutor: executor => dispatch(signInExecutor(executor))
   };
 };
 
-const SignInContainer =
+const ConfirmEmailContainer =
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(SignIn);
+  )(ConfirmEmail);
 
-export default SignInContainer;
+export default ConfirmEmailContainer;

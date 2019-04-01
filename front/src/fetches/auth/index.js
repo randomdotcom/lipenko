@@ -1,3 +1,5 @@
+const headers = { "Content-Type": "application/json" };
+
 export function fetchSignInUser(username, password) {
   fetch(`http://localhost:3002/api/clients/signin`, {
     method: "POST",
@@ -5,9 +7,7 @@ export function fetchSignInUser(username, password) {
       username: username,
       password: password
     }),
-    headers: {
-      "Content-Type": "application/json"
-    }
+    headers
   })
     .then(res => {
       return res.json();
@@ -21,7 +21,7 @@ export function fetchSignInUser(username, password) {
           username: username,
           password: password
         });
-        throw "Вы забыли подтвердить аккаунт, мы выслали вам ещё один код на почту!";
+        throw String("Вы забыли подтвердить аккаунт, мы выслали вам ещё один код на почту!");
       } else {
         localStorage.setItem("token", json.token);
 
@@ -29,14 +29,14 @@ export function fetchSignInUser(username, password) {
           username: json.username,
           email: json.email,
           phoneNumber: json.phoneNumber,
+          adress: json.adress,
           role: json.role
         };
       }
     })
     .then(user => {
-      this.props.signIn(user);
+      this.props.signInUser(user);
       this.handleMessage("Вход успешный!", "success");
-      console.log(user);
     })
     .catch(err => this.handleMessage(err, "error"));
 }
@@ -48,9 +48,7 @@ export function fetchSignInExecutor(username, password) {
       username: username,
       password: password
     }),
-    headers: {
-      "Content-Type": "application/json"
-    }
+    headers
   })
     .then(res => {
       return res.json();
@@ -65,7 +63,9 @@ export function fetchSignInExecutor(username, password) {
           username: username,
           password: password
         });
-        throw "Вы забыли подтвердить аккаунт, мы выслали вам ещё одно сообщение на почту!";
+        throw String(
+          "Вы забыли подтвердить аккаунт, мы выслали вам ещё одно сообщение на почту!"
+        );
       } else {
         localStorage.setItem("token", json.token);
 
@@ -73,14 +73,17 @@ export function fetchSignInExecutor(username, password) {
           username: json.username,
           email: json.email,
           phoneNumber: json.phoneNumber,
+          city: json.city,
+          companyName: json.companyName,
+          description: json.description,
+          typesOfCleaning: json.typesOfCleaning,
           role: json.role
         };
       }
     })
-    .then(user => {
-      this.props.signIn(user);
+    .then(executor => {
+      this.props.signInExecutor(executor);
       this.handleMessage("Вход успешный!", "success");
-      console.log(user);
     })
     .catch(err => this.handleMessage(err, "error"));
 }
@@ -101,6 +104,7 @@ export function fetchConfirmUser(verificationCode) {
       } else {
         console.log(json);
         this.handleMessage("Регистрация завершена!", "success");
+        this.props.signIn(json);
       }
     })
     .catch(err => this.handleMessage(err, "error"));
@@ -113,9 +117,7 @@ export function fetchNewVerificationCodeForUser({ username, password }) {
       username,
       password
     }),
-    headers: {
-      "Content-Type": "application/json"
-    }
+    headers
   })
     .then(res => {
       return res.json();
@@ -135,9 +137,7 @@ export function fetchNewVerificationCodeForExecutor({ username, password }) {
       username,
       password
     }),
-    headers: {
-      "Content-Type": "application/json"
-    }
+    headers
   })
     .then(res => {
       return res.json();
@@ -150,18 +150,23 @@ export function fetchNewVerificationCodeForExecutor({ username, password }) {
     .catch(err => this.handleMessage(err, "error"));
 }
 
-export function fetchRegisterUser(username, password, email, phoneNumber) {
+export function fetchRegisterUser(
+  username,
+  password,
+  email,
+  phoneNumber,
+  adress
+) {
   fetch(`http://localhost:3002/api/clients/register`, {
     method: "POST",
     body: JSON.stringify({
       username,
       password,
       email,
-      phoneNumber
+      phoneNumber,
+      adress
     }),
-    headers: {
-      "Content-Type": "application/json"
-    }
+    headers
   })
     .then(res => {
       return res.json();
@@ -180,19 +185,11 @@ export function fetchRegisterUser(username, password, email, phoneNumber) {
     .catch(err => this.handleMessage(err, "error"));
 }
 
-export function fetchRegisterExecutor(username, password, email, phoneNumber, typesOfCleaning) {
+export function fetchRegisterExecutor(values) {
   fetch(`http://localhost:3002/api/companies/register`, {
     method: "POST",
-    body: JSON.stringify({
-      username,
-      password,
-      email,
-      phoneNumber,
-      typesOfCleaning
-    }),
-    headers: {
-      "Content-Type": "application/json"
-    }
+    body: JSON.stringify(values),
+    headers
   })
     .then(res => {
       return res.json();
@@ -207,5 +204,31 @@ export function fetchRegisterExecutor(username, password, email, phoneNumber, ty
         );
       }
     })
-    .catch(err => this.handleMessage(err, "error"));
+    .catch(err => {
+      console.log(err);
+      return this.handleMessage(err, "error");
+    });
+}
+
+export function fetchConfirmEmailExecutor(verificationCode) {
+  return fetch(
+    `http://localhost:3002/api/companies/confirm?token=${verificationCode}`,
+    {
+      method: "PUT",
+      headers
+    }
+  )
+    .then(res => {
+      return res.json();
+    })
+    .then(json => {
+      console.log("ERROR " + json.error);
+      if (json.error) {
+        throw new Error(json.error);
+      }
+      this.props.signInExecutor(json);
+    })
+    .catch(err => {
+      throw new Error(err);
+    });
 }

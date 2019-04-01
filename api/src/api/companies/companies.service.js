@@ -38,28 +38,77 @@ async function logout({ token }) {
   return true;
 }
 
-async function register(
-  {
+async function register({ values }, role) {
+  var verificationCode = randtoken.generate(6);
+
+  console.log(values);
+
+  const {
     username,
-    companyName,
-    description,
-    adress,
-    typesOfCleaning,
     password,
     email,
-    phoneNumber
-  },
-  role
-) {
-  var verificationCode = randtoken.generate(6);
+    phoneNumber,
+    companyName,
+    description,
+    city,
+    standartSmallRoom,
+    standartBigRoom,
+    standartBathRoom,
+    generalBathRoom,
+    generalBigRoom,
+    generalSmallRoom,
+    afterRepairBathRoom,
+    afterRepairBigRoom,
+    afterRepairSmallRoom,
+    smallCarpet,
+    bigCarpet,
+    office,
+    furniture,
+    industrial,
+    pool
+  } = values;
 
   const user = new Executor({
     username,
+    password,
     companyName,
     description,
-    adress,
-    typesOfCleaning,
-    password,
+    city,
+    typesOfCleaning: {
+      standart: {
+        isAvailable: Boolean(
+          standartSmallRoom && standartBigRoom && standartBathRoom
+        ),
+        standartBathRoom,
+        standartBigRoom,
+        standartSmallRoom
+      },
+      general: {
+        isAvailable: Boolean(
+          generalSmallRoom && generalBigRoom && generalBathRoom
+        ),
+        generalBathRoom,
+        generalBigRoom,
+        generalSmallRoom
+      },
+      afterRepair: {
+        isAvailable: Boolean(
+          afterRepairSmallRoom && afterRepairBigRoom && afterRepairBathRoom
+        ),
+        afterRepairBathRoom,
+        afterRepairBigRoom,
+        afterRepairSmallRoom
+      },
+      carpet: {
+        isAvailable: Boolean(smallCarpet && bigCarpet),
+        bigCarpet,
+        smallCarpet
+      },
+      office,
+      furniture,
+      industrial,
+      pool
+    },
     email,
     verificationCode,
     phoneNumber,
@@ -76,24 +125,28 @@ async function register(
 }
 
 async function confirmEmail(code) {
-  const user = await Executor.findOneAndUpdate(
-    { verificationCode: code },
-    {
-      $set: { isVerified: true },
-      $unset: { verificationCode: { $exist: true } }
-    }
-  );
+  try {
+    const user = await Executor.findOneAndUpdate(
+      { verificationCode: code },
+      {
+        $set: { isVerified: true },
+        $unset: { verificationCode: { $exist: true } }
+      }
+    );
 
-  const data = user.toObject();
+    if (!user) throw "Probably, your code is expired";
 
-  const token = createToken(data);
+    const data = user.toObject();
 
-  const { password: userPassword, ...userWithoutPassword } = data;
+    const token = createToken(data);
 
-  return {
-    ...userWithoutPassword,
-    token
-  };
+    const { password: userPassword, ...userWithoutPassword } = data;
+
+    return {
+      ...userWithoutPassword,
+      token
+    };
+  } catch (err) { throw err }
 }
 
 async function newVerificationCode({ username, password }) {

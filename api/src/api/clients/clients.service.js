@@ -64,7 +64,7 @@ async function newVerificationCode({ username, password }) {
   };
 }
 
-async function register({ username, password, email, phoneNumber }, role) {
+async function register({ username, password, email, phoneNumber, adress }, role) {
   var verificationCode = randtoken.generate(6);
 
   const user = new User({
@@ -73,6 +73,7 @@ async function register({ username, password, email, phoneNumber }, role) {
     email,
     verificationCode,
     phoneNumber,
+    adress,
     role
   });
 
