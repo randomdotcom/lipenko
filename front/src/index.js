@@ -3,17 +3,11 @@ import ReactDOM from "react-dom";
 import App from "./components/App";
 import * as serviceWorker from "./serviceWorker";
 import { Provider } from "react-redux";
-import { createStore } from "redux";
-import combinedReducers from "./reducers";
-import createHistory from "history/createBrowserHistory";
 import { BrowserRouter as Router } from "react-router-dom";
+import store, { history } from "./redux";
+import axios from "axios";
 
-const store = createStore(
-  combinedReducers,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
-
-const history = createHistory()
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
 ReactDOM.render(
   <Provider store={store}>
