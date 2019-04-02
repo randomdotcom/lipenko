@@ -10,6 +10,7 @@ const Role = require("../../enums/roles.enum");
 
 router.post("/signin", controller.signin);
 router.post("/signout", controller.signout);
+
 router.post("/register", controller.register);
 router.put("/confirm", controller.confirm);
 router.put("/newVerificationCode", controller.newVerificationCode)
