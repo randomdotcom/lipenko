@@ -3,9 +3,13 @@ import {
   SIGNIN_USER,
   SIGNUP_USER,
   SIGNOUT_USER,
+  CONFIRM_USER,
   userSignInSuccess,
   userSignUpSuccess,
-  userSignOutSuccess
+  userSignOutSuccess,
+  userConfirmSuccess,
+  userConfirmFailed,
+  userSignUpFailed
 } from "../actions/user.actions";
 
 import axios from "axios";
@@ -13,27 +17,36 @@ import { storeToken, clearToken } from "../authentication";
 
 export function* watchUserSignUpSaga() {
   yield takeLeading(SIGNUP_USER, function*({ payload }) {
-    console.log("logging in");
+    try {
+      yield call(axios.post, "/api/clients/register", payload);
+      yield put(userSignUpSuccess());
+    } catch (err) {
+      console.log(err);
+      yield put(userSignUpFailed(err.data));
+    }
 
-    const response = yield call(axios.post, "/api/clients/register", payload);
-    console.log('OK')
-    yield put(userSignUpSuccess(response.data.username));
-    console.log('OK')
-    yield call(storeToken, response.data.token, response.data.user);
+    //yield call(storeToken, response.data.token, response.data.user);
     // yield put(push("/")); // Редирект
+  });
+}
 
-    //yield take(SIGNOUT_USER);
+export function* watchUserConfirmSaga() {
+  yield takeLeading(CONFIRM_USER, function*({ payload }) {
+    try { // Не через catch, глянуть response и как определить что это ошибка
+      const response = yield call(axios.put, "/api/clients/confirm", payload);
+      console.log(response.data);
+      yield put(userConfirmSuccess(response.data));
+    } catch (err) {
+      console.log(`watchUserConfirmSaga Error: ${err}`);
+      yield put(userConfirmFailed(err));
+    }
   });
 }
 
 export function* watchUserSignInSaga() {
   yield takeLeading(SIGNIN_USER, function*({ payload }) {
-    console.log("logging in");
-
     const response = yield call(axios.post, "/api/clients/signin", payload);
-    console.log('OK')
     yield put(userSignInSuccess(response.data.token, response.data.user));
-    console.log('OK')
     yield call(storeToken, response.data.token, response.data.user);
     // yield put(push("/")); // Редирект
 

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { fetchConfirmEmailExecutor } from "../../../fetches/auth";
 import { Paper } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import queryString from "query-string";
@@ -14,17 +13,17 @@ class ConfirmEmail extends Component {
     };
   }
 
-  componentWillMount() {
-    const { token } = queryString.parse(this.props.location.search);
-    console.log(token);
-    fetchConfirmEmailExecutor.call(this, token)
-      .then(() => {
-        this.setState({ confirmed: true });
-      })
-      .catch(err => {
-        this.setState({ error: err.message });
-      });
-  }
+  // componentWillMount() {
+  //   const { token } = queryString.parse(this.props.location.search);
+  //   console.log(token);
+  //   fetchConfirmEmailExecutor.call(this, token)
+  //     .then(() => {
+  //       this.setState({ confirmed: true });
+  //     })
+  //     .catch(err => {
+  //       this.setState({ error: err.message });
+  //     });
+  // }
 
   handleMessage = (msg, variant) => {
     this.props.enqueueSnackbar(msg, { variant });

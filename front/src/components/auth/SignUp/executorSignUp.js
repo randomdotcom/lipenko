@@ -10,7 +10,6 @@ import {
 } from "@material-ui/core";
 import { Formik } from "formik";
 import { string, object } from "yup";
-import { fetchRegisterExecutor } from "../../../fetches/auth";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { withSnackbar } from "notistack";
 
@@ -115,7 +114,7 @@ const validationSchema = object().shape({
 class ExecutorSignUp extends Component {
   fetchRegisterExecutor = values => {
     console.log("тут");
-    fetchRegisterExecutor.call(this, values);
+    //fetchRegisterExecutor.call(this, values);
   };
 
   handleMessage = (msg, variant) => {
@@ -152,9 +151,9 @@ class ExecutorSignUp extends Component {
         }}
         onSubmit={(values, { setFieldError }) => {
           try {
-            this.fetchRegisterExecutor({
-              values
-            });
+            // this.fetchRegisterExecutor({
+            //   values
+            // });
           } catch (errors) {
             console.log(errors);
             errors.forEach(err => {

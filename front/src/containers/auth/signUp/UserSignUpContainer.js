@@ -1,11 +1,10 @@
 import { connect } from "react-redux";
-import { signInUser, signUpUser } from "../../../actions/user.actions";
+import { signUpUser, confirmUser } from "../../../actions/user.actions";
 import React, { Component } from "react";
 import { TextField, withStyles, Button } from "@material-ui/core";
 import { Formik } from "formik";
 import { string, object } from "yup";
 import VerificationCodeField from "../../../components/auth/VerificationCodeField";
-import { fetchRegisterUser, fetchConfirmUser } from "../../../fetches/auth";
 import { withSnackbar } from "notistack";
 
 const validationSchema = object().shape({
@@ -59,17 +58,8 @@ class UserSignUp extends Component {
     };
   }
 
-  fetchRegisterUser = (username, password, email, phoneNumber, adress) => {
-    fetchRegisterUser.call(this, username, password, email, phoneNumber, adress);
-    console.log(this.state.isSended);
-  };
-
   handleMessage = (msg, variant) => {
     this.props.enqueueSnackbar(msg, { variant });
-  };
-
-  fetchConfirmUser = () => {
-    fetchConfirmUser.call(this, this.state.verificationCode);
   };
 
   handleVerificationCodeChange = code => {
@@ -88,14 +78,11 @@ class UserSignUp extends Component {
         }}
         onSubmit={(values, { setFieldError }) => {
           try {
-            if (!this.state.isSended) {
-              this.props.signUpUser(values.username,
-                values.password,
-                values.email,
-                values.phoneNumber,
-                values.adress)
+            if (!this.props.isSended) {
+              this.props.signUpUser(values)
             } else {
-              this.fetchConfirmUser();
+              console.log(this.state.verificationCode)
+              this.props.confirmUser(this.state.verificationCode)
             }
           } catch (errors) {
             console.log(errors);
@@ -120,7 +107,7 @@ class UserSignUp extends Component {
             <TextField
               label="Username"
               autoComplete="username"
-              disabled={this.state.isSended}
+              disabled={this.props.isSended}
               className={classes.textField}
               margin="normal"
               variant="outlined"
@@ -134,7 +121,7 @@ class UserSignUp extends Component {
             <TextField
               label="Password"
               autoComplete="new-password"
-              disabled={this.state.isSended}
+              disabled={this.props.isSended}
               className={classes.textField}
               margin="normal"
               variant="outlined"
@@ -149,7 +136,7 @@ class UserSignUp extends Component {
             <TextField
               label="Confirm password"
               autoComplete="new-password"
-              disabled={this.state.isSended}
+              disabled={this.props.isSended}
               className={classes.textField}
               margin="normal"
               variant="outlined"
@@ -164,7 +151,7 @@ class UserSignUp extends Component {
             <TextField
               label="Email"
               autoComplete="email"
-              disabled={this.state.isSended}
+              disabled={this.props.isSended}
               className={classes.textField}
               margin="normal"
               variant="outlined"
@@ -179,7 +166,7 @@ class UserSignUp extends Component {
             <TextField
               label="Phone number"
               autoComplete="tel"
-              disabled={this.state.isSended}
+              disabled={this.props.isSended}
               className={classes.textField}
               margin="normal"
               variant="outlined"
@@ -193,7 +180,7 @@ class UserSignUp extends Component {
             <TextField
               label="Your adress"
               autoComplete="tel"
-              disabled={this.state.isSended}
+              disabled={this.props.isSended}
               className={classes.textField}
               margin="normal"
               variant="outlined"
@@ -205,7 +192,7 @@ class UserSignUp extends Component {
               error={Boolean(errors.adress)}
             />
             <div className={classes.VerifyAndConfirmContainer}>
-              {this.state.isSended && (
+              {this.props.isSended && (
                 <VerificationCodeField
                   value={this.state.verificationCode}
                   handleChange={this.handleVerificationCodeChange}
@@ -359,10 +346,13 @@ const styles = theme => ({
   }
 });
 
+const mapStateToProps = state => ({
+  isSended: state.user.isSended
+});
 
 const UserSignUpContainer = connect(
-    null,
-    { signUpUser }
+    mapStateToProps,
+    { signUpUser, confirmUser }
   )(UserSignUp);
 
 export default withStyles(styles)(withSnackbar(UserSignUpContainer));

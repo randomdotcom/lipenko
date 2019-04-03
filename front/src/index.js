@@ -9,7 +9,7 @@ import axios from "axios";
 import {initializePreviousToken} from './authentication'
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
-initializePreviousToken(store);
+//initializePreviousToken(store);
 
 ReactDOM.render(
   <Provider store={store}>

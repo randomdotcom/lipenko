@@ -1,5 +1,4 @@
 import { connect } from "react-redux";
-import { signInUser, signUpUser } from "../../../actions/user.actions";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
@@ -87,8 +86,7 @@ const styles = theme => ({
 });
 
 const SignUpContainer = connect(
-  null,
-  { signUpUser }
+  null
 )(SignUp);
 
 export default withStyles(styles)(SignUpContainer);

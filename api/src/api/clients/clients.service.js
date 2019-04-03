@@ -21,7 +21,6 @@ async function authenticate({ username, password }) {
     if (success === false) throw "The password is incorrect";
 
     if (user.isBlocked) throw `The user is blocked, reason: ${user.block}`;
-    
 
     const data = user.toObject();
 
@@ -64,7 +63,10 @@ async function newVerificationCode({ username, password }) {
   };
 }
 
-async function register({ username, password, email, phoneNumber, adress }, role) {
+async function register(
+  { username, password, email, phoneNumber, adress },
+  role
+) {
   var verificationCode = randtoken.generate(6);
 
   const user = new User({
@@ -77,15 +79,13 @@ async function register({ username, password, email, phoneNumber, adress }, role
     role
   });
 
-  return {username}
+  return new Promise((resolve, reject) => {
+    user.save(err => {
+      if (err) reject(err);
 
-  // return new Promise((resolve, reject) => {
-  //   user.save(err => {
-  //     if (err) reject(err);
-
-  //     resolve({ email, username, verificationCode });
-  //   });
-  // });
+      resolve({ email, username, verificationCode });
+    });
+  });
 }
 
 async function getClients() {
@@ -101,10 +101,15 @@ async function confirmEmail(code) {
     }
   );
 
+  console.log(`user: ${user}`);
+  
+
   if (!user) throw new Error("Verification code is incorrect");
   const data = user.toObject();
 
   const token = createToken(data);
+
+  console.log(`token: ${token}`);
 
   const { password: userPassword, ...userWithoutPassword } = data;
 

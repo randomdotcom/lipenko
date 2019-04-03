@@ -38,13 +38,15 @@ module.exports.signout = (req, res, next) => {
 module.exports.register = (req, res, next) => {
   service
     .register(req.body, Role.User)
-    // .then(({ email, username, verificationCode }) => {
-    //   return sendUserConfirmationMessage(email, username, verificationCode);
-    // })
-    .then(user => {
-      res.status(httpStatus.CREATED).json(user);
+    .then(({ email, username, verificationCode }) => {
+      return sendUserConfirmationMessage(email, username, verificationCode);
     })
-    .catch(err => res.json({ error: `${err.message}` }));
+    .then(() => {
+      res.status(httpStatus.CREATED).json("success");
+    })
+    .catch(err => {
+      next(err);
+    });
 };
 
 module.exports.newVerificationCode = (req, res, next) => {
@@ -61,7 +63,7 @@ module.exports.newVerificationCode = (req, res, next) => {
 
 module.exports.confirm = (req, res, next) => {
   service
-    .confirmEmail(req.query.token)
+    .confirmEmail(req.body)
     .then(user => {
       res.status(httpStatus.CREATED).json(user);
     })

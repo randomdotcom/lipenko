@@ -1,6 +1,7 @@
 import {
   USER_LOADED,
   USER_SIGNIN_SUCCESS,
+  USER_CONFIRM_SUCCESS,
   USER_SIGNUP_SUCCESS,
   USER_SIGNOUT_SUCCESS
 } from "../actions/user.actions";
@@ -22,13 +23,20 @@ export default (state = {}, action) => {
         ...action.payload.user
       };
     }
-    case USER_SIGNUP_SUCCESS: {
-      const user = action.payload.username;
-      // user.orders = user.orders || [];
-
+    case USER_CONFIRM_SUCCESS: {
+      const { user } = action.payload;
       return {
-        // isAuthenticated: !!action.payload.token,
-        ...action.payload.username
+        isAuthenticated: !!action.payload.token,
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        role: user.role
+      };
+    }
+    case USER_SIGNUP_SUCCESS: {
+      return {
+        isSended: true
       };
     }
     case USER_SIGNOUT_SUCCESS:
