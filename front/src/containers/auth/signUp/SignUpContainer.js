@@ -1,9 +1,11 @@
+import { connect } from "react-redux";
+import { signInUser, signUpUser } from "../../../actions/user.actions";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { RadioGroup, FormControlLabel, Radio } from "@material-ui/core";
-import UserSignUp from "./userSignUp";
-import ExecutorSignUp from "./executorSignUp";
+import UserSignUpContainer from "./UserSignUpContainer";
+import ExecutorSignUp from "../../../components/auth/SignUp/executorSignUp";
 
 class SignUp extends Component {
   constructor(props) {
@@ -48,10 +50,10 @@ class SignUp extends Component {
           />
         </RadioGroup>
         {this.state.selectedForm === "user" ? (
-          <UserSignUp signIn={this.props.signIn}/>
+          <UserSignUpContainer signIn={this.props.signIn} />
         ) : (
-          <ExecutorSignUp />
-        )}
+            <ExecutorSignUp />
+          )}
       </div>
     );
   }
@@ -84,4 +86,9 @@ const styles = theme => ({
   }
 });
 
-export default withStyles(styles)(SignUp);
+const SignUpContainer = connect(
+  null,
+  { signUpUser }
+)(SignUp);
+
+export default withStyles(styles)(SignUpContainer);

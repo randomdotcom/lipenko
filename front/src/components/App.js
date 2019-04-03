@@ -14,9 +14,9 @@ class App extends Component {
   render() {
     return (
       <Switch>
-        {/* <Route path="/admin" component={Admin} />
+        <Route path="/admin" component={Admin} />
         <Route path="/auth" component={Auth} />
-        <Route path="/confirm" component={ConfirmEmailContainer} />F */}
+        <Route path="/confirm" component={ConfirmEmailContainer} />F
         <Route
           exact
           path="/companies"

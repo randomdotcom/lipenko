@@ -1,8 +1,10 @@
+import { connect } from "react-redux";
+import { signInUser, signUpUser } from "../../../actions/user.actions";
 import React, { Component } from "react";
 import { TextField, withStyles, Button } from "@material-ui/core";
 import { Formik } from "formik";
 import { string, object } from "yup";
-import VerificationCodeField from "../VerificationCodeField";
+import VerificationCodeField from "../../../components/auth/VerificationCodeField";
 import { fetchRegisterUser, fetchConfirmUser } from "../../../fetches/auth";
 import { withSnackbar } from "notistack";
 
@@ -47,7 +49,7 @@ const validationSchema = object().shape({
     .max(26, "Adress is too long")
 });
 
-class userSignUp extends Component {
+class UserSignUp extends Component {
   constructor(props) {
     super(props);
 
@@ -87,13 +89,11 @@ class userSignUp extends Component {
         onSubmit={(values, { setFieldError }) => {
           try {
             if (!this.state.isSended) {
-              this.fetchRegisterUser(
-                values.username,
+              this.props.signUpUser(values.username,
                 values.password,
                 values.email,
                 values.phoneNumber,
-                values.adress
-              );
+                values.adress)
             } else {
               this.fetchConfirmUser();
             }
@@ -359,4 +359,10 @@ const styles = theme => ({
   }
 });
 
-export default withStyles(styles)(withSnackbar(userSignUp));
+
+const UserSignUpContainer = connect(
+    null,
+    { signUpUser }
+  )(UserSignUp);
+
+export default withStyles(styles)(withSnackbar(UserSignUpContainer));

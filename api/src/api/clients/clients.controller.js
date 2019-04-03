@@ -38,11 +38,11 @@ module.exports.signout = (req, res, next) => {
 module.exports.register = (req, res, next) => {
   service
     .register(req.body, Role.User)
-    .then(({ email, username, verificationCode }) => {
-      return sendUserConfirmationMessage(email, username, verificationCode);
-    })
-    .then(() => {
-      res.status(httpStatus.CREATED).json("Created");
+    // .then(({ email, username, verificationCode }) => {
+    //   return sendUserConfirmationMessage(email, username, verificationCode);
+    // })
+    .then(user => {
+      res.status(httpStatus.CREATED).json(user);
     })
     .catch(err => res.json({ error: `${err.message}` }));
 };

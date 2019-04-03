@@ -48,3 +48,21 @@ export const userSignOutFailed = err => ({
   type: USER_SIGNOUT_FAILED,
   payload: err
 });
+
+export const SIGNUP_USER = "USER: SIGNUP..";
+export const signUpUser = (data) => ({
+  type: SIGNUP_USER,
+  payload: data
+});
+
+export const USER_SIGNUP_SUCCESS = "USER: SIGNUP SUCCESS";
+export const userSignUpSuccess = data => ({
+  type: USER_SIGNUP_SUCCESS,
+  payload: data
+});
+
+export const USER_SIGNUP_FAILED = "USER: SIGNUP IS FAILED";
+export const userSignUpFailed = err => ({
+  type: USER_SIGNUP_FAILED,
+  payload: err
+});

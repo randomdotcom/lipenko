@@ -6,8 +6,10 @@ import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 import store, { history } from "./redux";
 import axios from "axios";
+import {initializePreviousToken} from './authentication'
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+initializePreviousToken(store);
 
 ReactDOM.render(
   <Provider store={store}>

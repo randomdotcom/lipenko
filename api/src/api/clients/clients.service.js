@@ -77,13 +77,15 @@ async function register({ username, password, email, phoneNumber, adress }, role
     role
   });
 
-  return new Promise((resolve, reject) => {
-    user.save(err => {
-      if (err) reject(err);
+  return {username}
 
-      resolve({ email, username, verificationCode });
-    });
-  });
+  // return new Promise((resolve, reject) => {
+  //   user.save(err => {
+  //     if (err) reject(err);
+
+  //     resolve({ email, username, verificationCode });
+  //   });
+  // });
 }
 
 async function getClients() {

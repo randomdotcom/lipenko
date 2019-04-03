@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import ConfirmEmail from "../components/auth/ConfirmEmail"
-import { signInExecutor } from "../actions/userActions";
+// import { signInExecutor } from "../actions/user.actions";
 
 const mapStateToProps = state => ({
   user: state.user
@@ -8,14 +8,14 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    signInExecutor: executor => dispatch(signInExecutor(executor))
+    // signInExecutor: executor => dispatch(signInExecutor(executor))
   };
 };
 
 const ConfirmEmailContainer =
   connect(
     mapStateToProps,
-    mapDispatchToProps
+    // mapDispatchToProps
   )(ConfirmEmail);
 
 export default ConfirmEmailContainer;

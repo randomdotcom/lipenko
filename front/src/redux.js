@@ -11,7 +11,7 @@ export const history = createHistory()
 
 export default createStore(
   combinedReducers,
-  composeEnhancers(applyMiddleware(sagaMiddleware, history))
+  composeEnhancers(applyMiddleware(sagaMiddleware))
 );
 
 sagaMiddleware.run(saga);
