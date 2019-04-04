@@ -30,8 +30,8 @@ module.exports.signout = (req, res, next) => {
     result
       ? res.status(httpStatus.OK).json("Ok")
       : res
-          .status(httpStatus.INTERNAL_SERVER_ERROR)
-          .json({ error: `Внутренняя ошибка сервера` });
+        .status(httpStatus.INTERNAL_SERVER_ERROR)
+        .json({ error: `Внутренняя ошибка сервера` });
   });
 };
 
@@ -62,12 +62,14 @@ module.exports.newVerificationCode = (req, res, next) => {
 };
 
 module.exports.confirm = (req, res, next) => {
+  console.log(req.body);
+
   service
     .confirmEmail(req.body)
     .then(user => {
       res.status(httpStatus.CREATED).json(user);
     })
-    .catch(err => res.json({ error: `${err.message}` }));
+    .catch(err => { res.status(httpStatus.NOT_FOUND).send(err) });
 };
 
 module.exports.get = (req, res, next) => {

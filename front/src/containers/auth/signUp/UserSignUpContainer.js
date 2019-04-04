@@ -23,7 +23,7 @@ const validationSchema = object().shape({
     .matches(/^[\S]{5,18}$/, "The password cannot contain spaces"),
   confirmPassword: string()
     .required("Enter your password again")
-    .test("passwords-match", "Passwords must match ya fool", function(value) {
+    .test("passwords-match", "Passwords must match ya fool", function (value) {
       return this.parent.password === value;
     }),
   email: string()
@@ -63,7 +63,7 @@ class UserSignUp extends Component {
   };
 
   handleVerificationCodeChange = code => {
-    this.setState({verificationCode: code});
+    this.setState({ verificationCode: code });
   };
 
   render() {
@@ -82,7 +82,7 @@ class UserSignUp extends Component {
               this.props.signUpUser(values)
             } else {
               console.log(this.state.verificationCode)
-              this.props.confirmUser(this.state.verificationCode)
+              this.props.confirmUser({ username: values.username, verificationCode: this.state.verificationCode })
             }
           } catch (errors) {
             console.log(errors);
@@ -99,119 +99,119 @@ class UserSignUp extends Component {
           handleChange,
           handleSubmit
         }) => (
-          <form
-            className={classes.container}
-            onSubmit={handleSubmit}
-            noValidate
-          >
-            <TextField
-              label="Username"
-              autoComplete="username"
-              disabled={this.props.isSended}
-              className={classes.textField}
-              margin="normal"
-              variant="outlined"
-              name="username"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.username}
-              helperText={errors.username}
-              error={Boolean(errors.username)}
-            />
-            <TextField
-              label="Password"
-              autoComplete="new-password"
-              disabled={this.props.isSended}
-              className={classes.textField}
-              margin="normal"
-              variant="outlined"
-              type="password"
-              name="password"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.password}
-              helperText={errors.password}
-              error={Boolean(errors.password)}
-            />
-            <TextField
-              label="Confirm password"
-              autoComplete="new-password"
-              disabled={this.props.isSended}
-              className={classes.textField}
-              margin="normal"
-              variant="outlined"
-              type="password"
-              name="confirmPassword"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.confirmPassword}
-              helperText={errors.confirmPassword}
-              error={Boolean(errors.confirmPassword)}
-            />
-            <TextField
-              label="Email"
-              autoComplete="email"
-              disabled={this.props.isSended}
-              className={classes.textField}
-              margin="normal"
-              variant="outlined"
-              type="email"
-              name="email"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.email}
-              helperText={errors.email}
-              error={Boolean(errors.email)}
-            />
-            <TextField
-              label="Phone number"
-              autoComplete="tel"
-              disabled={this.props.isSended}
-              className={classes.textField}
-              margin="normal"
-              variant="outlined"
-              name="phoneNumber"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.phoneNumber}
-              helperText={errors.phoneNumber}
-              error={Boolean(errors.phoneNumber)}
-            />
-            <TextField
-              label="Your adress"
-              autoComplete="tel"
-              disabled={this.props.isSended}
-              className={classes.textField}
-              margin="normal"
-              variant="outlined"
-              name="adress"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.adress}
-              helperText={errors.adress}
-              error={Boolean(errors.adress)}
-            />
-            <div className={classes.VerifyAndConfirmContainer}>
-              {this.props.isSended && (
-                <VerificationCodeField
-                  value={this.state.verificationCode}
-                  handleChange={this.handleVerificationCodeChange}
-                />
-              )}
-              <Button
-                onClick={handleSubmit}
-                type="submit"
-                key="submit"
-                variant="contained"
-                color="primary"
-                size="large"
-                className={classes.button}
-              >
-                SIGN UP
+            <form
+              className={classes.container}
+              onSubmit={handleSubmit}
+              noValidate
+            >
+              <TextField
+                label="Username"
+                autoComplete="username"
+                disabled={this.props.isSended}
+                className={classes.textField}
+                margin="normal"
+                variant="outlined"
+                name="username"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.username}
+                helperText={errors.username}
+                error={Boolean(errors.username)}
+              />
+              <TextField
+                label="Password"
+                autoComplete="new-password"
+                disabled={this.props.isSended}
+                className={classes.textField}
+                margin="normal"
+                variant="outlined"
+                type="password"
+                name="password"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.password}
+                helperText={errors.password}
+                error={Boolean(errors.password)}
+              />
+              <TextField
+                label="Confirm password"
+                autoComplete="new-password"
+                disabled={this.props.isSended}
+                className={classes.textField}
+                margin="normal"
+                variant="outlined"
+                type="password"
+                name="confirmPassword"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.confirmPassword}
+                helperText={errors.confirmPassword}
+                error={Boolean(errors.confirmPassword)}
+              />
+              <TextField
+                label="Email"
+                autoComplete="email"
+                disabled={this.props.isSended}
+                className={classes.textField}
+                margin="normal"
+                variant="outlined"
+                type="email"
+                name="email"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.email}
+                helperText={errors.email}
+                error={Boolean(errors.email)}
+              />
+              <TextField
+                label="Phone number"
+                autoComplete="tel"
+                disabled={this.props.isSended}
+                className={classes.textField}
+                margin="normal"
+                variant="outlined"
+                name="phoneNumber"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.phoneNumber}
+                helperText={errors.phoneNumber}
+                error={Boolean(errors.phoneNumber)}
+              />
+              <TextField
+                label="Your adress"
+                autoComplete="tel"
+                disabled={this.props.isSended}
+                className={classes.textField}
+                margin="normal"
+                variant="outlined"
+                name="adress"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.adress}
+                helperText={errors.adress}
+                error={Boolean(errors.adress)}
+              />
+              <div className={classes.VerifyAndConfirmContainer}>
+                {this.props.isSended && (
+                  <VerificationCodeField
+                    value={this.state.verificationCode}
+                    handleChange={this.handleVerificationCodeChange}
+                  />
+                )}
+                <Button
+                  onClick={handleSubmit}
+                  type="submit"
+                  key="submit"
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  className={classes.button}
+                >
+                  SIGN UP
               </Button>
-            </div>
-          </form>
-        )}
+              </div>
+            </form>
+          )}
       />
     );
   }
@@ -351,8 +351,8 @@ const mapStateToProps = state => ({
 });
 
 const UserSignUpContainer = connect(
-    mapStateToProps,
-    { signUpUser, confirmUser }
-  )(UserSignUp);
+  mapStateToProps,
+  { signUpUser, confirmUser }
+)(UserSignUp);
 
 export default withStyles(styles)(withSnackbar(UserSignUpContainer));

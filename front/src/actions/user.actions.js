@@ -73,10 +73,10 @@ export const userSignUpFailed = err => ({
 });
 
 export const CONFIRM_USER = "USER: CONFIRMATION..";
-export const confirmUser = verificationCode => {
+export const confirmUser = data => {
   return {
     type: CONFIRM_USER,
-    payload: verificationCode
+    payload: data
   };
 };
 

@@ -24,7 +24,7 @@ export default (state = {}, action) => {
       };
     }
     case USER_CONFIRM_SUCCESS: {
-      const { user } = action.payload;
+      const user = action.payload;
       return {
         isAuthenticated: !!action.payload.token,
         id: user._id,
@@ -32,6 +32,12 @@ export default (state = {}, action) => {
         email: user.email,
         phoneNumber: user.phoneNumber,
         role: user.role
+      };
+    }
+    case USER_CONFIRM_SUCCESS: {
+      const error = action.payload.data;
+      return {
+        error
       };
     }
     case USER_SIGNUP_SUCCESS: {

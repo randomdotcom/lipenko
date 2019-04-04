@@ -2,27 +2,27 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const mongoosePaginate = require("mongoose-paginate");
 
-const validateEmail = function(email) {
+const validateEmail = function (email) {
   const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   return re.test(email);
 };
 
-const validatePNumber = function(phoneNumber) {
+const validatePNumber = function (phoneNumber) {
   const re = /^\+375(29|33|44|25)\d{7}$/;
   return re.test(phoneNumber);
 };
 
-const validateUsername = function(username) {
+const validateUsername = function (username) {
   const re = /^[a-zA-Z][a-zA-Z0-9-_\.]{1,9}$/;
   return re.test(username);
 };
 
-const validatePassword = function(password) {
+const validatePassword = function (password) {
   const re = /^[\S]{5,18}$/;
   return re.test(password);
 };
 
-const validateAdress = function(adress) {
+const validateAdress = function (adress) {
   const re = /^.{6,26}$/
   return re.test(adress)
 }
@@ -61,6 +61,10 @@ var schema = new mongoose.Schema(
     verificationCode: {
       type: String
     },
+    attempts: {
+      type: Number,
+      default: 0
+    },
     phoneNumber: {
       type: String,
       trim: true,
@@ -83,7 +87,7 @@ var schema = new mongoose.Schema(
 schema.plugin(mongoosePaginate);
 export const Users = mongoose.model("Users", schema);
 
-schema.pre("save", function(next) {
+schema.pre("save", function (next) {
   bcrypt.hash(this.password, 10, (err, hash) => {
     this.password = hash;
     console.log("presave password: " + this.password);
@@ -91,14 +95,14 @@ schema.pre("save", function(next) {
   });
 });
 
-schema.pre("update", function(next) {
+schema.pre("update", function (next) {
   bcrypt.hash(this.password, 10, (err, hash) => {
     this.password = hash;
     next();
   });
 });
 
-schema.post("save", function(error, doc, next) {
+schema.post("save", function (error, doc, next) {
   if (error.name === "MongoError" && error.code === 11000) {
     next(new Error("User already exist"));
   } else {
@@ -106,7 +110,7 @@ schema.post("save", function(error, doc, next) {
   }
 });
 
-schema.methods.comparePassword = function(candidatePassword) {
+schema.methods.comparePassword = function (candidatePassword) {
   return new Promise((resolve, reject) => {
     bcrypt.compare(candidatePassword, this.password, (err, success) => {
       if (err) return reject(err);
@@ -116,7 +120,7 @@ schema.methods.comparePassword = function(candidatePassword) {
 };
 
 schema.set("toObject", {
-  transform: function(doc, ret) {
+  transform: function (doc, ret) {
     delete ret.__v;
   }
 });

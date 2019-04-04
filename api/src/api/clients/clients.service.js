@@ -92,7 +92,7 @@ async function getClients() {
   return await User.find();
 }
 
-async function confirmEmail(code) {
+async function confirmEmail({ username, code }) {
   const user = await User.findOneAndUpdate(
     { verificationCode: code },
     {
@@ -101,10 +101,18 @@ async function confirmEmail(code) {
     }
   );
 
-  console.log(`user: ${user}`);
-  
-
-  if (!user) throw new Error("Verification code is incorrect");
+  if (!user) {
+    const user = await User.findOneAndUpdate({ username: username }, { $inc: { 'attempts': 1 } })
+    console.log(user.attempts)
+    if (user.attempts >= 1) {
+      console.log("Удаление аккаунта " + user.attempts)
+      await User.deleteOne({username: username}, () => {console.log('Callback удаления')})
+      console.log("Удаление аккаунта")
+      throw new Error("Too many attempts. Account deleted")
+    }////////5
+    console.log('КОД НЕПРАВИЛЬНЫЙ')
+    throw new Error("Verification code is incorrect");
+  }
   const data = user.toObject();
 
   const token = createToken(data);
