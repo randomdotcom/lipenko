@@ -5,9 +5,16 @@ import { Formik } from "formik";
 import { string, object } from "yup";
 import { TextField, withStyles, Button } from "@material-ui/core";
 import teal from "@material-ui/core/colors/teal";
-import { signUpUser } from "../../../actions/user/signUp.user.actions";
-import { confirmUser } from "../../../actions/user/confirm.user.actions";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import Snackbar from "@material-ui/core/Snackbar";
 import VerificationCodeField from "../../../components/auth/VerificationCodeField";
+import {
+  signUpUser,
+  confirmUser,
+  userNewVerificationCode
+} from "../../../actions/auth.actions";
+import { clearErrors } from "../../../actions/errors.actions";
 
 const validationSchema = object().shape({
   username: string()
@@ -68,6 +75,10 @@ class UserSignUp extends Component {
     this.setState({ verificationCode: code });
   };
 
+  handleNewVerificationCode = () => {
+    this.props.userNewVerificationCode(this.props.username);
+  }
+
   handleConfirm = () => {
     this.props.confirmUser({
       username: this.props.username,
@@ -78,164 +89,188 @@ class UserSignUp extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <Formik
-        initialValues={{
-          username: "",
-          password: "",
-          email: "",
-          phoneNumber: ""
-        }}
-        onSubmit={(values, { setFieldError }) => {
-          try {
-            this.props.signUpUser(values);
-          } catch (errors) {
-            errors.forEach(err => {
-              setFieldError(err.field, err.error);
-            });
-          }
-        }}
-        validationSchema={validationSchema}
-        render={({
-          values,
-          errors,
-          handleBlur,
-          handleChange,
-          handleSubmit
-        }) => (
-          <form
-            className={classes.container}
-            onSubmit={handleSubmit}
-            noValidate
-          >
-            {!this.props.isSended && (
-              <>
-                <TextField
-                  label="Username"
-                  autoComplete="username"
-                  disabled={this.props.isSended}
-                  className={classes.textField}
-                  margin="normal"
-                  variant="outlined"
-                  name="username"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.username}
-                  helperText={errors.username}
-                  error={Boolean(errors.username)}
-                />
-                <TextField
-                  label="Password"
-                  autoComplete="new-password"
-                  disabled={this.props.isSended}
-                  className={classes.textField}
-                  margin="normal"
-                  variant="outlined"
-                  type="password"
-                  name="password"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.password}
-                  helperText={errors.password}
-                  error={Boolean(errors.password)}
-                />
-                <TextField
-                  label="Confirm password"
-                  autoComplete="new-password"
-                  disabled={this.props.isSended}
-                  className={classes.textField}
-                  margin="normal"
-                  variant="outlined"
-                  type="password"
-                  name="confirmPassword"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.confirmPassword}
-                  helperText={errors.confirmPassword}
-                  error={Boolean(errors.confirmPassword)}
-                />
-                <TextField
-                  label="Email"
-                  autoComplete="email"
-                  disabled={this.props.isSended}
-                  className={classes.textField}
-                  margin="normal"
-                  variant="outlined"
-                  type="email"
-                  name="email"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.email}
-                  helperText={errors.email}
-                  error={Boolean(errors.email)}
-                />
-                <TextField
-                  label="Phone number"
-                  autoComplete="tel"
-                  disabled={this.props.isSended}
-                  className={classes.textField}
-                  margin="normal"
-                  variant="outlined"
-                  name="phoneNumber"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.phoneNumber}
-                  helperText={errors.phoneNumber}
-                  error={Boolean(errors.phoneNumber)}
-                />
-                <TextField
-                  label="Your adress"
-                  autoComplete="tel"
-                  disabled={this.props.isSended}
-                  className={classes.textField}
-                  margin="normal"
-                  variant="outlined"
-                  name="adress"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.adress}
-                  helperText={errors.adress}
-                  error={Boolean(errors.adress)}
-                />
-              </>
-            )}
-            <div className={classes.VerifyAndConfirmContainer}>
-              {this.props.isSended && (
+      <>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          open={Boolean(this.props.error)}
+          message={<span>{this.props.error}</span>}
+          autoHideDuration={4000}
+          onClose={this.props.clearErrors}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="secondary"
+              className={classes.close}
+              onClick={this.props.clearErrors}
+            >
+              <CloseIcon />
+            </IconButton>
+          ]}
+        />
+        <Formik
+          initialValues={{
+            username: "",
+            password: "",
+            email: "",
+            phoneNumber: ""
+          }}
+          onSubmit={(values, { setFieldError }) => {
+            try {
+              this.props.signUpUser(values);
+            } catch (errors) {
+              errors.forEach(err => {
+                setFieldError(err.field, err.error);
+              });
+            }
+          }}
+          validationSchema={validationSchema}
+          render={({
+            values,
+            errors,
+            handleBlur,
+            handleChange,
+            handleSubmit
+          }) => (
+            <form
+              className={classes.container}
+              onSubmit={handleSubmit}
+              noValidate
+            >
+              {!this.props.isSended && (
                 <>
-                  <VerificationCodeField
-                    value={this.state.verificationCode}
-                    handleChange={this.handleVerificationCodeChange}
+                  <TextField
+                    label="Username"
+                    autoComplete="username"
+                    disabled={this.props.isSended}
+                    className={classes.textField}
+                    margin="normal"
+                    variant="outlined"
+                    name="username"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.username}
+                    helperText={errors.username}
+                    error={Boolean(errors.username)}
                   />
+                  <TextField
+                    label="Password"
+                    autoComplete="new-password"
+                    disabled={this.props.isSended}
+                    className={classes.textField}
+                    margin="normal"
+                    variant="outlined"
+                    type="password"
+                    name="password"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.password}
+                    helperText={errors.password}
+                    error={Boolean(errors.password)}
+                  />
+                  <TextField
+                    label="Confirm password"
+                    autoComplete="new-password"
+                    disabled={this.props.isSended}
+                    className={classes.textField}
+                    margin="normal"
+                    variant="outlined"
+                    type="password"
+                    name="confirmPassword"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.confirmPassword}
+                    helperText={errors.confirmPassword}
+                    error={Boolean(errors.confirmPassword)}
+                  />
+                  <TextField
+                    label="Email"
+                    autoComplete="email"
+                    disabled={this.props.isSended}
+                    className={classes.textField}
+                    margin="normal"
+                    variant="outlined"
+                    type="email"
+                    name="email"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.email}
+                    helperText={errors.email}
+                    error={Boolean(errors.email)}
+                  />
+                  <TextField
+                    label="Phone number"
+                    autoComplete="tel"
+                    disabled={this.props.isSended}
+                    className={classes.textField}
+                    margin="normal"
+                    variant="outlined"
+                    name="phoneNumber"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.phoneNumber}
+                    helperText={errors.phoneNumber}
+                    error={Boolean(errors.phoneNumber)}
+                  />
+                  <TextField
+                    label="Your adress"
+                    autoComplete="tel"
+                    disabled={this.props.isSended}
+                    className={classes.textField}
+                    margin="normal"
+                    variant="outlined"
+                    name="adress"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.adress}
+                    helperText={errors.adress}
+                    error={Boolean(errors.adress)}
+                  />
+                </>
+              )}
+              <div className={classes.VerifyAndConfirmContainer}>
+                {this.props.isSended && (
+                  <>
+                    <VerificationCodeField
+                      value={this.state.verificationCode}
+                      handleChange={this.handleVerificationCodeChange}
+                    />
+                    <Button
+                      onClick={this.handleConfirm}
+                      key="submit"
+                      variant="contained"
+                      color="primary"
+                      size="large"
+                      className={classes.confirmButton}
+                    >
+                      CONFIRM
+                    </Button>
+                    <Button size="small" onClick={this.handleNewVerificationCode} className={classes.margin}>
+                      Отправить ещё раз
+                    </Button>
+                  </>
+                )}
+                {!this.props.isSended && (
                   <Button
-                    onClick={this.handleConfirm}
+                    onClick={handleSubmit}
+                    type="submit"
                     key="submit"
                     variant="contained"
                     color="primary"
                     size="large"
-                    className={
-                      classes.confirmButton
-                    }
+                    className={classes.button}
                   >
-                    CONFIRM
+                    SIGN UP
                   </Button>
-                </>
-              )}
-              {!this.props.isSended && (
-                <Button
-                  onClick={handleSubmit}
-                  type="submit"
-                  key="submit"
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  className={classes.button}
-                >
-                  SIGN UP
-                </Button>
-              )}
-            </div>
-          </form>
-        )}
-      />
+                )}
+              </div>
+            </form>
+          )}
+        />
+      </>
     );
   }
 }
@@ -268,17 +303,21 @@ const styles = theme => ({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center"
+  },
+  close: {
+    padding: theme.spacing.unit / 2
   }
 });
 
 const mapStateToProps = state => ({
-  isSended: state.user.isSended,
-  username: state.user.username
+  isSended: state.profile.isSended,
+  username: state.profile.data.username,
+  error: state.errors.message
 });
 
 const UserSignUpContainer = connect(
   mapStateToProps,
-  { signUpUser, confirmUser }
+  { signUpUser, confirmUser, userNewVerificationCode, clearErrors }
 )(UserSignUp);
 
 export default withStyles(styles)(withSnackbar(UserSignUpContainer));

@@ -1,4 +1,4 @@
-import { userSignInSuccess } from "./actions/user/signIn.user.actions";
+import { userSignInSuccess } from "./actions/auth.actions";
 
 const AUTH_TOKEN_KEY = "auth token";
 const USER_KEY = "user";

@@ -1,13 +1,10 @@
 import { combineReducers } from "redux";
-import userReducer from "./user.reducer";
-import executorReducer from "./executor.reducer";
-
-console.log(userReducer);
-
-const user = combineReducers(userReducer, executorReducer); //// ?
+import profile from "./profile.reducer";
+import errors from "./errors.reducer";
 
 const combinedReducers = combineReducers({
-  user
+  profile,
+  errors
 });
 
 export default combinedReducers;

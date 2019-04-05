@@ -31,24 +31,29 @@ module.exports.signin = (req, res, next) => {
       } else {
         res
           .status(httpStatus.UNAUTHORIZED)
-          .json({ error: "Username or password is incorrect" });
+          .send("Username or password is incorrect");
       }
     })
     .catch(err => {
-      res.status(httpStatus.UNAUTHORIZED).json({ error: `${err.message}` });
+      res.status(httpStatus.UNAUTHORIZED).send(err.message);
     });
 };
 
 module.exports.signout = (req, res, next) => {
-  service.logout(req.body).then(result => {
-    result
-      ? res.status(httpStatus.OK).json("Ok")
-      : res.status(httpStatus.INTERNAL_SERVER_ERROR).json("Internal Error");
-  });
+  service
+    .logout(req.body)
+    .then(result => {
+      result
+        ? res.status(httpStatus.OK).json("Ok")
+        : res.status(httpStatus.INTERNAL_SERVER_ERROR).send("Internal Error");
+    })
+    .catch(err => {
+      res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err.message);
+    });
 };
 
 module.exports.register = (req, res, next) => {
-  console.log(req.body)
+  console.log(req.body);
   service
     .register(req.body, Role.Executor)
     .then(({ email, username, verificationCode }) => {
@@ -57,7 +62,9 @@ module.exports.register = (req, res, next) => {
     .then(() => {
       res.status(httpStatus.CREATED).json("Created");
     })
-    .catch(err => res.json({ error: `${err.message}` }));
+    .catch(err => {
+      res.send(err.message);
+    });
 };
 
 module.exports.confirm = (req, res, next) => {
@@ -67,7 +74,7 @@ module.exports.confirm = (req, res, next) => {
       res.status(httpStatus.CREATED).json(user);
     })
     .catch(err => {
-      return res.status(httpStatus.NOT_FOUND).send(err);
+      res.status(httpStatus.NOT_FOUND).send(err.message);
     });
 };
 
@@ -80,7 +87,9 @@ module.exports.newVerificationCode = (req, res, next) => {
     .then(() => {
       res.status(httpStatus.CREATED).json("Created");
     })
-    .catch(err => res.json({ error: `${err.message}` }));
+    .catch(err => {
+      res.send(err.message);
+    });
 };
 
 module.exports.block = (req, res, next) => {
@@ -89,7 +98,9 @@ module.exports.block = (req, res, next) => {
     .then(() => {
       res.status(httpStatus.OK).json(`Company ${req.params.id} blocked`);
     })
-    .catch(err => next(err));
+    .catch(err => {
+      res.send(err.message);
+    });
 };
 
 module.exports.unblock = (req, res, next) => {
@@ -98,7 +109,9 @@ module.exports.unblock = (req, res, next) => {
     .then(() => {
       res.status(httpStatus.OK).json(`Company ${req.params.id} unblocked`);
     })
-    .catch(err => next(err));
+    .catch(err => {
+      res.send(err.message);
+    });
 };
 
 module.exports.rate = (req, res, next) => {
@@ -110,7 +123,9 @@ module.exports.rate = (req, res, next) => {
     .then(() => {
       res.status(httpStatus.OK).json(`Company ${req.params.id} rated`);
     })
-    .catch(err => next(err));
+    .catch(err => {
+      res.send(err.message);
+    });
 };
 
 module.exports.edit = (req, res, next) => {
@@ -127,6 +142,6 @@ module.exports.edit = (req, res, next) => {
       .then(() => {
         res.status(httpStatus.OK).json(`Company ${req.user.id} edited`);
       })
-      .catch(err => next(err));
-  } else next("Введены не все данные");
+      .catch(err => res.send(err.message));
+  } else res.send("Введены не все данные");
 };

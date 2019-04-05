@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Formik } from "formik";
 import { string, object } from "yup";
-import { withSnackbar } from "notistack";
+import Snackbar from "@material-ui/core/Snackbar";
 import TextField from "@material-ui/core/TextField";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -11,10 +11,16 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import teal from "@material-ui/core/colors/teal";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 import VerificationCodeField from "../../../components/auth/VerificationCodeField";
-import { signInUser } from "../../../actions/user/signIn.user.actions";
-import { confirmUser } from "../../../actions/user/confirm.user.actions";
-import { signInExecutor } from "../../../actions/executor/signIn.executor.actions";
+import { clearErrors } from "../../../actions/errors.actions";
+import {
+  signInUser,
+  confirmUser,
+  userNewVerificationCode,
+  signInExecutor
+} from "../../../actions/auth.actions";
 
 const validationSchema = object().shape({
   username: string()
@@ -42,15 +48,13 @@ class SignIn extends Component {
     };
   }
 
-  handleMessage = (msg, variant) => {
-    this.props.enqueueSnackbar(msg, { variant });
+  handleVerificationCodeChange = verificationCode => {
+    this.setState({ verificationCode });
   };
 
-  handleVerificationCodeChange = verificationCode => {
-    this.setState({ verificationCode }, () =>
-      console.log(this.state.verificationCode)
-    );
-  };
+  handleNewVerificationCode = () => {
+    this.props.userNewVerificationCode(this.props.username);
+  }
 
   handleChangeRadioButton = event => {
     this.setState({ selectedForm: event.target.value });
@@ -64,26 +68,50 @@ class SignIn extends Component {
   };
 
   render() {
+    const { classes } = this.props;
     return (
-      <Formik
-        initialValues={{ username: "", password: "" }}
-        validationSchema={validationSchema}
-        onSubmit={(values, { setFieldError }) => {
-          try {
-            if (this.state.selectedForm === "user") {
-              this.props.signInUser(values.username, values.password);
-            } else if (this.state.selectedForm === "executor") {
-              this.props.signInExecutor(values.username, values.password);
+      <>
+        <Formik
+          initialValues={{ username: "", password: "" }}
+          validationSchema={validationSchema}
+          onSubmit={(values, { setFieldError }) => {
+            try {
+              if (this.state.selectedForm === "user") {
+                this.props.signInUser(values.username, values.password);
+              } else if (this.state.selectedForm === "executor") {
+                this.props.signInExecutor(values.username, values.password);
+              }
+            } catch (errors) {
+              console.log(errors);
+              errors.forEach(err => {
+                setFieldError(err.field, err.error);
+              });
             }
-          } catch (errors) {
-            console.log(errors);
-            errors.forEach(err => {
-              setFieldError(err.field, err.error);
-            });
-          }
-        }}
-        component={this.form}
-      />
+          }}
+          component={this.form}
+        />
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          open={Boolean(this.props.error)}
+          message={<span>{this.props.error}</span>}
+          autoHideDuration={4000}
+          onClose={this.props.clearErrors}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="secondary"
+              className={classes.close}
+              onClick={this.props.clearErrors}
+            >
+              <CloseIcon />
+            </IconButton>
+          ]}
+        />
+      </>
     );
   }
 
@@ -162,6 +190,13 @@ class SignIn extends Component {
               >
                 CONFIRM
               </Button>
+              <Button
+                size="small"
+                onClick={this.handleNewVerificationCode}
+                className={classes.margin}
+              >
+                Отправить ещё раз
+              </Button>
             </>
           )}
           {!this.props.isSended && (
@@ -184,8 +219,7 @@ class SignIn extends Component {
 }
 
 SignIn.propTypes = {
-  classes: PropTypes.object.isRequired,
-  enqueueSnackbar: PropTypes.func.isRequired
+  classes: PropTypes.object.isRequired
 };
 
 const styles = theme => ({
@@ -223,17 +257,27 @@ const styles = theme => ({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center"
+  },
+  close: {
+    padding: theme.spacing.unit / 2
   }
 });
 
 const mapStateToProps = state => ({
-  isSended: state.user.isSended,
-  username: state.user.username
+  isSended: state.profile.isSended,
+  username: state.profile.data.username,
+  error: state.errors.message
 });
 
 const SignInContainer = connect(
   mapStateToProps,
-  { signInExecutor, signInUser, confirmUser }
+  {
+    signInExecutor,
+    signInUser,
+    confirmUser,
+    userNewVerificationCode,
+    clearErrors
+  }
 )(SignIn);
 
-export default withStyles(styles)(withSnackbar(SignInContainer));
+export default withStyles(styles)(SignInContainer);

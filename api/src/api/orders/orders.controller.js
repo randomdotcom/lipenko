@@ -9,7 +9,9 @@ module.exports.get = (req, res, next) => {
   service
     .getOrders(req.user)
     .then(orders => res.status(httpStatus.OK).json(orders))
-    .catch(err => next(err));
+    .catch(err => {
+      res.send(err.message);
+    });
 };
 
 module.exports.getById = (req, res) => {
@@ -27,7 +29,9 @@ module.exports.create = (req, res) => {
     .then(() => {
       res.status(httpStatus.CREATED).json("Created");
     })
-    .catch(err => next(err));
+    .catch(err => {
+      res.send(err.message);
+    });
 };
 
 module.exports.accept = (req, res) => {
@@ -47,7 +51,7 @@ module.exports.accept = (req, res) => {
           res.status(httpStatus.OK).json("Order accepted");
         })
         .catch(err => {
-          res.send(err);
+          res.send(err.message);
         });
     }
   );
@@ -72,7 +76,7 @@ module.exports.cancel = (req, res) => {
           res.status(httpStatus.OK).json("Order canceled");
         })
         .catch(err => {
-          res.send(err);
+          res.send(err.message);
         });
     }
   );
@@ -87,7 +91,8 @@ module.exports.confirm = (req, res) => {
     (err, order) => {
       if (err) return res.send(err);
       if (!order[0].status) return res.send("Нет доступа");
-      if (order[0].status != Status.Accepted) return res.send(`Заказ не со статусом "Accepted"`);
+      if (order[0].status != Status.Accepted)
+        return res.send(`Заказ не со статусом "Accepted"`);
 
       service
         .confirmOrder(req.body.orderId)
@@ -95,7 +100,7 @@ module.exports.confirm = (req, res) => {
           res.status(httpStatus.OK).json("Order confirmed");
         })
         .catch(err => {
-          res.send(err);
+          res.send(err.message);
         });
     }
   );
@@ -107,5 +112,7 @@ module.exports.history = (req, res, next) => {
     .then(orders => {
       res.status(httpStatus.OK).json(orders);
     })
-    .catch(err => next(err));
+    .catch(err => {
+      res.send(err.message);
+    });
 };

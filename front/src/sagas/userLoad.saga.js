@@ -1,6 +1,6 @@
-import { call, put, takeLatest } from "redux-saga/effects";
 import axios from "axios";
-import { userLoaded, LOAD_USER } from "../actions/user/load.user.actions";
+import { call, put, takeLatest } from "redux-saga/effects";
+import { userLoaded, LOAD_USER } from "../actions/auth.actions";
 
 function* loadUserSaga() {
   const response = yield call(axios.get, "/api/users/current");

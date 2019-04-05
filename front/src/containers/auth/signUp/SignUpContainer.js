@@ -90,7 +90,7 @@ const styles = theme => ({
 });
 
 const mapStateToProps = state => ({
-  isSended: state.user.isSended
+  isSended: state.profile.isSended
 });
 
 const SignUpContainer = connect(mapStateToProps)(SignUp);

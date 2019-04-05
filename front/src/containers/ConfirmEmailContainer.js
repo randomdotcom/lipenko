@@ -3,10 +3,9 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import queryString from "query-string";
 import { Paper } from "@material-ui/core";
-import { confirmExecutor } from '../actions/executor/confirm.executor.actions'
+import { confirmExecutor } from "../actions/auth.actions";
 
 class ConfirmEmail extends Component {
-
   componentWillMount() {
     const { token } = queryString.parse(this.props.location.search);
     this.props.confirmExecutor(token);
@@ -41,10 +40,9 @@ const mapStateToProps = state => ({
   isAuthenticated: state.user.isAuthenticated
 });
 
-const ConfirmEmailContainer =
-  connect(
-    mapStateToProps,
-    { confirmExecutor }
-  )(ConfirmEmail);
+const ConfirmEmailContainer = connect(
+  mapStateToProps,
+  { confirmExecutor }
+)(ConfirmEmail);
 
 export default ConfirmEmailContainer;

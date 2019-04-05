@@ -13,7 +13,7 @@ const randtoken = require("rand-token").generator({
 async function authenticate({ username, password }) {
   try {
     console.log(`username: ${username}`);
-    console.log(`pass: ${password}`)
+    console.log(`pass: ${password}`);
     const user = await User.findOne({ username })
       .select("+password")
       .exec();
@@ -45,7 +45,7 @@ async function logout({ token }) {
 
 async function newVerificationCode({ username }) {
   var verificationCode = randtoken.generate(6);
-
+  
   const user = await User.findOne({ username })
     .select("+password")
     .exec();
@@ -57,7 +57,8 @@ async function newVerificationCode({ username }) {
   if (user.isBlocked) throw `The user is blocked, reason: ${user.block}`;
 
   await User.findOneAndUpdate({ username }, { $set: { verificationCode } });
-
+  console.log(user.email)
+  console.log(verificationCode)
   return {
     email: user.email,
     username: user.username,
@@ -108,10 +109,12 @@ async function confirmEmail({ username, verificationCode }) {
       { username: username },
       { $inc: { attempts: 1 } }
     );
-    if (user.attempts >= 40) {
+    if (!user) throw new Error("User does not exist");
+
+    if (user.attempts >= 4) {
       await User.deleteOne({ username: username });
       throw new Error("Too many attempts. Account deleted");
-    } ////////5
+    }
     throw new Error("Verification code is incorrect");
   }
   const data = user.toObject();
