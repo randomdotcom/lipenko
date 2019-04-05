@@ -49,10 +49,7 @@ const sendProfileBlockMessage = (to, username, reason) => {
     html: `<div style="width: 100%, display: flex, justify-content: center"><h2>Аккаунт <b>${username}</b> был заблокирован, Причина: ${reason}</h2>` // plain text body
   };
 
-  transporter.sendMail(mailOptions, function(err, info) {
-    if (err) res.send(err);
-    else return res.send(info);
-  });
+  transporter.sendMail(mailOptions);
 };
 
 const sendProfileUnblockMessage = (to, username) => {
@@ -63,10 +60,7 @@ const sendProfileUnblockMessage = (to, username) => {
     html: `<div style="width: 100%, display: flex, justify-content: center"><h2>Аккаунт <b>${username}</b> был разблокирован</h2>` // plain text body
   };
 
-  transporter.sendMail(mailOptions, function(err, info) {
-    if (err) res.send(err);
-    else return res.send(info);
-  });
+  transporter.sendMail(mailOptions);
 };
 
 const sendOrderStatusMessage = (to, orderId, status) => {
@@ -79,10 +73,7 @@ const sendOrderStatusMessage = (to, orderId, status) => {
     }/api/orders/${orderId}">${orderId}</a> изменил статус: ${status}</h2>`
   };
 
-  transporter.sendMail(mailOptions, function(err, info) {
-    if (err) res.send(err);
-    else return res.send(info);
-  });
+  transporter.sendMail(mailOptions);
 };
 
 module.exports = {

@@ -1,5 +1,10 @@
 import { combineReducers } from "redux";
-import user from "./user.reducer";
+import userReducer from "./user.reducer";
+import executorReducer from "./executor.reducer";
+
+console.log(userReducer);
+
+const user = combineReducers(userReducer, executorReducer); //// ?
 
 const combinedReducers = combineReducers({
   user

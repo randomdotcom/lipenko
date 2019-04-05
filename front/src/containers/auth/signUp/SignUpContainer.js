@@ -1,10 +1,10 @@
-import { connect } from "react-redux";
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { RadioGroup, FormControlLabel, Radio } from "@material-ui/core";
 import UserSignUpContainer from "./UserSignUpContainer";
-import ExecutorSignUp from "../../../components/auth/SignUp/executorSignUp";
+import ExecutorSignUpContainer from "./ExecutorSignUpContainer";
 
 class SignUp extends Component {
   constructor(props) {
@@ -28,31 +28,35 @@ class SignUp extends Component {
 
     return (
       <div className={classes.container}>
-        <RadioGroup
-          row
-          aria-label="Gender"
-          name="type"
-          value={this.state.selectedForm}
-          onChange={this.handleChangeRadioButton}
-        >
-          <FormControlLabel
-            value="user"
-            control={<Radio />}
-            labelPlacement="end"
-            label="User"
-          />
-          <FormControlLabel
-            value="executor"
-            control={<Radio />}
-            labelPlacement="end"
-            label="Executor"
-          />
-        </RadioGroup>
+        {!this.props.isSended && (
+          <>
+            <RadioGroup
+              row
+              aria-label="Gender"
+              name="type"
+              value={this.state.selectedForm}
+              onChange={this.handleChangeRadioButton}
+            >
+              <FormControlLabel
+                value="user"
+                control={<Radio />}
+                labelPlacement="end"
+                label="User"
+              />
+              <FormControlLabel
+                value="executor"
+                control={<Radio />}
+                labelPlacement="end"
+                label="Executor"
+              />
+            </RadioGroup>
+          </>
+        )}
         {this.state.selectedForm === "user" ? (
-          <UserSignUpContainer signIn={this.props.signIn} />
+          <UserSignUpContainer />
         ) : (
-            <ExecutorSignUp />
-          )}
+          <ExecutorSignUpContainer />
+        )}
       </div>
     );
   }
@@ -85,8 +89,10 @@ const styles = theme => ({
   }
 });
 
-const SignUpContainer = connect(
-  null
-)(SignUp);
+const mapStateToProps = state => ({
+  isSended: state.user.isSended
+});
+
+const SignUpContainer = connect(mapStateToProps)(SignUp);
 
 export default withStyles(styles)(SignUpContainer);

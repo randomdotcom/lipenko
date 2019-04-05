@@ -48,6 +48,7 @@ module.exports.signout = (req, res, next) => {
 };
 
 module.exports.register = (req, res, next) => {
+  console.log(req.body)
   service
     .register(req.body, Role.Executor)
     .then(({ email, username, verificationCode }) => {
@@ -61,13 +62,12 @@ module.exports.register = (req, res, next) => {
 
 module.exports.confirm = (req, res, next) => {
   service
-    .confirmEmail(req.query.token)
+    .confirmEmail(req.body.token)
     .then(user => {
       res.status(httpStatus.CREATED).json(user);
     })
     .catch(err => {
-      console.log('ERROR SENDED: ' + err);
-      return res.json({ error: err });
+      return res.status(httpStatus.NOT_FOUND).send(err);
     });
 };
 

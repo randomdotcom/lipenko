@@ -1,4 +1,8 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Formik } from "formik";
+import { string, object } from "yup";
+import { withSnackbar } from "notistack";
 import {
   TextField,
   withStyles,
@@ -8,10 +12,8 @@ import {
   ExpansionPanelDetails,
   Button
 } from "@material-ui/core";
-import { Formik } from "formik";
-import { string, object } from "yup";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { withSnackbar } from "notistack";
+import { signUpExecutor } from "../../../actions/executor/signUp.executor.actions.js";
 
 const validationSchema = object().shape({
   username: string()
@@ -112,11 +114,6 @@ const validationSchema = object().shape({
 });
 
 class ExecutorSignUp extends Component {
-  fetchRegisterExecutor = values => {
-    console.log("тут");
-    //fetchRegisterExecutor.call(this, values);
-  };
-
   handleMessage = (msg, variant) => {
     this.props.enqueueSnackbar(msg, { variant });
   };
@@ -151,11 +148,9 @@ class ExecutorSignUp extends Component {
         }}
         onSubmit={(values, { setFieldError }) => {
           try {
-            // this.fetchRegisterExecutor({
-            //   values
-            // });
+            console.log(values);
+            this.props.signUpExecutor(values);
           } catch (errors) {
-            console.log(errors);
             errors.forEach(err => {
               setFieldError(err.field, err.error);
             });
@@ -581,4 +576,14 @@ const styles = theme => ({
   }
 });
 
-export default withStyles(styles)(withSnackbar(ExecutorSignUp));
+const mapStateToProps = state => ({
+  isSended: state.user.isSended,
+  username: state.user.username
+});
+
+const ExecutorSignUpContainer = connect(
+  mapStateToProps,
+  { signUpExecutor }
+)(ExecutorSignUp);
+
+export default withStyles(styles)(withSnackbar(ExecutorSignUpContainer));

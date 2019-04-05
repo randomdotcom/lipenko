@@ -12,6 +12,8 @@ const randtoken = require("rand-token").generator({
 
 async function authenticate({ username, password }) {
   try {
+    console.log(`username: ${username}`);
+    console.log(`pass: ${password}`)
     const user = await User.findOne({ username })
       .select("+password")
       .exec();
@@ -41,7 +43,7 @@ async function logout({ token }) {
   return true;
 }
 
-async function newVerificationCode({ username, password }) {
+async function newVerificationCode({ username }) {
   var verificationCode = randtoken.generate(6);
 
   const user = await User.findOne({ username })
@@ -92,9 +94,9 @@ async function getClients() {
   return await User.find();
 }
 
-async function confirmEmail({ username, code }) {
+async function confirmEmail({ username, verificationCode }) {
   const user = await User.findOneAndUpdate(
-    { verificationCode: code },
+    { verificationCode: verificationCode },
     {
       $set: { isVerified: true },
       $unset: { verificationCode: { $exist: true } }
@@ -102,22 +104,19 @@ async function confirmEmail({ username, code }) {
   );
 
   if (!user) {
-    const user = await User.findOneAndUpdate({ username: username }, { $inc: { 'attempts': 1 } })
-    console.log(user.attempts)
-    if (user.attempts >= 1) {
-      console.log("Удаление аккаунта " + user.attempts)
-      await User.deleteOne({username: username}, () => {console.log('Callback удаления')})
-      console.log("Удаление аккаунта")
-      throw new Error("Too many attempts. Account deleted")
-    }////////5
-    console.log('КОД НЕПРАВИЛЬНЫЙ')
+    const user = await User.findOneAndUpdate(
+      { username: username },
+      { $inc: { attempts: 1 } }
+    );
+    if (user.attempts >= 40) {
+      await User.deleteOne({ username: username });
+      throw new Error("Too many attempts. Account deleted");
+    } ////////5
     throw new Error("Verification code is incorrect");
   }
   const data = user.toObject();
 
   const token = createToken(data);
-
-  console.log(`token: ${token}`);
 
   const { password: userPassword, ...userWithoutPassword } = data;
 

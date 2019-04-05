@@ -8,7 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import { SnackbarProvider } from "notistack";
 
 import SignUpContainer from "../../containers/auth/signUp/SignUpContainer";
-import SignInContainer from "../../containers/SignInContainer";
+import SignInContainer from "../../containers/auth/signIn/SignInContainer";
 
 function TabContainer(props) {
   return (

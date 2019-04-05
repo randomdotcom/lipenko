@@ -38,7 +38,7 @@ async function logout({ token }) {
   return true;
 }
 
-async function register({ values }, role) {
+async function register(values, role) {
   var verificationCode = randtoken.generate(6);
 
   console.log(values);

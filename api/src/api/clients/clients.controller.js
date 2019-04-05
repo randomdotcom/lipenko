@@ -7,11 +7,12 @@ const Role = require("../../enums/roles.enum");
 const { sendUserConfirmationMessage } = require("../../config/nodemailer");
 
 module.exports.signin = (req, res, next) => {
+  console.log(`req.body: ${req.body}`);
   service
     .authenticate(req.body)
     .then(user => {
       if (user.isVerified === false) {
-        res.status(httpStatus.OK).json({ isVerified: user.isVerified });
+        res.status(httpStatus.OK).json({ isVerified: false });
       } else if (user) {
         res.status(httpStatus.OK).json(user);
       } else {
@@ -30,8 +31,8 @@ module.exports.signout = (req, res, next) => {
     result
       ? res.status(httpStatus.OK).json("Ok")
       : res
-        .status(httpStatus.INTERNAL_SERVER_ERROR)
-        .json({ error: `Внутренняя ошибка сервера` });
+          .status(httpStatus.INTERNAL_SERVER_ERROR)
+          .json({ error: `Внутренняя ошибка сервера` });
   });
 };
 
@@ -39,10 +40,11 @@ module.exports.register = (req, res, next) => {
   service
     .register(req.body, Role.User)
     .then(({ email, username, verificationCode }) => {
-      return sendUserConfirmationMessage(email, username, verificationCode);
+      sendUserConfirmationMessage(email, username, verificationCode);
+      return username;
     })
-    .then(() => {
-      res.status(httpStatus.CREATED).json("success");
+    .then(username => {
+      res.status(httpStatus.CREATED).json({ username });
     })
     .catch(err => {
       next(err);
@@ -53,23 +55,24 @@ module.exports.newVerificationCode = (req, res, next) => {
   service
     .newVerificationCode(req.body)
     .then(({ email, username, verificationCode }) => {
-      return sendUserConfirmationMessage(email, username, verificationCode);
+      sendUserConfirmationMessage(email, username, verificationCode);
+      return username;
     })
-    .then(() => {
-      res.status(httpStatus.CREATED).json("Created");
+    .then(username => {
+      res.status(httpStatus.CREATED).json({ username });
     })
     .catch(err => res.json({ error: `${err.message}` }));
 };
 
 module.exports.confirm = (req, res, next) => {
-  console.log(req.body);
-
   service
     .confirmEmail(req.body)
     .then(user => {
       res.status(httpStatus.CREATED).json(user);
     })
-    .catch(err => { res.status(httpStatus.NOT_FOUND).send(err) });
+    .catch(err => {
+      res.status(httpStatus.NOT_FOUND).send(err);
+    });
 };
 
 module.exports.get = (req, res, next) => {
