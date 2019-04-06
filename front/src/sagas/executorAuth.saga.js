@@ -1,5 +1,5 @@
 import axios from "axios";
-import { call, put, take, takeLeading, takeEvery } from "redux-saga/effects";
+import { call, put, take, takeLeading, takeEvery, throttle } from "redux-saga/effects";
 import { storeToken, clearToken } from "../authentication";
 import {
   SIGNIN_EXECUTOR,
@@ -10,7 +10,9 @@ import {
   SIGNOUT_EXECUTOR,
   executorSignOutSuccess,
   CONFIRM_EXECUTOR,
-  executorConfirmSuccess
+  executorConfirmSuccess,
+  EXECUTOR_NEW_VERIFICATION_CODE,
+  executorNewVerificationCodeSuccess
 } from "../actions/auth.actions";
 import { returnErrors } from "../actions/errors.actions";
 
@@ -35,6 +37,17 @@ export function* watchExecutorConfirmSaga() {
 
       yield put(executorConfirmSuccess(response.data));
       yield call(storeToken, response.data.token, response.data.user);
+    } catch (error) {
+      yield put(returnErrors(error.response.data));
+    }
+  });
+}
+
+export function* watchExecutorNewVerificationCode() {
+  yield throttle(120000, EXECUTOR_NEW_VERIFICATION_CODE, function* ({ payload }) {
+    try {
+      yield call(axios.put, "/api/companies/newVerificationCode", payload);
+      yield put(executorNewVerificationCodeSuccess());
     } catch (error) {
       yield put(returnErrors(error.response.data));
     }

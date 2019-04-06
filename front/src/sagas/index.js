@@ -10,7 +10,8 @@ import {
   watchExecutorSignInSaga,
   watchExecutorSignOutSaga,
   watchExecutorSignUpSaga,
-  watchExecutorConfirmSaga
+  watchExecutorConfirmSaga,
+  watchExecutorNewVerificationCode
 } from "./executorAuth.saga";
 import { watchLoadUserSaga } from "./userLoad.saga";
 //import { watchLoadExecutorSaga } from "./executorLoad.saga";
@@ -26,6 +27,7 @@ export default function*() {
   yield spawn(watchExecutorSignUpSaga);
   yield spawn(watchExecutorSignOutSaga);
   yield spawn(watchUserNewVerificationCode);
+  yield spawn(watchExecutorNewVerificationCode);
 
   // yield spawn(watchLoadExecutorSaga);
 }

@@ -41,8 +41,6 @@ async function logout({ token }) {
 async function register(values, role) {
   var verificationCode = randtoken.generate(6);
 
-  console.log(values);
-
   const {
     username,
     password,
@@ -149,16 +147,13 @@ async function confirmEmail(code) {
   } catch (err) { throw err }
 }
 
-async function newVerificationCode({ username, password }) {
+async function newVerificationCode({ username }) {
   var verificationCode = randtoken.generate(6);
   console.log(username + " " + password);
   const user = await Executor.findOne({ username })
     .select("+password")
     .exec();
   if (user === null) throw new Error("The user is not found");
-
-  let success = await user.comparePassword(password);
-  if (success === false) throw new Error("The password is incorrect");
 
   if (user.isBlocked)
     throw new Error(`The user is blocked, reason: ${user.block}`);

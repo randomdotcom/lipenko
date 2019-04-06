@@ -12,8 +12,6 @@ const randtoken = require("rand-token").generator({
 
 async function authenticate({ username, password }) {
   try {
-    console.log(`username: ${username}`);
-    console.log(`pass: ${password}`);
     const user = await User.findOne({ username })
       .select("+password")
       .exec();
@@ -51,14 +49,10 @@ async function newVerificationCode({ username }) {
     .exec();
   if (user === null) throw "The user is not found";
 
-  let success = await user.comparePassword(password);
-  if (success === false) throw "The password is incorrect";
-
   if (user.isBlocked) throw `The user is blocked, reason: ${user.block}`;
 
   await User.findOneAndUpdate({ username }, { $set: { verificationCode } });
-  console.log(user.email)
-  console.log(verificationCode)
+  
   return {
     email: user.email,
     username: user.username,

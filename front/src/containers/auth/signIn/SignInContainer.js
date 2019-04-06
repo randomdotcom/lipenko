@@ -19,6 +19,7 @@ import {
   signInUser,
   confirmUser,
   userNewVerificationCode,
+  executorNewVerificationCode,
   signInExecutor
 } from "../../../actions/auth.actions";
 
@@ -53,7 +54,11 @@ class SignIn extends Component {
   };
 
   handleNewVerificationCode = () => {
+    if (this.state.selectedForm === 'user') {
     this.props.userNewVerificationCode(this.props.username);
+    } else {
+      this.props.executorNewVerificationCode(this.props.username);
+    }
   }
 
   handleChangeRadioButton = event => {
@@ -276,6 +281,7 @@ const SignInContainer = connect(
     signInUser,
     confirmUser,
     userNewVerificationCode,
+    executorNewVerificationCode,
     clearErrors
   }
 )(SignIn);

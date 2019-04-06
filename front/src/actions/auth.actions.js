@@ -105,6 +105,21 @@ export const confirmExecutor = token => {
   };
 };
 
+export const EXECUTOR_NEW_VERIFICATION_CODE = "EXECUTOR: NEW VERIFICATION CODE..";
+export const executorNewVerificationCode = username => {
+  return {
+    type: EXECUTOR_NEW_VERIFICATION_CODE,
+    payload: { username }
+  };
+};
+
+export const EXECUTOR_NEW_VERIFICATION_CODE_SUCCESS = "EXECUTOR: NEW VERIFICATION CODE SUCCESS";
+export const executorNewVerificationCodeSuccess = () => {
+  return {
+    type: EXECUTOR_NEW_VERIFICATION_CODE_SUCCESS
+  };
+};
+
 export const EXECUTOR_CONFIRM_SUCCESS = "EXECUTOR: CONFIRMATION IS SUCCESS";
 export const executorConfirmSuccess = data => ({
   type: EXECUTOR_CONFIRM_SUCCESS,

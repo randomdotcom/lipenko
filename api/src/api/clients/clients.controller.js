@@ -54,7 +54,6 @@ module.exports.newVerificationCode = (req, res, next) => {
   service
     .newVerificationCode(req.body)
     .then(({ email, username, verificationCode }) => {
-      console.log('ТУТ')
       sendUserConfirmationMessage(email, username, verificationCode);
       return username;
     })

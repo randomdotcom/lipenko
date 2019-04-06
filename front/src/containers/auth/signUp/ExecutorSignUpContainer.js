@@ -17,7 +17,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import { clearErrors } from "../../../actions/errors.actions";
-import { signUpExecutor } from "../../../actions/auth.actions.js";
+import { signUpExecutor, executorNewVerificationCode } from "../../../actions/auth.actions.js";
 
 const validationSchema = object().shape({
   username: string()
@@ -35,7 +35,7 @@ const validationSchema = object().shape({
     .matches(/^[\S]{5,18}$/, "The password cannot contain spaces"),
   confirmPassword: string()
     .required("Enter your password again")
-    .test("passwords-match", "Passwords must match ya fool", function(value) {
+    .test("passwords-match", "Passwords must match ya fool", function (value) {
       return this.parent.password === value;
     }),
   email: string()
@@ -122,6 +122,10 @@ class ExecutorSignUp extends Component {
     this.props.enqueueSnackbar(msg, { variant });
   };
 
+  handleNewVerificationCode = () => {
+    this.props.executorNewVerificationCode(this.props.username);
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -190,390 +194,393 @@ class ExecutorSignUp extends Component {
             handleChange,
             handleSubmit
           }) => (
-            <form className={classes.container} onSubmit={handleSubmit}>
-              <Grid container justify="center" spacing={24}>
-                <Grid
-                  item
-                  justify="center"
-                  container
-                  className={classes.mainInfo}
-                >
-                  <TextField
-                    label="Username"
-                    autoComplete="username"
-                    className={classes.textField}
-                    margin="normal"
-                    variant="outlined"
-                    name="username"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.username}
-                    helperText={errors.username}
-                    error={Boolean(errors.username)}
-                  />
-                  <TextField
-                    label="Password"
-                    autoComplete="new-password"
-                    className={classes.textField}
-                    margin="normal"
-                    variant="outlined"
-                    type="password"
-                    name="password"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.password}
-                    helperText={errors.password}
-                    error={Boolean(errors.password)}
-                  />
-                  <TextField
-                    label="Confirm password"
-                    autoComplete="new-password"
-                    className={classes.textField}
-                    margin="normal"
-                    variant="outlined"
-                    type="password"
-                    name="confirmPassword"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.confirmPassword}
-                    helperText={errors.confirmPassword}
-                    error={Boolean(errors.confirmPassword)}
-                  />
-                  <TextField
-                    label="Email"
-                    autoComplete="email"
-                    className={classes.textField}
-                    margin="normal"
-                    variant="outlined"
-                    type="email"
-                    name="email"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.email}
-                    helperText={errors.email}
-                    error={Boolean(errors.email)}
-                  />
-                  <TextField
-                    label="Phone number"
-                    autoComplete="tel"
-                    className={classes.textField}
-                    margin="normal"
-                    variant="outlined"
-                    name="phoneNumber"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.phoneNumber}
-                    helperText={errors.phoneNumber}
-                    error={Boolean(errors.phoneNumber)}
-                  />
-                  <TextField
-                    label="Company name"
-                    autoComplete="text"
-                    className={classes.textField}
-                    margin="normal"
-                    variant="outlined"
-                    name="companyName"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.companyName}
-                    helperText={errors.companyName}
-                    error={Boolean(errors.companyName)}
-                  />
-                  <TextField
-                    label="Descrition"
-                    autoComplete="tel"
-                    className={classes.textFieldFullWidth}
-                    margin="normal"
-                    variant="outlined"
-                    name="description"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.description}
-                    helperText={errors.description}
-                    error={Boolean(errors.description)}
-                    multiline
-                    rowsMax="4"
-                    fullWidth
-                  />
-                  <TextField
-                    label="City"
-                    className={classes.textField}
-                    margin="normal"
-                    variant="outlined"
-                    name="city"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.city}
-                    helperText={errors.city}
-                    error={Boolean(errors.city)}
-                  />
-                </Grid>
+              <form className={classes.container} onSubmit={handleSubmit}>
                 <Grid container justify="center" spacing={24}>
-                  <Grid item>
-                    <ExpansionPanel>
-                      <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                        Standart cleaning
-                      </ExpansionPanelSummary>
-                      <ExpansionPanelDetails>
-                        <div flexwrap="true">
-                          <TextField
-                            label="Price per small room"
-                            autoComplete="tel"
-                            className={classes.textField}
-                            margin="normal"
-                            variant="outlined"
-                            name="standartSmallRoom"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.standartSmallRoom}
-                            helperText={errors.standartSmallRoom}
-                            error={Boolean(errors.standartSmallRoom)}
-                          />
-                          <TextField
-                            label="Price per big room"
-                            autoComplete="tel"
-                            className={classes.textField}
-                            margin="normal"
-                            variant="outlined"
-                            name="standartBigRoom"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.standartBigRoom}
-                            helperText={errors.standartBigRoom}
-                            error={Boolean(errors.standartBigRoom)}
-                          />
-                          <TextField
-                            label="Price per bathroom"
-                            autoComplete="tel"
-                            className={classes.textField}
-                            margin="normal"
-                            variant="outlined"
-                            name="standartBathRoom"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.standartBathRoom}
-                            helperText={errors.standartBathRoom}
-                            error={Boolean(errors.standartBathRoom)}
-                          />
-                        </div>
-                      </ExpansionPanelDetails>
-                    </ExpansionPanel>
-                  </Grid>
-                  <Grid item>
-                    <ExpansionPanel>
-                      <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                        General cleaning
-                      </ExpansionPanelSummary>
-                      <ExpansionPanelDetails>
-                        <div flexwrap="true">
-                          <TextField
-                            label="Price per small room"
-                            autoComplete="tel"
-                            className={classes.textField}
-                            margin="normal"
-                            variant="outlined"
-                            name="generalSmallRoom"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.generalSmallRoom}
-                            helperText={errors.generalSmallRoom}
-                            error={Boolean(errors.generalSmallRoom)}
-                          />
-                          <TextField
-                            label="Price per big room"
-                            autoComplete="tel"
-                            className={classes.textField}
-                            margin="normal"
-                            variant="outlined"
-                            name="generalBigRoom"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.generalBigRoom}
-                            helperText={errors.generalBigRoom}
-                            error={Boolean(errors.generalBigRoom)}
-                          />
-                          <TextField
-                            label="Price per bathroom"
-                            autoComplete="tel"
-                            className={classes.textField}
-                            margin="normal"
-                            variant="outlined"
-                            name="generalBathRoom"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.generalBathRoom}
-                            helperText={errors.generalBathRoom}
-                            error={Boolean(errors.generalBathRoom)}
-                          />
-                        </div>
-                      </ExpansionPanelDetails>
-                    </ExpansionPanel>
-                  </Grid>
-                  <Grid item>
-                    <ExpansionPanel>
-                      <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                        After repair cleaning
-                      </ExpansionPanelSummary>
-                      <ExpansionPanelDetails>
-                        <div flexwrap="true">
-                          <TextField
-                            label="Price per small room"
-                            autoComplete="tel"
-                            className={classes.textField}
-                            margin="normal"
-                            variant="outlined"
-                            name="afterRepairSmallRoom"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.afterRepairSmallRoom}
-                            helperText={errors.afterRepairSmallRoom}
-                            error={Boolean(errors.afterRepairSmallRoom)}
-                          />
-                          <TextField
-                            label="Price per big room"
-                            autoComplete="tel"
-                            className={classes.textField}
-                            margin="normal"
-                            variant="outlined"
-                            name="afterRepairBigRoom"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.afterRepairBigRoom}
-                            helperText={errors.afterRepairBigRoom}
-                            error={Boolean(errors.afterRepairBigRoom)}
-                          />
-                          <TextField
-                            label="Price per bathroom"
-                            autoComplete="tel"
-                            className={classes.textField}
-                            margin="normal"
-                            variant="outlined"
-                            name="afterRepairBathRoom"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.afterRepairBathRoom}
-                            helperText={errors.afterRepairBathRoom}
-                            error={Boolean(errors.afterRepairBathRoom)}
-                          />
-                        </div>
-                      </ExpansionPanelDetails>
-                    </ExpansionPanel>
-                  </Grid>
-                  <Grid item>
-                    <ExpansionPanel>
-                      <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                        Carpet cleaning
-                      </ExpansionPanelSummary>
-                      <ExpansionPanelDetails>
-                        <div flexwrap="true">
-                          <TextField
-                            label="Price per small carpet"
-                            autoComplete="tel"
-                            className={classes.textField}
-                            margin="normal"
-                            variant="outlined"
-                            name="smallCarpet"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.smallCarpet}
-                            helperText={errors.smallCarpet}
-                            error={Boolean(errors.smallCarpet)}
-                          />
-                          <TextField
-                            label="Price per big carpet"
-                            autoComplete="tel"
-                            className={classes.textField}
-                            margin="normal"
-                            variant="outlined"
-                            name="bigCarpet"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.bigCarpet}
-                            helperText={errors.bigCarpet}
-                            error={Boolean(errors.bigCarpet)}
-                          />
-                        </div>
-                      </ExpansionPanelDetails>
-                    </ExpansionPanel>
-                  </Grid>
-                  <Grid item>
-                    <ExpansionPanel>
-                      <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                        Other cleaning
-                      </ExpansionPanelSummary>
-                      <ExpansionPanelDetails>
-                        <div flexwrap="true">
-                          <TextField
-                            label="Office cleaning, per square meter"
-                            autoComplete="tel"
-                            className={classes.textField}
-                            margin="normal"
-                            variant="outlined"
-                            name="office"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.office}
-                            helperText={errors.office}
-                            error={Boolean(errors.office)}
-                          />
-                          <TextField
-                            label="Furniture cleaning"
-                            autoComplete="tel"
-                            className={classes.textField}
-                            margin="normal"
-                            variant="outlined"
-                            name="furniture"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.furniture}
-                            helperText={errors.furniture}
-                            error={Boolean(errors.furniture)}
-                          />
-                          <TextField
-                            label="Industrial cleaning, per square meter"
-                            autoComplete="tel"
-                            className={classes.textField}
-                            margin="normal"
-                            variant="outlined"
-                            name="industrial"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.industrial}
-                            helperText={errors.industrial}
-                            error={Boolean(errors.industrial)}
-                          />
-                          <TextField
-                            label="Pool cleaning, for one"
-                            autoComplete="tel"
-                            className={classes.textField}
-                            margin="normal"
-                            variant="outlined"
-                            name="pool"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.pool}
-                            helperText={errors.pool}
-                            error={Boolean(errors.pool)}
-                          />
-                        </div>
-                      </ExpansionPanelDetails>
-                    </ExpansionPanel>
-                  </Grid>
-                  <Button
-                    onClick={handleSubmit}
-                    type="submit"
-                    key="submit"
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                    className={classes.button}
+                  <Grid
+                    item
+                    justify="center"
+                    container
+                    className={classes.mainInfo}
                   >
-                    SIGN UP
-                  </Button>
+                    <TextField
+                      label="Username"
+                      autoComplete="username"
+                      className={classes.textField}
+                      margin="normal"
+                      variant="outlined"
+                      name="username"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.username}
+                      helperText={errors.username}
+                      error={Boolean(errors.username)}
+                    />
+                    <TextField
+                      label="Password"
+                      autoComplete="new-password"
+                      className={classes.textField}
+                      margin="normal"
+                      variant="outlined"
+                      type="password"
+                      name="password"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.password}
+                      helperText={errors.password}
+                      error={Boolean(errors.password)}
+                    />
+                    <TextField
+                      label="Confirm password"
+                      autoComplete="new-password"
+                      className={classes.textField}
+                      margin="normal"
+                      variant="outlined"
+                      type="password"
+                      name="confirmPassword"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.confirmPassword}
+                      helperText={errors.confirmPassword}
+                      error={Boolean(errors.confirmPassword)}
+                    />
+                    <TextField
+                      label="Email"
+                      autoComplete="email"
+                      className={classes.textField}
+                      margin="normal"
+                      variant="outlined"
+                      type="email"
+                      name="email"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.email}
+                      helperText={errors.email}
+                      error={Boolean(errors.email)}
+                    />
+                    <TextField
+                      label="Phone number"
+                      autoComplete="tel"
+                      className={classes.textField}
+                      margin="normal"
+                      variant="outlined"
+                      name="phoneNumber"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.phoneNumber}
+                      helperText={errors.phoneNumber}
+                      error={Boolean(errors.phoneNumber)}
+                    />
+                    <TextField
+                      label="Company name"
+                      autoComplete="text"
+                      className={classes.textField}
+                      margin="normal"
+                      variant="outlined"
+                      name="companyName"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.companyName}
+                      helperText={errors.companyName}
+                      error={Boolean(errors.companyName)}
+                    />
+                    <TextField
+                      label="Descrition"
+                      autoComplete="tel"
+                      className={classes.textFieldFullWidth}
+                      margin="normal"
+                      variant="outlined"
+                      name="description"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.description}
+                      helperText={errors.description}
+                      error={Boolean(errors.description)}
+                      multiline
+                      rowsMax="4"
+                      fullWidth
+                    />
+                    <TextField
+                      label="City"
+                      className={classes.textField}
+                      margin="normal"
+                      variant="outlined"
+                      name="city"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.city}
+                      helperText={errors.city}
+                      error={Boolean(errors.city)}
+                    />
+                  </Grid>
+                  <Grid container justify="center" spacing={24}>
+                    <Grid item>
+                      <ExpansionPanel>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                          Standart cleaning
+                      </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                          <div flexwrap="true">
+                            <TextField
+                              label="Price per small room"
+                              autoComplete="tel"
+                              className={classes.textField}
+                              margin="normal"
+                              variant="outlined"
+                              name="standartSmallRoom"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.standartSmallRoom}
+                              helperText={errors.standartSmallRoom}
+                              error={Boolean(errors.standartSmallRoom)}
+                            />
+                            <TextField
+                              label="Price per big room"
+                              autoComplete="tel"
+                              className={classes.textField}
+                              margin="normal"
+                              variant="outlined"
+                              name="standartBigRoom"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.standartBigRoom}
+                              helperText={errors.standartBigRoom}
+                              error={Boolean(errors.standartBigRoom)}
+                            />
+                            <TextField
+                              label="Price per bathroom"
+                              autoComplete="tel"
+                              className={classes.textField}
+                              margin="normal"
+                              variant="outlined"
+                              name="standartBathRoom"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.standartBathRoom}
+                              helperText={errors.standartBathRoom}
+                              error={Boolean(errors.standartBathRoom)}
+                            />
+                          </div>
+                        </ExpansionPanelDetails>
+                      </ExpansionPanel>
+                    </Grid>
+                    <Grid item>
+                      <ExpansionPanel>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                          General cleaning
+                      </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                          <div flexwrap="true">
+                            <TextField
+                              label="Price per small room"
+                              autoComplete="tel"
+                              className={classes.textField}
+                              margin="normal"
+                              variant="outlined"
+                              name="generalSmallRoom"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.generalSmallRoom}
+                              helperText={errors.generalSmallRoom}
+                              error={Boolean(errors.generalSmallRoom)}
+                            />
+                            <TextField
+                              label="Price per big room"
+                              autoComplete="tel"
+                              className={classes.textField}
+                              margin="normal"
+                              variant="outlined"
+                              name="generalBigRoom"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.generalBigRoom}
+                              helperText={errors.generalBigRoom}
+                              error={Boolean(errors.generalBigRoom)}
+                            />
+                            <TextField
+                              label="Price per bathroom"
+                              autoComplete="tel"
+                              className={classes.textField}
+                              margin="normal"
+                              variant="outlined"
+                              name="generalBathRoom"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.generalBathRoom}
+                              helperText={errors.generalBathRoom}
+                              error={Boolean(errors.generalBathRoom)}
+                            />
+                          </div>
+                        </ExpansionPanelDetails>
+                      </ExpansionPanel>
+                    </Grid>
+                    <Grid item>
+                      <ExpansionPanel>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                          After repair cleaning
+                      </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                          <div flexwrap="true">
+                            <TextField
+                              label="Price per small room"
+                              autoComplete="tel"
+                              className={classes.textField}
+                              margin="normal"
+                              variant="outlined"
+                              name="afterRepairSmallRoom"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.afterRepairSmallRoom}
+                              helperText={errors.afterRepairSmallRoom}
+                              error={Boolean(errors.afterRepairSmallRoom)}
+                            />
+                            <TextField
+                              label="Price per big room"
+                              autoComplete="tel"
+                              className={classes.textField}
+                              margin="normal"
+                              variant="outlined"
+                              name="afterRepairBigRoom"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.afterRepairBigRoom}
+                              helperText={errors.afterRepairBigRoom}
+                              error={Boolean(errors.afterRepairBigRoom)}
+                            />
+                            <TextField
+                              label="Price per bathroom"
+                              autoComplete="tel"
+                              className={classes.textField}
+                              margin="normal"
+                              variant="outlined"
+                              name="afterRepairBathRoom"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.afterRepairBathRoom}
+                              helperText={errors.afterRepairBathRoom}
+                              error={Boolean(errors.afterRepairBathRoom)}
+                            />
+                          </div>
+                        </ExpansionPanelDetails>
+                      </ExpansionPanel>
+                    </Grid>
+                    <Grid item>
+                      <ExpansionPanel>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                          Carpet cleaning
+                      </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                          <div flexwrap="true">
+                            <TextField
+                              label="Price per small carpet"
+                              autoComplete="tel"
+                              className={classes.textField}
+                              margin="normal"
+                              variant="outlined"
+                              name="smallCarpet"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.smallCarpet}
+                              helperText={errors.smallCarpet}
+                              error={Boolean(errors.smallCarpet)}
+                            />
+                            <TextField
+                              label="Price per big carpet"
+                              autoComplete="tel"
+                              className={classes.textField}
+                              margin="normal"
+                              variant="outlined"
+                              name="bigCarpet"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.bigCarpet}
+                              helperText={errors.bigCarpet}
+                              error={Boolean(errors.bigCarpet)}
+                            />
+                          </div>
+                        </ExpansionPanelDetails>
+                      </ExpansionPanel>
+                    </Grid>
+                    <Grid item>
+                      <ExpansionPanel>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                          Other cleaning
+                      </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                          <div flexwrap="true">
+                            <TextField
+                              label="Office cleaning, per square meter"
+                              autoComplete="tel"
+                              className={classes.textField}
+                              margin="normal"
+                              variant="outlined"
+                              name="office"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.office}
+                              helperText={errors.office}
+                              error={Boolean(errors.office)}
+                            />
+                            <TextField
+                              label="Furniture cleaning"
+                              autoComplete="tel"
+                              className={classes.textField}
+                              margin="normal"
+                              variant="outlined"
+                              name="furniture"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.furniture}
+                              helperText={errors.furniture}
+                              error={Boolean(errors.furniture)}
+                            />
+                            <TextField
+                              label="Industrial cleaning, per square meter"
+                              autoComplete="tel"
+                              className={classes.textField}
+                              margin="normal"
+                              variant="outlined"
+                              name="industrial"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.industrial}
+                              helperText={errors.industrial}
+                              error={Boolean(errors.industrial)}
+                            />
+                            <TextField
+                              label="Pool cleaning, for one"
+                              autoComplete="tel"
+                              className={classes.textField}
+                              margin="normal"
+                              variant="outlined"
+                              name="pool"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.pool}
+                              helperText={errors.pool}
+                              error={Boolean(errors.pool)}
+                            />
+                          </div>
+                        </ExpansionPanelDetails>
+                      </ExpansionPanel>
+                    </Grid>
+                    <Button
+                      onClick={handleSubmit}
+                      type="submit"
+                      key="submit"
+                      variant="contained"
+                      color="primary"
+                      size="large"
+                      className={classes.button}
+                    >
+                      SIGN UP
+                   </Button>
+                    <Button size="small" onClick={this.handleNewVerificationCode} className={classes.margin}>
+                      Отправить ещё раз
+                    </Button>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </form>
-          )}
+              </form>
+            )}
         />
       </>
     );
@@ -614,7 +621,7 @@ const mapStateToProps = state => ({
 
 const ExecutorSignUpContainer = connect(
   mapStateToProps,
-  { signUpExecutor, clearErrors }
+  { signUpExecutor, clearErrors, executorNewVerificationCode }
 )(ExecutorSignUp);
 
 export default withStyles(styles)(withSnackbar(ExecutorSignUpContainer));

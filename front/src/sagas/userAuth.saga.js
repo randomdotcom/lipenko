@@ -1,5 +1,5 @@
 import axios from "axios";
-import { call, put, take, takeLeading, takeEvery } from "redux-saga/effects";
+import { call, put, take, takeLeading, takeEvery, throttle } from "redux-saga/effects";
 import { storeToken, clearToken } from "../authentication";
 import {
   SIGNIN_USER,
@@ -17,7 +17,7 @@ import {
 import { returnErrors } from "../actions/errors.actions";
 
 export function* watchUserSignUpSaga() {
-  yield takeLeading(SIGNUP_USER, function*({ payload }) {
+  yield takeLeading(SIGNUP_USER, function* ({ payload }) {
     try {
       yield call(axios.post, "/api/clients/register", payload);
       yield put(userSignUpSuccess(payload.username));
@@ -28,7 +28,7 @@ export function* watchUserSignUpSaga() {
 }
 
 export function* watchUserConfirmSaga() {
-  yield takeLeading(CONFIRM_USER, function*({ payload }) {
+  yield takeLeading(CONFIRM_USER, function* ({ payload }) {
     try {
       const response = yield call(axios.put, "/api/clients/confirm", payload);
 
@@ -41,7 +41,7 @@ export function* watchUserConfirmSaga() {
 }
 
 export function* watchUserNewVerificationCode() {
-  yield takeLeading(USER_NEW_VERIFICATION_CODE, function*({ payload }) {
+  yield throttle(120000, USER_NEW_VERIFICATION_CODE, function* ({ payload }) {
     try {
       yield call(axios.put, "/api/clients/newVerificationCode", payload);
       yield put(userNewVerificationCodeSuccess());
@@ -52,7 +52,7 @@ export function* watchUserNewVerificationCode() {
 }
 
 export function* watchUserSignInSaga() {
-  yield takeLeading(SIGNIN_USER, function*({ payload }) {
+  yield takeLeading(SIGNIN_USER, function* ({ payload }) {
     try {
       const response = yield call(axios.post, "/api/clients/signin", payload);
 
@@ -72,7 +72,7 @@ export function* watchUserSignInSaga() {
 }
 
 export function* watchUserSignOutSaga() {
-  yield takeEvery(SIGNOUT_USER, function*() {
+  yield takeEvery(SIGNOUT_USER, function* () {
     try {
       yield call(clearToken);
       yield put(userSignOutSuccess());
