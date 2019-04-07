@@ -1,5 +1,5 @@
 import axios from "axios";
-import { push, goBack } from "connected-react-router";
+import { push } from "connected-react-router";
 import { call, put, take, takeLeading, takeEvery } from "redux-saga/effects";
 import { storeToken, clearToken } from "../authentication";
 import {

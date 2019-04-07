@@ -8,16 +8,20 @@ const { sendExecutorConfirmationMessage } = require("../../config/nodemailer");
 
 module.exports.get = (req, res, next) => {
   service
-    .getCompanies()
+    .getCompanies(req.query)
     .then(companies => res.status(httpStatus.OK).json(companies))
-    .catch(err => next(err));
+    .catch(err => {
+      res.send(err.message);
+    });
 };
 
 module.exports.getById = (req, res, next) => {
   service
     .getCompanyById(req.params.id)
     .then(company => res.status(httpStatus.OK).json(company))
-    .catch(err => next(err));
+    .catch(err => {
+      res.send(err.message);
+    });
 };
 
 module.exports.signin = (req, res, next) => {

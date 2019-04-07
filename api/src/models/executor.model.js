@@ -85,24 +85,28 @@ var schema = new mongoose.Schema(
     typesOfCleaning: {
       standart: {
         isAvailable: { type: Boolean, required: true },
+        averagePrice: { type: Number, require: true },
         standartBathRoom: { type: Number, required: true },
         standartBigRoom: { type: Number, required: true },
         standartSmallRoom: { type: Number, required: true }
       },
       general: {
         isAvailable: { type: Boolean, required: true },
+        averagePrice: { type: Number, require: true },
         generalBathRoom: { type: Number, required: true },
         generalBigRoom: { type: Number, required: true },
         generalSmallRoom: { type: Number, required: true }
       },
       afterRepair: {
         isAvailable: { type: Boolean, required: true },
+        averagePrice: { type: Number, require: true },
         afterRepairBathRoom: { type: Number, required: true },
         afterRepairBigRoom: { type: Number, required: true },
         afterRepairSmallRoom: { type: Number, required: true }
       },
       carpet: {
         isAvailable: { type: Boolean, required: true },
+        averagePrice: { type: Number, require: true },
         bigCarpet: { type: Number, required: true },
         smallCarpet: { type: Number, required: true }
       },

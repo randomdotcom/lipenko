@@ -77,6 +77,11 @@ async function register(values, role) {
         isAvailable: Boolean(
           standartSmallRoom && standartBigRoom && standartBathRoom
         ),
+        averagePrice:
+          (parseInt(standartBathRoom) +
+            parseInt(standartBigRoom) +
+            parseInt(standartSmallRoom)) /
+          3,
         standartBathRoom,
         standartBigRoom,
         standartSmallRoom
@@ -85,6 +90,11 @@ async function register(values, role) {
         isAvailable: Boolean(
           generalSmallRoom && generalBigRoom && generalBathRoom
         ),
+        averagePrice:
+          (parseInt(generalBathRoom) +
+            parseInt(generalBigRoom) +
+            parseInt(generalSmallRoom)) /
+          3,
         generalBathRoom,
         generalBigRoom,
         generalSmallRoom
@@ -93,12 +103,18 @@ async function register(values, role) {
         isAvailable: Boolean(
           afterRepairSmallRoom && afterRepairBigRoom && afterRepairBathRoom
         ),
+        averagePrice:
+          (parseInt(afterRepairBathRoom) +
+            parseInt(afterRepairBigRoom) +
+            parseInt(afterRepairSmallRoom)) /
+          3,
         afterRepairBathRoom,
         afterRepairBigRoom,
         afterRepairSmallRoom
       },
       carpet: {
         isAvailable: Boolean(smallCarpet && bigCarpet),
+        averagePrice: (parseInt(smallCarpet) + parseInt(bigCarpet)) / 2,
         bigCarpet,
         smallCarpet
       },
@@ -144,7 +160,9 @@ async function confirmEmail(code) {
       ...userWithoutPassword,
       token
     };
-  } catch (err) { throw err }
+  } catch (err) {
+    throw err;
+  }
 }
 
 async function newVerificationCode({ username }) {
@@ -169,8 +187,67 @@ async function newVerificationCode({ username }) {
   };
 }
 
-async function getCompanies() {
-  return await Executor.find();
+async function getCompanies({
+  page=1,
+  perPage=5,
+  city,
+  sortBy,
+  name,
+  standart,
+  general,
+  afterRepair,
+  carpet,
+  office,
+  furniture,
+  industrial,
+  pool
+}) {
+  let sort = {};
+  if (sortBy === "price" || sortBy === "-price") {
+    const type = sortBy === "price" ? 1 : -1;
+    if (standart) sort["typesOfCleaning.standart.averagePrice"] = type;
+    if (general) sort["typesOfCleaning.general.averagePrice"] = type;
+    if (afterRepair) sort["typesOfCleaning.afterRepair.averagePrice"] = type;
+    if (carpet) sort["typesOfCleaning.carpet.averagePrice"] = type;
+    if (office) sort["typesOfCleaning.office"] = type;
+    if (furniture) sort["typesOfCleaning.furniture"] = type;
+    if (industrial) sort["typesOfCleaning.industrial"] = type;
+    if (pool) sort["typesOfCleaning.pool"] = type;
+  }
+
+  if (sortBy === "rating" || sortBy === "-rating") {
+    const type = sortBy === "rating" ? 1 : -1;
+    sort.rating = type;
+  }
+
+  // if (sortBy === 'popularity' || sortBy === '-popularity') {
+  //   const type = sortBy === 'popularity' ? 1 : -1;
+  //   sort.popularity = type;
+  // }
+
+  const options = {
+    page: parseInt(page, 10) || 1,
+    limit: parseInt(perPage, 10) || 10,
+    select: "companyName city rating typesOfCleaning",
+    sort
+  };
+
+  let query = {};
+
+  if (city) query.city = { $regex: city };
+  if (name) query.companyName = { $regex: name };
+  if (standart) query["typesOfCleaning.standart.isAvailable"] = true;
+  if (general) query["typesOfCleaning.general.isAvailable"] = true;
+  if (afterRepair) query["typesOfCleaning.afterRepair.isAvailable"] = true;
+  if (carpet) query["typesOfCleaning.carpet.isAvailable"] = true;
+  if (office) query["typesOfCleaning.office"] = { $gte: 1 };
+  if (furniture) query["typesOfCleaning.furniture"] = { $gte: 1 };
+  if (industrial) query["typesOfCleaning.industrial"] = { $gte: 1 };
+  if (pool) query["typesOfCleaning.pool"] = { $gte: 1 };
+
+  const companies = await Executor.paginate(query, options);
+
+  return companies;
 }
 
 async function getCompanyById(companyId) {
