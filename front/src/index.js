@@ -1,15 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import { ConnectedRouter as Router } from "connected-react-router";
+import axios from "axios";
 import App from "./components/App";
 import * as serviceWorker from "./serviceWorker";
-import { Provider } from "react-redux";
-import { BrowserRouter as Router } from "react-router-dom";
 import store, { history } from "./redux";
-import axios from "axios";
 import {initializePreviousToken} from './authentication'
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
-//initializePreviousToken(store);
+initializePreviousToken(store);
 
 ReactDOM.render(
   <Provider store={store}>

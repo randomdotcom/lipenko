@@ -13,7 +13,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import teal from "@material-ui/core/colors/teal";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import VerificationCodeField from "../../../components/auth/VerificationCodeField";
+import VerificationCodeField from "../VerificationCodeField";
 import { clearErrors } from "../../../actions/errors.actions";
 import {
   signInUser,

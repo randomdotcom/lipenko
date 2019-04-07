@@ -1,5 +1,13 @@
 import axios from "axios";
-import { call, put, take, takeLeading, takeEvery, throttle } from "redux-saga/effects";
+import { push, goBack } from "connected-react-router";
+import {
+  call,
+  put,
+  take,
+  takeLeading,
+  takeEvery,
+  throttle
+} from "redux-saga/effects";
 import { storeToken, clearToken } from "../authentication";
 import {
   SIGNIN_EXECUTOR,
@@ -35,8 +43,10 @@ export function* watchExecutorConfirmSaga() {
     try {
       const response = yield call(axios.put, "/api/companies/confirm", payload);
 
-      yield put(executorConfirmSuccess(response.data));
-      yield call(storeToken, response.data.token, response.data.user);
+      const { token, ...user } = response.data;
+      yield put(executorConfirmSuccess({token, user}));
+      yield call(storeToken, response.data);
+      yield put(push("/"));
     } catch (error) {
       yield put(returnErrors(error.response.data));
     }
@@ -44,7 +54,9 @@ export function* watchExecutorConfirmSaga() {
 }
 
 export function* watchExecutorNewVerificationCode() {
-  yield throttle(120000, EXECUTOR_NEW_VERIFICATION_CODE, function* ({ payload }) {
+  yield throttle(120000, EXECUTOR_NEW_VERIFICATION_CODE, function*({
+    payload
+  }) {
     try {
       yield call(axios.put, "/api/companies/newVerificationCode", payload);
       yield put(executorNewVerificationCodeSuccess());
@@ -63,8 +75,11 @@ export function* watchExecutorSignInSaga() {
         yield put(executorSignInNeedConfirm());
         yield take(CONFIRM_EXECUTOR);
       } else {
-        yield put(executorSignInSuccess(response.data));
-        yield call(storeToken, response.data.token, response.data.user);
+        const { token, ...user } = response.data;
+
+        yield put(executorSignInSuccess({ token, user }));
+        yield call(storeToken, response.data);
+        yield put(push("/"));
         yield take(SIGNOUT_EXECUTOR);
       }
     } catch (error) {

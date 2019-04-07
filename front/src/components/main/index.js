@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import {
   AppBar,
   Toolbar,
@@ -9,7 +10,7 @@ import {
 import { Link, NavLink } from "react-router-dom";
 import indigo from "@material-ui/core/colors/indigo";
 
-const Main = ({ classes, children }) => {
+const Main = ({ isAuthenticated, username, classes, children }) => {
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -19,21 +20,24 @@ const Main = ({ classes, children }) => {
           </Typography>
           <Button
             component={NavLink}
-            to="/profile"
-            activeClassName={classes.activeNavLink}
-          >
-            Profile
-          </Button>
-          <Button
-            component={NavLink}
             to="/companies"
             activeClassName={classes.activeNavLink}
           >
             Companies
           </Button>
-          <Button component={Link} to="/auth" color="inherit">
-            Login
-          </Button>
+          {isAuthenticated ? (
+            <Button
+              component={NavLink}
+              to="/profile"
+              activeClassName={classes.activeNavLink}
+            >
+              {username}
+            </Button>
+          ) : (
+            <Button component={Link} to="/auth" color="inherit">
+              Login
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
       {children}
@@ -57,4 +61,12 @@ const styles = {
   }
 };
 
-export default withStyles(styles)(Main);
+const mapStateToProps = state => ({
+  isAuthenticated: state.profile.isAuthenticated,
+  username: state.profile.data.username,
+  error: state.errors.message
+});
+
+const MainContainer = connect(mapStateToProps)(Main);
+
+export default withStyles(styles)(MainContainer);

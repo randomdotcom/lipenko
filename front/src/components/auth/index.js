@@ -1,14 +1,14 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
-
 import { withStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import { SnackbarProvider } from "notistack";
-
-import SignUpContainer from "../../containers/auth/signUp/SignUpContainer";
-import SignInContainer from "../../containers/auth/signIn/SignInContainer";
+import SwipeableViews from "react-swipeable-views";
+import SignUpContainer from "./signUp";
+import SignInContainer from "./signIn";
 
 function TabContainer(props) {
   return (
@@ -35,9 +35,12 @@ class Auth extends Component {
     this.setState({ value });
   };
 
+  handleChangeIndex = index => {
+    this.setState({ value: index });
+  };
+
   render() {
-    const { classes } = this.props;
-    const { value } = this.state;
+    const { classes, theme } = this.props;
 
     return (
       <div className={classes.root}>
@@ -51,20 +54,23 @@ class Auth extends Component {
           <Tab label="Sign In" />
           <Tab label="Sign Up" />
         </Tabs>
-        {value === 0 && (
-          <TabContainer>
+        <SwipeableViews
+          axis={theme.direction === "rtl" ? "x-reverse" : "x"}
+          index={this.state.value}
+          onChangeIndex={this.handleChangeIndex}
+        >
+          <TabContainer dir={theme.direction}>
             <SnackbarProvider maxSnack={3}>
               <SignInContainer />
             </SnackbarProvider>
           </TabContainer>
-        )}
-        {value === 1 && (
-          <TabContainer>
+
+          <TabContainer dir={theme.direction}>
             <SnackbarProvider maxSnack={3}>
               <SignUpContainer />
             </SnackbarProvider>
           </TabContainer>
-        )}
+        </SwipeableViews>
       </div>
     );
   }
@@ -77,4 +83,10 @@ const styles = theme => ({
   }
 });
 
-export default withStyles(styles)(Auth);
+const mapStateToProps = state => ({
+  isAuthenticate: state.profile.isAuthenticate
+});
+
+const AuthContainer = connect(mapStateToProps)(Auth);
+
+export default withStyles(styles, { withTheme: true })(AuthContainer);

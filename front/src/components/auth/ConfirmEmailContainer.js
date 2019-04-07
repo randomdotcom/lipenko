@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import queryString from "query-string";
 import { Paper } from "@material-ui/core";
-import { confirmExecutor } from "../actions/auth.actions";
+import { confirmExecutor } from "../../actions/auth.actions";
 
 class ConfirmEmail extends Component {
   componentWillMount() {
@@ -37,7 +37,7 @@ class ConfirmEmail extends Component {
 }
 
 const mapStateToProps = state => ({
-  isAuthenticated: state.user.isAuthenticated
+  isAuthenticated: state.profile.isAuthenticated
 });
 
 const ConfirmEmailContainer = connect(

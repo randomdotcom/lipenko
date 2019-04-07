@@ -1,46 +1,33 @@
 import React, { Component } from "react";
-import Auth from "./auth";
-import { Route, Switch, Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { Route, Switch, Redirect } from "react-router-dom";
 import Admin from "./admin";
-import ConfirmEmailContainer from "../containers/ConfirmEmailContainer";
-import Main from "../components/main";
+import Auth from "./auth";
+import ConfirmEmailContainer from "./auth/ConfirmEmailContainer";
 import Companies from "./companies/Companies";
 import Company from "./companies/Company";
-import Profile from "./profile/Profile";
-import NotFound from "./notFound";
+import Profile from "./profile";
+import NotFound from "./NotFound";
 import withMainLayout from "../routes/MainRoute";
+import PrivateRoute from "../routes/PrivateRoute";
 
 class App extends Component {
+  MainRedirect = () => <Redirect to="/companies" />;
+
   render() {
+    const { isAuthenticated } = this.props;
     return (
       <Switch>
         <Route path="/admin" component={Admin} />
         <Route path="/auth" component={Auth} />
-        <Route path="/confirm" component={ConfirmEmailContainer} />F
-        <Route
-          exact
-          path="/companies"
-          render={() => (
-            <Main>
-              <Companies />
-            </Main>
-          )}
-        />
-        <Route
-          path="/companies/:id"
-          render={() => (
-            <Main>
-              <Company />
-            </Main>
-          )}
-        />
-        <Route
+        <Route path="/confirm" component={ConfirmEmailContainer} />
+        <Route exact path="/" component={this.MainRedirect} />
+        <Route exact path="/companies" component={withMainLayout(Companies)} />
+        <Route path="/companies/:id" component={withMainLayout(Company)} />
+        <PrivateRoute
           path="/profile"
-          render={() => (
-            <Main>
-              <Profile />
-            </Main>
-          )}
+          isAuthenticated={isAuthenticated}
+          component={withMainLayout(Profile)}
         />
         <Route component={NotFound} />
       </Switch>
@@ -48,4 +35,8 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => ({
+  isAuthenticated: state.profile.isAuthenticated
+});
+
+export default connect(mapStateToProps)(App);
