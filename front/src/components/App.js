@@ -4,7 +4,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import Admin from "./admin";
 import Auth from "./auth";
 import ConfirmEmailContainer from "./auth/ConfirmEmailContainer";
-import Companies from "./companies/Companies";
+import Companies from "./companies";
 import Company from "./companies/Company";
 import Profile from "./profile";
 import NotFound from "./NotFound";

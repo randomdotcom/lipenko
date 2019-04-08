@@ -228,7 +228,7 @@ async function getCompanies({
   const options = {
     page: parseInt(page, 10) || 1,
     limit: parseInt(perPage, 10) || 10,
-    select: "companyName city rating typesOfCleaning",
+    select: "companyName description city rating typesOfCleaning",
     sort
   };
 
