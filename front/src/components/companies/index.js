@@ -35,7 +35,7 @@ class Companies extends Component {
       <div className={classes.root}>
         <Search />
         <div className={classes.listAndFilters}>
-          <div>
+          <div className={classes.sortAndList}>
             <Sort />
             <List className={classes.list}>
               <CompaniesList companies={this.props.companies} />
@@ -72,6 +72,9 @@ const styles = theme => ({
   },
   inline: {
     display: "inline"
+  },
+  sortAndList: {
+    width: "100%"
   }
 });
 

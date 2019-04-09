@@ -1,13 +1,10 @@
 import React from "react";
 import { Link, withRouter } from "react-router-dom";
-import { push, goBack } from "connected-react-router";
 import { withStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
-import store from "../redux";
 
 function Profile(props) {
   const goBack = () => {
-    // store.dispatch(goBack());
     props.history.goBack();
   };
 
