@@ -1,6 +1,6 @@
 import axios from "axios";
 import { parse, stringify } from "query-string";
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, takeLatest, takeEvery } from "redux-saga/effects";
 import { push } from "connected-react-router";
 import {
   companiesLoaded,
@@ -11,15 +11,18 @@ import {
 
 export function* watchLoadCompaniesSaga() {
   yield takeLatest(LOAD_COMPANIES, function*({ payload }) {
-    if (payload[0] !== "?") payload = `?${payload}`;
+    let query = parse(payload);
+    if (query.type === undefined) query.type = 'standart';
+    query = stringify(query);
+    // if (payload[0] !== "?") payload = `?${payload}`;
     
-    const response = yield call(axios.get, `/api/companies${payload}`);
+    const response = yield call(axios.get, `/api/companies?${payload}`);
     yield put(companiesLoaded(response.data));
   });
 }
 
 export function* watchChangeFiltersCompaniesSaga() {
-  yield takeLatest(CHANGE_FILTERS_COMPANIES, function*({ payload }) {
+  yield takeEvery(CHANGE_FILTERS_COMPANIES, function*({ payload }) {
     const { name, value, path } = payload;
 
     let query = parse(payload.query);

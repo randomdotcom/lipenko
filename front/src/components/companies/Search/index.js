@@ -1,18 +1,17 @@
-import React from "react";
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
-import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
-import DirectionsIcon from "@material-ui/icons/Directions";
+import { changeFiltersCompanies } from "../../../actions/companies.actions";
 
 const styles = {
   root: {
     padding: "2px 4px",
     display: "flex",
-    alignItems: "center",
+    alignItems: "center"
   },
   input: {
     marginLeft: 8,
@@ -20,20 +19,62 @@ const styles = {
   },
   iconButton: {
     padding: 10
-  },
+  }
 };
 
-function Search(props) {
-  const { classes } = props;
+class Search extends Component {
+  constructor(props) {
+    super(props);
 
-  return (
-    <Paper className={classes.root} elevation={1}>
-      <InputBase className={classes.input} placeholder="Search For Company" />
-      <IconButton className={classes.iconButton} aria-label="Search" key="submit">
-        <SearchIcon />
-      </IconButton>
-    </Paper>
-  );
-} 
+    this.state = {
+      value: ""
+    };
+  }
 
-export default withStyles(styles)(Search)
+  handleSubmit = () => {
+    const query = this.props.search;
+    const path = this.props.pathname;
+
+    this.props.changeFiltersCompanies({
+      query,
+      name: "name",
+      value: this.state.value,
+      path
+    });
+  };
+
+  handleChange = event => {
+    this.setState({ value: event.target.value }, () => this.handleSubmit());
+  };
+
+  render() {
+    const { classes } = this.props;
+    return (
+      <Paper className={classes.root} elevation={1}>
+        <InputBase
+          onChange={this.handleChange}
+          className={classes.input}
+          placeholder="Search For Company"
+        />
+        <IconButton
+          className={classes.iconButton}
+          aria-label="Search"
+          key="submit"
+          onClick={this.handleSubmit}
+        >
+          <SearchIcon />
+        </IconButton>
+      </Paper>
+    );
+  }
+}
+
+const mapStateToProps = state => ({
+  search: state.router.location.search,
+  pathname: state.router.location.pathname
+});
+
+export default connect(
+  mapStateToProps,
+  { changeFiltersCompanies }
+)(withStyles(styles)(Search));

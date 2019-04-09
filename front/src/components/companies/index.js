@@ -3,10 +3,14 @@ import List from "@material-ui/core/List";
 import { withStyles } from "@material-ui/core";
 import PagePicker from "./PagePicker";
 import { connect } from "react-redux";
-import { loadCompanies, changeFiltersCompanies } from "../../actions/companies.actions";
+import {
+  loadCompanies,
+  changeFiltersCompanies
+} from "../../actions/companies.actions";
 import CompaniesList from "./CompaniesList";
-import Filters from './Filters'
-import Search from './Search'
+import Filters from "./Filters";
+import Search from "./Search";
+import Sort from './Sort'
 
 class Companies extends Component {
   componentDidMount() {
@@ -31,9 +35,12 @@ class Companies extends Component {
       <div className={classes.root}>
         <Search />
         <div className={classes.listAndFilters}>
-          <List className={classes.list}>
-            <CompaniesList companies={this.props.companies} />
-          </List>
+          <div>
+            <Sort />
+            <List className={classes.list}>
+              <CompaniesList companies={this.props.companies} />
+            </List>
+          </div>
           <Filters />
         </div>
         <PagePicker
@@ -61,6 +68,7 @@ const styles = theme => ({
   },
   list: {
     width: "100%",
+    paddingTop: 0
   },
   inline: {
     display: "inline"

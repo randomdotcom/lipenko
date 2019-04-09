@@ -6,7 +6,6 @@ import Typography from "@material-ui/core/Typography";
 
 function CompanyCard(props) {
   const { classes, company } = props;
-  console.log(company);
   return (
     <div className={classes.listItem}>
       <ListItem alignItems="flex-start">
