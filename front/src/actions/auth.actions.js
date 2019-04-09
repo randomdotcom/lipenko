@@ -57,19 +57,19 @@ export const userSignInNeedConfirm = username => ({
   payload: { username }
 });
 
-export const SIGNOUT_USER = "USER: SIGNOUT...";
-export const signOutUser = () => ({
-  type: SIGNOUT_USER
-}); /////////////
+export const SIGNOUT = "SIGNOUT...";
+export const signOut = () => ({
+  type: SIGNOUT
+});
 
-export const USER_SIGNOUT_SUCCESS = "USER: SIGNOUT SUCCESS";
-export const userSignOutSuccess = () => ({
-  type: USER_SIGNOUT_SUCCESS
-}); ///////////////
+export const SIGNOUT_SUCCESS = "SIGNOUT SUCCESS";
+export const signOutSuccess = () => ({
+  type: SIGNOUT_SUCCESS
+});
 
 export const LOAD_USER = "USER: LOAD...";
 export const loadUser = () => ({
-  type: LOAD_USER ///////////////
+  type: LOAD_USER //////////////
 });
 
 export const USER_LOADED = "USER: LOADED";
@@ -153,22 +153,6 @@ export const executorSignInNeedConfirm = username => ({
 export const EXECUTOR_SIGNIN_FAILED = "EXECUTOR: SIGNIN IS FAILED";
 export const executorSignInFailed = err => ({
   type: EXECUTOR_SIGNIN_FAILED,
-  payload: err
-});
-
-export const SIGNOUT_EXECUTOR = "EXECUTOR: SIGNOUT...";
-export const signOutExecutor = () => ({
-  type: SIGNOUT_EXECUTOR
-});
-
-export const EXECUTOR_SIGNOUT_SUCCESS = "EXECUTOR: SIGNOUT SUCCESS";
-export const executorSignOutSuccess = () => ({
-  type: EXECUTOR_SIGNOUT_SUCCESS
-});
-
-export const EXECUTOR_SIGNOUT_FAILED = "EXECUTOR: SIGNOUT FAILED";
-export const executorSignOutFailed = err => ({
-  type: EXECUTOR_SIGNOUT_FAILED,
   payload: err
 });
 

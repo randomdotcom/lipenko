@@ -63,8 +63,8 @@ const styles = {
 
 const mapStateToProps = state => ({
   isAuthenticated: state.profile.isAuthenticated,
-  username: state.profile.data.username,
-  error: state.errors.message
+  username: state.profile.isAuthenticated === true ? state.profile.data.username : undefined,
+  error: state.profile.isAuthenticated === true ? state.errors.message : undefined
 });
 
 const MainContainer = connect(mapStateToProps)(Main);

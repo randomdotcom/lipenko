@@ -2,12 +2,11 @@ import {
   USER_SIGNIN_SUCCESS,
   USER_SIGNIN_NEED_CONFIRM,
   USER_SIGNUP_SUCCESS,
-  USER_SIGNOUT_SUCCESS,
+  SIGNOUT_SUCCESS,
   USER_CONFIRM_SUCCESS,
   EXECUTOR_SIGNIN_SUCCESS,
   EXECUTOR_SIGNIN_NEED_CONFIRM,
   EXECUTOR_SIGNUP_SUCCESS,
-  EXECUTOR_SIGNOUT_SUCCESS,
   EXECUTOR_CONFIRM_SUCCESS
 } from "../actions/auth.actions";
 
@@ -50,7 +49,7 @@ export default (state = initialState, action) => {
         data: { username: action.payload.username }
       };
     }
-    case USER_SIGNOUT_SUCCESS: {
+    case SIGNOUT_SUCCESS: {
       return {
         isAuthenticated: false
       };
@@ -93,11 +92,6 @@ export default (state = initialState, action) => {
         isSended: true
       };
     }
-    case EXECUTOR_SIGNOUT_SUCCESS:
-      return {
-        ...state,
-        isAuthenticated: false
-      };
 
     default:
       return state;

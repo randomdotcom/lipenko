@@ -15,12 +15,12 @@ import {
   executorSignInNeedConfirm,
   SIGNUP_EXECUTOR,
   executorSignUpSuccess,
-  SIGNOUT_EXECUTOR,
-  executorSignOutSuccess,
   CONFIRM_EXECUTOR,
   executorConfirmSuccess,
   EXECUTOR_NEW_VERIFICATION_CODE,
-  executorNewVerificationCodeSuccess
+  executorNewVerificationCodeSuccess,
+  SIGNOUT,
+  signOutSuccess
 } from "../actions/auth.actions";
 import { returnErrors } from "../actions/errors.actions";
 
@@ -29,12 +29,11 @@ export function* watchExecutorSignUpSaga() {
     try {
       yield call(axios.post, "/api/companies/register", payload);
       yield put(executorSignUpSuccess());
+      yield call(clearToken);
+      yield put(push("/"));
     } catch (error) {
       yield put(returnErrors(error.response.data));
     }
-
-    //yield call(storeToken, response.data.token, response.data.user);
-    // yield put(push("/")); // Редирект
   });
 }
 
@@ -80,20 +79,19 @@ export function* watchExecutorSignInSaga() {
         yield put(executorSignInSuccess({ token, user }));
         yield call(storeToken, response.data);
         yield put(push("/"));
-        yield take(SIGNOUT_EXECUTOR);
+        yield take(SIGNOUT);
       }
     } catch (error) {
       yield put(returnErrors(error.response.data));
     }
-    // yield put(push("/")); // Редирект
   });
 }
 
-export function* watchExecutorSignOutSaga() {
-  yield takeEvery(SIGNOUT_EXECUTOR, function*() {
+export function* watchSignOutSaga() {
+  yield takeEvery(SIGNOUT, function*() {
     try {
       yield call(clearToken);
-      yield put(executorSignOutSuccess());
+      yield put(signOutSuccess());
     } catch (error) {
       yield put(returnErrors(error.response.data));
     }

@@ -311,7 +311,7 @@ const styles = theme => ({
 
 const mapStateToProps = state => ({
   isSended: state.profile.isSended,
-  username: state.profile.data.username,
+  username: state.profile.data ? state.profile.data.username : undefined,
   error: state.errors.message
 });
 

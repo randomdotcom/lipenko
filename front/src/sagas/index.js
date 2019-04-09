@@ -1,14 +1,13 @@
 import { spawn } from "redux-saga/effects";
 import {
   watchUserSignInSaga,
-  watchUserSignOutSaga,
+  watchSignOutSaga,
   watchUserSignUpSaga,
   watchUserConfirmSaga,
   watchUserNewVerificationCode
 } from "./userAuth.saga";
 import {
   watchExecutorSignInSaga,
-  watchExecutorSignOutSaga,
   watchExecutorSignUpSaga,
   watchExecutorConfirmSaga,
   watchExecutorNewVerificationCode
@@ -21,22 +20,22 @@ import {
 } from "./companies.saga";
 //import { watchLoadExecutorSaga } from "./executorLoad.saga";
 
-export default function*() {
+export default function* () {
   yield spawn(watchUserSignInSaga);
   yield spawn(watchUserSignUpSaga);
   yield spawn(watchUserConfirmSaga);
-  yield spawn(watchUserSignOutSaga);
   yield spawn(watchLoadUserSaga);
 
   yield spawn(watchExecutorSignInSaga);
   yield spawn(watchExecutorConfirmSaga);
   yield spawn(watchExecutorSignUpSaga);
-  yield spawn(watchExecutorSignOutSaga);
   yield spawn(watchUserNewVerificationCode);
   yield spawn(watchExecutorNewVerificationCode);
 
   yield spawn(watchLoadCompaniesSaga);
   yield spawn(watchChangeFiltersCompaniesSaga);
+
+  yield spawn(watchSignOutSaga);
 
   // yield spawn(watchLoadExecutorSaga);
 }

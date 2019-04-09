@@ -15,7 +15,7 @@ class Sort extends Component {
     super(props);
 
     this.state = {
-      sortBy: "rating"
+      sortBy: ""
     };
   }
 
@@ -64,9 +64,13 @@ const styles = theme => ({
     marginLeft: 35
   },
   radio: {
+    transition: 'color 0.1s linear',
     '&$checked': {
       color: green[500],
     },
+    '&:hover': {
+      color: green[500]
+    }
   },
   checked: {}
 });

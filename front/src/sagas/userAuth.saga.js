@@ -8,8 +8,8 @@ import {
   userSignInNeedConfirm,
   SIGNUP_USER,
   userSignUpSuccess,
-  SIGNOUT_USER,
-  userSignOutSuccess,
+  SIGNOUT,
+  signOutSuccess,
   CONFIRM_USER,
   userConfirmSuccess,
   USER_NEW_VERIFICATION_CODE,
@@ -18,7 +18,7 @@ import {
 import { returnErrors } from "../actions/errors.actions";
 
 export function* watchUserSignUpSaga() {
-  yield takeLeading(SIGNUP_USER, function*({ payload }) {
+  yield takeLeading(SIGNUP_USER, function* ({ payload }) {
     try {
       yield call(axios.post, "/api/clients/register", payload);
       yield put(userSignUpSuccess(payload.username));
@@ -29,11 +29,11 @@ export function* watchUserSignUpSaga() {
 }
 
 export function* watchUserConfirmSaga() {
-  yield takeLeading(CONFIRM_USER, function*({ payload }) {
+  yield takeLeading(CONFIRM_USER, function* ({ payload }) {
     try {
       const response = yield call(axios.put, "/api/clients/confirm", payload);
       const { token, ...user } = response.data;
-      
+
       yield put(userConfirmSuccess({ token, user }));
       yield call(storeToken, response.data);
       yield put(push("/"));
@@ -44,7 +44,7 @@ export function* watchUserConfirmSaga() {
 }
 
 export function* watchUserNewVerificationCode() {
-  yield takeLeading(USER_NEW_VERIFICATION_CODE, function*({ payload }) {
+  yield takeLeading(USER_NEW_VERIFICATION_CODE, function* ({ payload }) {
     try {
       yield call(axios.put, "/api/clients/newVerificationCode", payload);
       yield put(userNewVerificationCodeSuccess());
@@ -55,7 +55,7 @@ export function* watchUserNewVerificationCode() {
 }
 
 export function* watchUserSignInSaga() {
-  yield takeLeading(SIGNIN_USER, function*({ payload }) {
+  yield takeLeading(SIGNIN_USER, function* ({ payload }) {
     try {
       console.log(payload);
       const response = yield call(axios.post, "/api/clients/signin", payload);
@@ -70,7 +70,7 @@ export function* watchUserSignInSaga() {
         yield call(storeToken, response.data);
         yield put(push("/"));
 
-        yield take(SIGNOUT_USER);
+        yield take(SIGNOUT);
       }
     } catch (error) {
       yield put(returnErrors(error.response.data));
@@ -78,11 +78,11 @@ export function* watchUserSignInSaga() {
   });
 }
 
-export function* watchUserSignOutSaga() {
-  yield takeEvery(SIGNOUT_USER, function*() {
+export function* watchSignOutSaga() {
+  yield takeEvery(SIGNOUT, function* () {
     try {
       yield call(clearToken);
-      yield put(userSignOutSuccess());
+      yield put(signOutSuccess());
     } catch (error) {
       yield put(returnErrors(error.response.data));
     }
