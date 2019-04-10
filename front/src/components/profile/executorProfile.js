@@ -1,83 +1,94 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
-import { Typography, Button } from "@material-ui/core";
+import { Typography, Button, Paper, Avatar } from "@material-ui/core";
 import { connect } from 'react-redux'
 import LogOutButton from './LogOutButton'
 
+
 function UserProfile(props) {
-  const {classes} = props;
+  const { classes } = props;
   return (
-      <div className={classes.root}>
-        <div>
-        <Typography>
-          <b>Account type:</b> {props.role}
-        </Typography>
-        <Typography>
-          <b>Username:</b> {props.username}
-        </Typography>
-        <Typography>
-          <b>Phone number:</b> {props.phoneNumber}
-        </Typography>
-        <Typography>
-          <b>City:</b> {props.city}
-        </Typography>
-        <Typography>
-          <b>Company name:</b> {props.companyName}
-        </Typography>
-        <Typography>
-          <b>Description:</b> {props.description}
-        </Typography>
-        <Typography>
-          <b>TypesOfCleaning</b>
-        </Typography>
-        <Typography>
-          <b>Standart small room:</b> {props.standartSmallRoom}
-        </Typography>
-        <Typography>
-          <b>Standart big room:</b> {props.standartBigRoom}
-        </Typography>
-        <Typography>
-          <b>Standart bathroom:</b> {props.standartBathRoom}
-        </Typography>
-        <Typography>
-          <b>General small room:</b> {props.generalSmallRoom}
-        </Typography>
-        <Typography>
-          <b>General big room:</b> {props.generalBigRoom}
-        </Typography>
-        <Typography>
-          <b>General bathroom:</b> {props.generalBathRoom}
-        </Typography>
-        <Typography>
-          <b>After repair small room:</b> {props.afterRepairmallRoom}
-        </Typography>
-        <Typography>
-          <b>After repair big room:</b> {props.afterRepairBigRoom}
-        </Typography>
-        <Typography>
-          <b>After repair bathroom:</b> {props.afterRepairBathRoom}
-        </Typography>
-        <Typography>
-          <b>Carpet small:</b> {props.smallCarpet}
-        </Typography>
-        <Typography>
-          <b>Carpet big:</b> {props.bigCarpet}
-        </Typography>
-        <Typography>
-          <b>Office:</b> {props.office}
-        </Typography>
-        <Typography>
-          <b>Furniture:</b> {props.furniture}
-        </Typography>
-        <Typography>
-          <b>Industrial:</b> {props.industrial}
-        </Typography>
-        <Typography>
-          <b>Pool:</b> {props.pool}
-        </Typography>
+    <div className={classes.root}>
+      <div className={classes.AvatarAndInfo}>
+        <div className={classes.AvatarAndEdit}>
+          <Paper className={classes.AvatarAndUsername}>
+            <p>{props.username}</p>
+            <Avatar alt="Avatar" src="https://static.espreso.tv/uploads/article/2596219/images/im578x383-avatar-neytiri-sad.jpg" className={classes.bigAvatar} />
+          </Paper>
+          <Button>edit</Button>
         </div>
-        <LogOutButton/>
+        <div className={classes.InfoAndLogOutButton}>
+          <div className={classes.logOutButton}>
+            <LogOutButton />
+          </div>
+          <div className={classes.profileInfo}>
+            <Typography>
+              <b>Account type:</b> {props.role}
+            </Typography>
+            <Typography>
+              <b>Phone number:</b> {props.phoneNumber}
+            </Typography>
+            <Typography>
+              <b>City:</b> {props.city}
+            </Typography>
+            <Typography>
+              <b>Company name:</b> {props.companyName}
+            </Typography>
+            <Typography>
+              <b>Description:</b> {props.description}
+            </Typography>
+            <Typography>
+              <b>TypesOfCleaning</b>
+            </Typography>
+            <Typography>
+              <b>Standart small room:</b> {props.standartSmallRoom}
+            </Typography>
+            <Typography>
+              <b>Standart big room:</b> {props.standartBigRoom}
+            </Typography>
+            <Typography>
+              <b>Standart bathroom:</b> {props.standartBathRoom}
+            </Typography>
+            <Typography>
+              <b>General small room:</b> {props.generalSmallRoom}
+            </Typography>
+            <Typography>
+              <b>General big room:</b> {props.generalBigRoom}
+            </Typography>
+            <Typography>
+              <b>General bathroom:</b> {props.generalBathRoom}
+            </Typography>
+            <Typography>
+              <b>After repair small room:</b> {props.afterRepairSmallRoom}
+            </Typography>
+            <Typography>
+              <b>After repair big room:</b> {props.afterRepairBigRoom}
+            </Typography>
+            <Typography>
+              <b>After repair bathroom:</b> {props.afterRepairBathRoom}
+            </Typography>
+            <Typography>
+              <b>Carpet small:</b> {props.smallCarpet}
+            </Typography>
+            <Typography>
+              <b>Carpet big:</b> {props.bigCarpet}
+            </Typography>
+            <Typography>
+              <b>Office:</b> {props.office}
+            </Typography>
+            <Typography>
+              <b>Furniture:</b> {props.furniture}
+            </Typography>
+            <Typography>
+              <b>Industrial:</b> {props.industrial}
+            </Typography>
+            <Typography>
+              <b>Pool:</b> {props.pool}
+            </Typography>
+          </div>
+        </div>
       </div>
+    </div>
   );
 }
 
@@ -87,6 +98,38 @@ const styles = theme => ({
     backgroundColor: "whitesmoke",
     boxShadow: "0 1px 7px 1px rgba(0, 0, 0, .25)",
     padding: 25
+  },
+  bigAvatar: {
+    width: 160,
+    height: 160
+  },
+  profileInfo: {
+    marginLeft: 20,
+  },
+  logOutButton: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    width: '100%'
+  },
+  InfoAndLogOutButton: {
+    width: '100%'
+  },
+  AvatarAndUsername: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    paddingLeft: 15,
+    paddingBottom: 15,
+    paddingRight: 15,
+  },
+  AvatarAndEdit: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  AvatarAndInfo: {
+    display: 'flex',
+
   }
 })
 

@@ -42,18 +42,24 @@ class Sort extends Component {
         value={this.state.sortBy}
         onChange={this.handleChange}
       >
+
         <FormControlLabel
           value="price"
-          control={<Radio icon={<AttachMoney/>} checkedIcon={<AttachMoney/>} color="secondary" classes={{colorSecondary: classes.radio, checked: classes.checked}} />}
+          control={<Radio icon={<AttachMoney />} checkedIcon={<AttachMoney />} color="secondary" classes={{ colorSecondary: classes.radio, checked: classes.checked }} />}
         />
+
+
         <FormControlLabel
           value="rating"
-          control={<Radio icon={<StarRate/>} checkedIcon={<StarRate/>} color="secondary" classes={{colorSecondary: classes.radio, checked: classes.checked}} />}
+          control={<Radio icon={<StarRate />} checkedIcon={<StarRate />} color="secondary" classes={{ colorSecondary: classes.radio, checked: classes.checked }} />}
         />
+
+
         <FormControlLabel
           value="popularity"
-          control={<Radio icon={<ShowChart/>} checkedIcon={<ShowChart/>} color="secondary" classes={{colorSecondary: classes.radio, checked: classes.checked}} />}
+          control={<Radio icon={<ShowChart />} checkedIcon={<ShowChart />} color="secondary" classes={{ colorSecondary: classes.radio, checked: classes.checked }} />}
         />
+
       </RadioGroup>
     );
   }
@@ -72,7 +78,7 @@ const styles = theme => ({
       color: green[500]
     }
   },
-  checked: {}
+  checked: {},
 });
 
 const mapStateToProps = state => ({
