@@ -1,7 +1,7 @@
 import React from "react";
 import {connect } from 'react-redux'
-import UserProfile from './userProfile'
-import ExecutorProfile from './executorProfile'
+import UserProfile from './UserProfile'
+import ExecutorProfile from './ExecutorProfile'
 
 function Profile(props) {
   if (props.role === 'user') {

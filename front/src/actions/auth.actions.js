@@ -26,7 +26,8 @@ export const userNewVerificationCode = username => {
   };
 };
 
-export const USER_NEW_VERIFICATION_CODE_SUCCESS = "USER: NEW VERIFICATION CODE SUCCESS";
+export const USER_NEW_VERIFICATION_CODE_SUCCESS =
+  "USER: NEW VERIFICATION CODE SUCCESS";
 export const userNewVerificationCodeSuccess = () => {
   return {
     type: USER_NEW_VERIFICATION_CODE_SUCCESS
@@ -78,6 +79,18 @@ export const userLoaded = data => ({
   payload: data /////////////////
 });
 
+export const EDIT_USER = "USER: EDIT...";
+export const editUser = data => ({
+  type: EDIT_USER,
+  payload: data
+});
+
+export const USER_EDITED = "USER: EDITED SUCCESSFUL";
+export const userEdited = data => ({
+  type: USER_EDITED,
+  payload: data
+});
+
 //////////////////////// EEEXXXEEECCCUUUTTTOOORRRR ///////////////////
 
 export const SIGNUP_EXECUTOR = "EXECUTOR: SIGNUP..";
@@ -105,7 +118,8 @@ export const confirmExecutor = token => {
   };
 };
 
-export const EXECUTOR_NEW_VERIFICATION_CODE = "EXECUTOR: NEW VERIFICATION CODE..";
+export const EXECUTOR_NEW_VERIFICATION_CODE =
+  "EXECUTOR: NEW VERIFICATION CODE..";
 export const executorNewVerificationCode = username => {
   return {
     type: EXECUTOR_NEW_VERIFICATION_CODE,
@@ -113,7 +127,8 @@ export const executorNewVerificationCode = username => {
   };
 };
 
-export const EXECUTOR_NEW_VERIFICATION_CODE_SUCCESS = "EXECUTOR: NEW VERIFICATION CODE SUCCESS";
+export const EXECUTOR_NEW_VERIFICATION_CODE_SUCCESS =
+  "EXECUTOR: NEW VERIFICATION CODE SUCCESS";
 export const executorNewVerificationCodeSuccess = () => {
   return {
     type: EXECUTOR_NEW_VERIFICATION_CODE_SUCCESS

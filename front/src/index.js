@@ -6,7 +6,7 @@ import axios from "axios";
 import App from "./components/App";
 import * as serviceWorker from "./serviceWorker";
 import store, { history } from "./redux";
-import {initializePreviousToken} from './authentication'
+import { initializePreviousToken } from "./authentication";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 initializePreviousToken(store);

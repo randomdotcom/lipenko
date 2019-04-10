@@ -57,7 +57,6 @@ export function* watchUserNewVerificationCode() {
 export function* watchUserSignInSaga() {
   yield takeLeading(SIGNIN_USER, function* ({ payload }) {
     try {
-      console.log(payload);
       const response = yield call(axios.post, "/api/clients/signin", payload);
 
       if (!response.data.isVerified) {

@@ -112,7 +112,6 @@ module.exports.unblock = (req, res, next) => {
 };
 
 module.exports.edit = (req, res, next) => {
-  if (req.body.email && req.body.password && req.body.phoneNumber) {
     service
       .editProfile(req.user.id, req.body)
       .then(() => {
@@ -121,7 +120,6 @@ module.exports.edit = (req, res, next) => {
       .catch(err => {
         res.send(err.message);
       });
-  } else res.send(`Введены не все данные`);
 };
 
 module.exports.authSocialNetwork = (req, res, next) => {

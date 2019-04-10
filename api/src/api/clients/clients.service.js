@@ -43,7 +43,7 @@ async function logout({ token }) {
 
 async function newVerificationCode({ username }) {
   var verificationCode = randtoken.generate(6);
-  
+
   const user = await User.findOne({ username })
     .select("+password")
     .exec();
@@ -52,7 +52,7 @@ async function newVerificationCode({ username }) {
   if (user.isBlocked) throw `The user is blocked, reason: ${user.block}`;
 
   await User.findOneAndUpdate({ username }, { $set: { verificationCode } });
-  
+
   return {
     email: user.email,
     username: user.username,
@@ -152,15 +152,28 @@ async function unblockClient(userId) {
 }
 
 async function editProfile(userId, data) {
-  return await User.findById(userId, (err, user) => {
-    if (err) throw new Error(err);
+  if (!userId) throw new Error("Unauthorized");
+  console.log(data);
+  if (!data.username | !data.email | !data.phoneNumber | !data.adress) {
+    throw new Error("Wrong data");
+  }
 
-    user.password = data.password;
-    user.email = data.email;
-    user.phoneNumber = data.phoneNumber;
-
-    user.save();
+  return await User.findByIdAndUpdate(userId, {
+    username: data.username,
+    email: data.email,
+    phoneNumber: data.phoneNumber,
+    adress: data.adress
   });
+  // return await User.findById(userId, (err, user) => {
+
+  //   if (err) throw new Error(err);
+
+  //   user.password = data.password;
+  //   user.email = data.email;
+  //   user.phoneNumber = data.phoneNumber;
+
+  //   user.save();
+  // });
 }
 
 async function authSocialNetwork(data) {

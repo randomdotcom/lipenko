@@ -3,7 +3,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { Typography, Button, Paper, Avatar } from "@material-ui/core";
 import { connect } from 'react-redux'
 import LogOutButton from './LogOutButton'
-
+import {Link} from 'react-router-dom'
 
 function UserProfile(props) {
   const { classes } = props;
@@ -15,7 +15,7 @@ function UserProfile(props) {
             <p>{props.username}</p>
             <Avatar alt="Avatar" src="https://static.espreso.tv/uploads/article/2596219/images/im578x383-avatar-neytiri-sad.jpg" className={classes.bigAvatar} />
           </Paper>
-          <Button>edit</Button>
+          <Button component={Link} to="/profile/edit" className={classes.editButton} variant="contained" color="secondary">edit</Button>
         </div>
         <div className={classes.InfoAndLogOutButton}>
           <div className={classes.logOutButton}>
@@ -127,9 +127,13 @@ const styles = theme => ({
     flexDirection: 'column',
     alignItems: 'center'
   },
+  editButton: {
+    marginTop: 10,
+    width: '100%',
+    fontWeight: 'bold'
+  },
   AvatarAndInfo: {
     display: 'flex',
-
   }
 })
 
