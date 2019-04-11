@@ -10,15 +10,14 @@ import {getAuthHeader} from '../services/jwtHeader'
 
 const editProfileRequest = (options) => {
   return axios(options)
-  
 }
 
 export function* watchEditUser() {
   yield takeLeading(EDIT_USER, function*({ payload }) {
     try {
-      const headers = yield put(getAuthHeader());
-      console.log(headers)
-      yield call(editProfileRequest, {url: '/api/clients/edit', body: payload, headers});
+      const headers = getAuthHeader();
+      console.log("headers "+headers)
+      yield call(editProfileRequest, {method: 'put', url: '/api/clients/edit', data: payload, headers});
       yield put(userEdited(payload));
       yield push('/profile')
     } catch (error) {
