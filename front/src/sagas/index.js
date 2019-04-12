@@ -13,7 +13,12 @@ import {
   watchExecutorNewVerificationCode
 } from "./executorAuth.saga";
 import { watchLoadUserSaga } from "./userLoad.saga";
-import { watchEditUser } from "./user.saga";
+import { watchEditUser, watchChangePasswordUser } from "./user.saga";
+import {
+  watchEditMainInfoExecutor,
+  watchEditTOCExecutor,
+  watchChangePasswordExecutor
+} from "./executor.saga";
 import {
   watchLoadCompaniesSaga,
   watchChangeFiltersCompaniesSaga
@@ -25,13 +30,17 @@ export default function*() {
   yield spawn(watchUserSignUpSaga);
   yield spawn(watchUserConfirmSaga);
   yield spawn(watchLoadUserSaga);
-  yield spawn(watchEditUser)
+  yield spawn(watchEditUser);
+  yield spawn(watchChangePasswordUser);
 
   yield spawn(watchExecutorSignInSaga);
   yield spawn(watchExecutorConfirmSaga);
   yield spawn(watchExecutorSignUpSaga);
   yield spawn(watchUserNewVerificationCode);
   yield spawn(watchExecutorNewVerificationCode);
+  yield spawn(watchChangePasswordExecutor);
+  yield spawn(watchEditMainInfoExecutor);
+  yield spawn(watchEditTOCExecutor);
 
   yield spawn(watchLoadCompaniesSaga);
   yield spawn(watchChangeFiltersCompaniesSaga);

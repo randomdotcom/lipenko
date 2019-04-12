@@ -4,7 +4,7 @@ import { Button, TextField } from "@material-ui/core";
 import { Formik } from "formik";
 import { string, object } from "yup";
 import { connect } from "react-redux";
-import { editUser } from '../../../actions/auth.actions'
+import { editUser, changePasswordUser } from "../../../actions/auth.actions";
 
 const validationEditProfile = object().shape({
   username: string()
@@ -51,7 +51,7 @@ const validationNewPassword = object().shape({
   confirmNewPassword: string()
     .required("Enter your password again")
     .test("passwords-match", "Passwords must match ya fool", function(value) {
-      return this.parent.password === value;
+      return this.parent.newPassword === value;
     })
 });
 
@@ -63,9 +63,12 @@ class UserProfileEdit extends Component {
         <Formik
           initialValues={{ username, email, phoneNumber, adress }}
           validationSchema={validationEditProfile}
-          onSubmit={({username, email, phoneNumber, adress}, { setFieldError }) => {
+          onSubmit={(
+            { username, email, phoneNumber, adress },
+            { setFieldError }
+          ) => {
             try {
-              this.props.editUser({username, email, phoneNumber, adress  });
+              this.props.editUser({ username, email, phoneNumber, adress });
             } catch (errors) {
               errors.forEach(err => {
                 setFieldError(err.field, err.error);
@@ -75,12 +78,17 @@ class UserProfileEdit extends Component {
           component={this.EditProfileForm}
         />
         <Formik
-          initialValues={{ username: "", password: "" }}
+          initialValues={{
+            oldPassword: "",
+            newPassword: "",
+            confirmNewPassword: ""
+          }}
           validationSchema={validationNewPassword}
-          onSubmit={(values, { setFieldError }) => {
+          onSubmit={({ oldPassword, newPassword }, { setFieldError }) => {
             try {
-              this.props.newPasswordUser(this.props.username, values.password);
+              this.props.changePasswordUser({ oldPassword, newPassword });
             } catch (errors) {
+              console.log(errors)
               errors.forEach(err => {
                 setFieldError(err.field, err.error);
               });
@@ -261,4 +269,7 @@ const mapStateToProps = state => ({
   phoneNumber: state.profile.data.phoneNumber
 });
 
-export default connect(mapStateToProps, {editUser})(withStyles(styles)(UserProfileEdit));
+export default connect(
+  mapStateToProps,
+  { editUser, changePasswordUser }
+)(withStyles(styles)(UserProfileEdit));

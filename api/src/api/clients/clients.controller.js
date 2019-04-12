@@ -122,6 +122,17 @@ module.exports.edit = (req, res, next) => {
       });
 };
 
+module.exports.newPassword = (req, res, next) => {
+  service
+    .newPassword(req.user.id, req.body)
+    .then(() => {
+      res.status(httpStatus.OK).json(`Profile ${req.user.id} edited`);
+    })
+    .catch(err => {
+      res.send(err.message);
+    });
+};
+
 module.exports.authSocialNetwork = (req, res, next) => {
   service
     .authSocialNetwork(req.user)

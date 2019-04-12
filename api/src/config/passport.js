@@ -23,6 +23,7 @@ function jwtStrategy() {
   };
 
   const strategy = new Strategy(opts, async (token, done) => {
+    console.log(token)
     const user = await User.findOne({ _id: token.id });
     const executor = await Executor.findOne({ _id: token.id });
     const admin = await Admin.findOne({ _id: token.id });

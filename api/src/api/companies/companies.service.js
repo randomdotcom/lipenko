@@ -283,7 +283,7 @@ async function unblockCompany(userId) {
 
 async function rateCompany(userId, data, companyId) {
   const executor = await Executor.findById(companyId, err => {
-    if (err) res.send(err);
+    if (err) throw new Error(err);
   });
 
   let ratingList = executor.ratingList;
@@ -302,24 +302,127 @@ async function rateCompany(userId, data, companyId) {
     companyId,
     { $set: { rating: rating, ratingList: ratingList } },
     err => {
-      if (err) res.send(err);
+      if (err) throw new Error(err);
     }
   );
 }
 
-async function editProfile(userId, data) {
-  return await Executor.findById(userId, (err, company) => {
-    if (err) return res.send(err);
+async function editMainInfoProfile(userId, data) {
+  if (!userId) throw new Error("Unauthorized");
 
-    company.companyName = data.companyName;
-    company.description = data.description;
-    company.adress = data.adress;
-    company.password = data.password;
-    company.email = data.email;
-    company.phoneNumber = data.phoneNumber;
+  if (
+    !data.username |
+    !data.email |
+    !data.phoneNumber |
+    !data.city |
+    !data.companyName |
+    !data.description
+  ) {
+    throw new Error("Wrong data");
+  }
 
-    company.save();
+  return await Executor.findByIdAndUpdate(userId, {
+    username: data.username,
+    email: data.email,
+    phoneNumber: data.phoneNumber,
+    city: data.city,
+    companyName: data.companyName,
+    description: data.description
   });
+}
+
+async function newPassword(userId, data) {
+  const user = await Executor.findById(userId)
+    .select("+password")
+    .exec();
+  if (user === null) throw new Error("The user is not found");
+
+  let success = await user.comparePassword(data.oldPassword);
+  if (success === false) throw new Error("The password is incorrect");
+
+  user.password = data.newPassword;
+  return new Promise((resolve, reject) => {
+    user.save(err => {
+      if (err) reject(err);
+
+      resolve();
+    });
+  });
+}
+
+async function editTypesOfCleaning(userId, values) {
+  const {
+    standartSmallRoom,
+    standartBigRoom,
+    standartBathRoom,
+    generalBathRoom,
+    generalBigRoom,
+    generalSmallRoom,
+    afterRepairBathRoom,
+    afterRepairBigRoom,
+    afterRepairSmallRoom,
+    smallCarpet,
+    bigCarpet,
+    office,
+    furniture,
+    industrial,
+    pool
+  } = values;
+
+  const typesOfCleaning = {
+    standart: {
+      isAvailable: Boolean(
+        standartSmallRoom && standartBigRoom && standartBathRoom
+      ),
+      averagePrice:
+        (parseInt(standartBathRoom) +
+          parseInt(standartBigRoom) +
+          parseInt(standartSmallRoom)) /
+        3,
+      standartBathRoom,
+      standartBigRoom,
+      standartSmallRoom
+    },
+    general: {
+      isAvailable: Boolean(
+        generalSmallRoom && generalBigRoom && generalBathRoom
+      ),
+      averagePrice:
+        (parseInt(generalBathRoom) +
+          parseInt(generalBigRoom) +
+          parseInt(generalSmallRoom)) /
+        3,
+      generalBathRoom,
+      generalBigRoom,
+      generalSmallRoom
+    },
+    afterRepair: {
+      isAvailable: Boolean(
+        afterRepairSmallRoom && afterRepairBigRoom && afterRepairBathRoom
+      ),
+      averagePrice:
+        (parseInt(afterRepairBathRoom) +
+          parseInt(afterRepairBigRoom) +
+          parseInt(afterRepairSmallRoom)) /
+        3,
+      afterRepairBathRoom,
+      afterRepairBigRoom,
+      afterRepairSmallRoom
+    },
+    carpet: {
+      isAvailable: Boolean(smallCarpet && bigCarpet),
+      averagePrice: (parseInt(smallCarpet) + parseInt(bigCarpet)) / 2,
+      bigCarpet,
+      smallCarpet
+    },
+    office,
+    furniture,
+    industrial,
+    pool
+  };
+
+  await Executor.findByIdAndUpdate(userId, { typesOfCleaning });
+  return typesOfCleaning;
 }
 
 module.exports = {
@@ -330,7 +433,9 @@ module.exports = {
   blockCompany,
   unblockCompany,
   rateCompany,
-  editProfile,
+  editMainInfoProfile,
+  editTypesOfCleaning,
+  newPassword,
   getCompanyById,
   confirmEmail,
   newVerificationCode

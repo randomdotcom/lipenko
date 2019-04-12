@@ -11,7 +11,9 @@ router.post("/signout", controller.signout);
 router.post("/register", controller.register);
 router.put("/confirm", controller.confirm);
 
-router.put("/edit", permit(Role.Executor), controller.edit);
+router.put("/edit/main", permit(Role.Executor), controller.editMain);
+router.put("/edit/typesOfCleaning", permit(Role.Executor), controller.editTypesOfCleaning);
+router.put("/edit/newPassword", permit(Role.Executor), controller.newPassword);
 
 router.get('/', controller.get); // get collection of companies
 router.get('/:id', controller.getById);

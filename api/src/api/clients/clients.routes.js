@@ -25,6 +25,7 @@ router.get("/google/callback", authenticateGoogle(), controller.authSocialNetwor
 // router.get("/vk/callback", authenticateVKontakte(), controller.authSocialNetwork);
 
 router.put('/edit', permit(Role.User), controller.edit);
+router.put('/newPassword', permit(Role.User), controller.newPassword);
 
 router.get('/', permit(Role.Admin), controller.get);
 

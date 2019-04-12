@@ -132,20 +132,31 @@ module.exports.rate = (req, res, next) => {
     });
 };
 
-module.exports.edit = (req, res, next) => {
-  if (
-    req.body.email &&
-    req.body.password &&
-    req.body.phoneNumber &&
-    req.body.companyName &&
-    req.body.description &&
-    req.body.adress
-  ) {
-    service
-      .editProfile(req.user.id, req.body)
-      .then(() => {
-        res.status(httpStatus.OK).json(`Company ${req.user.id} edited`);
-      })
-      .catch(err => res.send(err.message));
-  } else res.send("Введены не все данные");
+module.exports.editMain = (req, res, next) => {
+  service
+    .editMainInfoProfile(req.user.id, req.body)
+    .then(() => {
+      res.status(httpStatus.OK).json(`Company ${req.user.id} edited`);
+    })
+    .catch(err => res.send(err.message));
+};
+
+module.exports.editTypesOfCleaning = (req, res, next) => {
+  service
+    .editTypesOfCleaning(req.user.id, req.body)
+    .then(data => {
+      res.status(httpStatus.OK).json(data);
+    })
+    .catch(err => res.send(err.message));
+};
+
+module.exports.newPassword = (req, res, next) => {
+  service
+    .newPassword(req.user.id, req.body)
+    .then(() => {
+      res.status(httpStatus.OK).json(`Profile ${req.user.id} edited`);
+    })
+    .catch(err => {
+      res.send(err.message);
+    });
 };

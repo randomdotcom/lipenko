@@ -4,10 +4,13 @@ import {
   USER_SIGNUP_SUCCESS,
   SIGNOUT_SUCCESS,
   USER_CONFIRM_SUCCESS,
+  USER_EDITED,
   EXECUTOR_SIGNIN_SUCCESS,
   EXECUTOR_SIGNIN_NEED_CONFIRM,
   EXECUTOR_SIGNUP_SUCCESS,
-  EXECUTOR_CONFIRM_SUCCESS
+  EXECUTOR_CONFIRM_SUCCESS,
+  EXECUTOR_TOC_EDITED,
+  EXECUTOR_MAIN_INFO_EDITED
 } from "../actions/auth.actions";
 
 const initialState = {
@@ -54,6 +57,17 @@ export default (state = initialState, action) => {
         isAuthenticated: false
       };
     }
+    case USER_EDITED: {
+      return {
+        ...state,
+        data: {
+          username: action.payload.username,
+          email: action.payload.email,
+          phoneNumber: action.payload.phoneNumber,
+          adress: action.payload.adress
+        }
+      };
+    }
     // case EXECUTOR_LOADED: {
     //   const user = action.payload;
     //   // user.orders.forEach(o => (o.date = new Date(o.date))); // преобр даты?
@@ -90,6 +104,35 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isSended: true
+      };
+    }
+    case EXECUTOR_MAIN_INFO_EDITED: {
+      return {
+        ...state,
+        data: {
+          username: action.payload.username,
+          email: action.payload.email,
+          phoneNumber: action.payload.phoneNumber,
+          city: action.payload.city,
+          companyName: action.payload.companyName,
+          description: action.payload.description,
+          typesOfCleaning: state.data.typesOfCleaning
+        }
+      };
+    }
+    case EXECUTOR_TOC_EDITED: {
+      console.log(action.payload)
+      return {
+        ...state,
+        data: {
+          username: state.data.username,
+          email: state.data.email,
+          phoneNumber: state.data.phoneNumber,
+          city: state.data.city,
+          companyName: state.data.companyName,
+          description: state.data.description,
+          typesOfCleaning: action.payload
+        }
       };
     }
 

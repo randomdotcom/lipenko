@@ -181,7 +181,6 @@ class ExecutorSignUp extends Component {
           }}
           onSubmit={(values, { setFieldError }) => {
             try {
-              console.log(values);
               this.props.signUpExecutor(values);
             } catch (errors) {
               errors.forEach(err => {

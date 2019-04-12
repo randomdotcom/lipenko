@@ -164,16 +164,25 @@ async function editProfile(userId, data) {
     phoneNumber: data.phoneNumber,
     adress: data.adress
   });
-  // return await User.findById(userId, (err, user) => {
+}
 
-  //   if (err) throw new Error(err);
+async function newPassword(userId, data) {
+  const user = await User.findById(userId)
+    .select("+password")
+    .exec();
+  if (user === null) throw new Error("The user is not found");
 
-  //   user.password = data.password;
-  //   user.email = data.email;
-  //   user.phoneNumber = data.phoneNumber;
+  let success = await user.comparePassword(data.oldPassword);
+  if (success === false) throw "The password is incorrect";
 
-  //   user.save();
-  // });
+  user.password = data.newPassword;
+  return new Promise((resolve, reject) => {
+    user.save(err => {
+      if (err) reject(err);
+
+      resolve();
+    });
+  });
 }
 
 async function authSocialNetwork(data) {
@@ -203,6 +212,7 @@ module.exports = {
   blockClient,
   unblockClient,
   editProfile,
+  newPassword,
   confirmEmail,
   authSocialNetwork,
   newVerificationCode
