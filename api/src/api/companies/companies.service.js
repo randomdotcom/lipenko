@@ -49,6 +49,7 @@ async function register(values, role) {
     companyName,
     description,
     city,
+    workingDays,
     standartSmallRoom,
     standartBigRoom,
     standartBathRoom,
@@ -72,6 +73,7 @@ async function register(values, role) {
     companyName,
     description,
     city,
+    workingDays,
     typesOfCleaning: {
       standart: {
         isAvailable: Boolean(

@@ -15,8 +15,11 @@ const Main = ({ isAuthenticated, username, classes, children }) => {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
-            CLEANING PLATFORM
+          <Typography variant="h6" color="inherit" className={classes.logoAndBook}>
+            <span>CLEANING PLATFORM</span>
+            <Button className={classes.bookButton} variant="contained"
+              color="secondary"
+            >book cleaning</Button>
           </Typography>
           <Button
             component={NavLink}
@@ -34,10 +37,10 @@ const Main = ({ isAuthenticated, username, classes, children }) => {
               {username}
             </Button>
           ) : (
-            <Button component={Link} to="/auth" color="inherit">
-              Login
+              <Button component={Link} to="/auth" color="inherit">
+                Login
             </Button>
-          )}
+            )}
         </Toolbar>
       </AppBar>
       {children}
@@ -49,8 +52,12 @@ const styles = {
   root: {
     flexGrow: 1
   },
-  grow: {
-    flexGrow: 1
+  logoAndBook: {
+    flexGrow: 1,
+    alignItems: 'center'
+  },
+  bookButton: {
+    marginLeft: 15
   },
   menuButton: {
     marginLeft: -12,
