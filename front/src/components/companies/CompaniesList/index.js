@@ -6,7 +6,7 @@ const CompaniesList = ({ companies }) => {
     return <p>Companies is not found</p>;
   } else {
     return companies.map(company => (
-      <CompanyCard company={company} key={company._id} />
+      <CompanyCard company={company} id={company._id} key={company._id} />
     ));
   }
 };

@@ -251,7 +251,7 @@ async function getCompanies({
 }
 
 async function getCompanyById(companyId) {
-  return await Executor.find({ _id: companyId });
+  return await Executor.findById({ _id: companyId });
 }
 
 async function blockCompany(userId, data) {

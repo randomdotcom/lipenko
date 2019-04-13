@@ -14,7 +14,6 @@ export function* watchLoadCompaniesSaga() {
     let query = parse(payload);
     if (query.type === undefined) query.type = 'standart';
     query = stringify(query);
-    // if (payload[0] !== "?") payload = `?${payload}`;
     
     const response = yield call(axios.get, `/api/companies?${payload}`);
     yield put(companiesLoaded(response.data));

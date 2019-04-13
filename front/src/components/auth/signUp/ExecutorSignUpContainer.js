@@ -21,6 +21,7 @@ import {
   signUpExecutor,
   executorNewVerificationCode
 } from "../../../actions/auth.actions.js";
+import WorkingDaysSelect from "./WorkingDaysSelect";
 
 const validationSchema = object().shape({
   username: string()
@@ -163,6 +164,7 @@ class ExecutorSignUp extends Component {
             companyName: "",
             description: "",
             city: "",
+            WorkingDays: [],
             standartSmallRoom: 0,
             standartBigRoom: 0,
             standartBathRoom: 0,
@@ -192,9 +194,12 @@ class ExecutorSignUp extends Component {
           render={({
             values,
             errors,
+            touched,
             handleBlur,
             handleChange,
-            handleSubmit
+            handleSubmit,
+            setFieldValue,
+            setFieldTouched
           }) => (
             <form className={classes.container} onSubmit={handleSubmit}>
               <Grid container justify="center" spacing={24}>
@@ -312,6 +317,13 @@ class ExecutorSignUp extends Component {
                     value={values.city}
                     helperText={errors.city}
                     error={Boolean(errors.city)}
+                  />
+                  <WorkingDaysSelect
+                    value={values.topics}
+                    onChange={setFieldValue}
+                    onBlur={setFieldTouched}
+                    error={errors.topics}
+                    touched={touched.topics}
                   />
                 </Grid>
                 <Grid container justify="center" spacing={24}>
@@ -592,7 +604,7 @@ const styles = theme => ({
     flexDirection: "column",
     alignItems: "center",
     flexWrap: "wrap",
-    flexGrow: 1,
+    flexGrow: 1
     //marginBottom: 25
   },
   button: {

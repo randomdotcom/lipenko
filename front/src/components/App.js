@@ -5,7 +5,7 @@ import Admin from "./admin";
 import Auth from "./auth";
 import ConfirmEmailContainer from "./auth/ConfirmEmailContainer";
 import Companies from "./companies";
-import Company from "./companies/Company";
+import Company from "./companies/CompanyPage";
 import Profile from "./profile";
 import ProfileEdit from "./profile/edit";
 import NotFound from "./NotFound";
@@ -18,27 +18,31 @@ class App extends Component {
   render() {
     const { isAuthenticated } = this.props;
     return (
-      <Switch>
-        <Route exact path="/admin" component={Admin} />
-        <Route exact path="/auth" component={Auth} />
-        <Route exact path="/confirm" component={ConfirmEmailContainer} />
-        <Route exact path="/" component={this.MainRedirect} />
-        <Route exact path="/companies" component={withMainLayout(Companies)} />
-        <Route path="/companies/:id" component={withMainLayout(Company)} />
-        <PrivateRoute
-          exact
-          path="/profile"
-          isAuthenticated={isAuthenticated}
-          component={withMainLayout(Profile)}
-        />
-        <PrivateRoute
-          exact
-          path="/profile/edit"
-          isAuthenticated={isAuthenticated}
-          component={withMainLayout(ProfileEdit)}
-        />
-        <Route component={NotFound} />
-      </Switch>
+        <Switch>
+          <Route exact path="/admin" component={Admin} />
+          <Route exact path="/auth" component={Auth} />
+          <Route exact path="/confirm" component={ConfirmEmailContainer} />
+          <Route exact path="/" component={this.MainRedirect} />
+          <Route
+            exact
+            path="/companies"
+            component={withMainLayout(Companies)}
+          />
+          <Route path="/companies/:id" component={withMainLayout(Company)} />
+          <PrivateRoute
+            exact
+            path="/profile"
+            isAuthenticated={isAuthenticated}
+            component={withMainLayout(Profile)}
+          />
+          <PrivateRoute
+            exact
+            path="/profile/edit"
+            isAuthenticated={isAuthenticated}
+            component={withMainLayout(ProfileEdit)}
+          />
+          <Route component={NotFound} />
+        </Switch>
     );
   }
 }

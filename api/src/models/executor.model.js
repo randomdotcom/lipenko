@@ -82,6 +82,15 @@ var schema = new mongoose.Schema(
         "The city can contain only letters, -, numbers and must be between 3 and 12 characters"
       ]
     },
+    workingDays: {
+      sunday: { type: Boolean, required: true, default: false },
+      monday: { type: Boolean, required: true, default: true },
+      tuesday: { type: Boolean, required: true, default: true },
+      wednesday: { type: Boolean, required: true, default: true },
+      thursday: { type: Boolean, required: true, default: true },
+      friday: { type: Boolean, required: true, default: true },
+      saturday: { type: Boolean, required: true, default: false }
+    },
     typesOfCleaning: {
       standart: {
         isAvailable: { type: Boolean, required: true },
