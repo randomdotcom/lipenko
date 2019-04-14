@@ -20,3 +20,16 @@ export const CLEANING_BOOKED = "ORDER: CLEANING BOOKED";
 export const cleaningBooked = () => ({
   type: CLEANING_BOOKED
 });
+
+export const LOOK_OFFERS = "ORDER: LOOK OFFERS...";
+export const lookOffers = data => ({
+  type: LOOK_OFFERS,
+  payload: data
+});
+
+export const OFFERS_FOUND = "ORDER: OFFERS FOUND";
+export const offersFound = data => ({
+  type: OFFERS_FOUND,
+  payload: data
+});
+

@@ -15,6 +15,7 @@ import {
   TimePicker,
   MuiPickersUtilsProvider
 } from "material-ui-pickers";
+import querySetParam from "../../services/query";
 
 function BookingForm(props) {
   const {
@@ -25,10 +26,20 @@ function BookingForm(props) {
     values,
     errors
   } = props;
+
   return (
     <div className={classes.root}>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <Form className={classes.container}>
+        <form className={classes.container} onSubmit={handleSubmit}>
+          <TextField
+            required
+            id="city"
+            label="City"
+            className={classes.input}
+            value={values.city}
+            onChange={handleChange}
+            margin="normal"
+          />
           <TextField
             required
             id="adress"
@@ -155,10 +166,10 @@ function BookingForm(props) {
               { value: 0, label: "Sunday" },
               { value: 1, label: "Monday" },
               { value: 2, label: "Tuesday" },
-              { value: 4, label: "Wednesday" },
-              { value: 5, label: "Thursday" },
-              { value: 6, label: "Friday" },
-              { value: 7, label: "Saturday" }
+              { value: 3, label: "Wednesday" },
+              { value: 4, label: "Thursday" },
+              { value: 5, label: "Friday" },
+              { value: 6, label: "Saturday" }
             ]}
             component={Select}
           />
@@ -208,15 +219,15 @@ function BookingForm(props) {
             />
           )}
           {values.company ? (
-            <Button variant="contained" color="primary" fullWidth>
+            <Button type="submit" variant="contained" color="primary" fullWidth>
               Заказать услугу
             </Button>
           ) : (
-            <Button variant="contained" color="primary" fullWidth>
+            <Button type="submit" variant="contained" color="primary" fullWidth>
               Рассмотреть предложения
             </Button>
           )}
-        </Form>
+        </form>
       </MuiPickersUtilsProvider>
     </div>
   );

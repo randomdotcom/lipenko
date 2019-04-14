@@ -29,8 +29,6 @@ export function* watchExecutorSignUpSaga() {
     try {
       yield call(axios.post, "/api/companies/register", payload);
       yield put(executorSignUpSuccess());
-      yield call(clearToken);
-      yield put(push("/"));
     } catch (error) {
       yield put(returnErrors(error.response.data));
     }
@@ -43,7 +41,7 @@ export function* watchExecutorConfirmSaga() {
       const response = yield call(axios.put, "/api/companies/confirm", payload);
 
       const { token, ...user } = response.data;
-      yield put(executorConfirmSuccess({token, user}));
+      yield put(executorConfirmSuccess({ token, user }));
       yield call(storeToken, response.data);
       yield put(push("/"));
     } catch (error) {

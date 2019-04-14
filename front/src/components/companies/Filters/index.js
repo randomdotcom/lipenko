@@ -21,7 +21,7 @@ class Filters extends Component {
     carpet: this.query.carpet ? true : false,
     furniture: this.query.furniture ? true : false,
     pool: this.query.pool ? true : false,
-    city: ""
+    city: this.query.city ? this.query.city : ''
   };
 
   handleChangeType = event => {

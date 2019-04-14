@@ -46,7 +46,7 @@ module.exports.register = (req, res, next) => {
       res.status(httpStatus.CREATED).json({ username });
     })
     .catch(err => {
-      send(err.message);
+      res.status(httpStatus.CONFLICT).send(err.message);
     });
 };
 
@@ -61,7 +61,7 @@ module.exports.newVerificationCode = (req, res, next) => {
       res.status(httpStatus.CREATED).json({ username });
     })
     .catch(err => {
-      res.send(err.message);
+      res.status(httpStatus.CONFLICT).send(err.message);
     });
 };
 

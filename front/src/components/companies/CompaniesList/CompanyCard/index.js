@@ -27,12 +27,15 @@ function CompanyCard(props) {
                 <b>Rating:</b> {company.rating}
               </Typography>
               <Button
+                variant="outlined"
+                color="primary"
+                className={classes.button}
                 component={Link}
                 to={{
                   pathname: `/companies/${props.id}`
                 }}
               >
-                Заказать услугу
+                <b>Заказать услугу</b>
               </Button>
             </>
           }
@@ -51,9 +54,12 @@ const styles = theme => ({
     display: "flex"
   },
   logo: {
-    width: 115,
-    height: 115,
+    width: 125,
+    height: 125,
     boxShadow: theme.shadows[2]
+  },
+  button: {
+    margin: theme.spacing.unit
   }
 });
 

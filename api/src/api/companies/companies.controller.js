@@ -57,17 +57,17 @@ module.exports.signout = (req, res, next) => {
 };
 
 module.exports.register = (req, res, next) => {
-  console.log(req.body);
   service
     .register(req.body, Role.Executor)
     .then(({ email, username, verificationCode }) => {
-      return sendExecutorConfirmationMessage(email, username, verificationCode);
+      sendExecutorConfirmationMessage(email, username, verificationCode);
+      return username;
     })
-    .then(() => {
-      res.status(httpStatus.CREATED).json("Created");
+    .then(username => {
+      res.status(httpStatus.CREATED).json({ username });
     })
     .catch(err => {
-      res.send(err.message);
+      res.status(httpStatus.CONFLICT).send(err.message);
     });
 };
 
@@ -92,7 +92,7 @@ module.exports.newVerificationCode = (req, res, next) => {
       res.status(httpStatus.CREATED).json("Created");
     })
     .catch(err => {
-      res.send(err.message);
+      res.status(httpStatus.CONFLICT).send(err.message);
     });
 };
 
@@ -103,7 +103,7 @@ module.exports.block = (req, res, next) => {
       res.status(httpStatus.OK).json(`Company ${req.params.id} blocked`);
     })
     .catch(err => {
-      res.send(err.message);
+      res.status(httpStatus.CONFLICT).send(err.message);
     });
 };
 
@@ -114,7 +114,7 @@ module.exports.unblock = (req, res, next) => {
       res.status(httpStatus.OK).json(`Company ${req.params.id} unblocked`);
     })
     .catch(err => {
-      res.send(err.message);
+      res.status(httpStatus.CONFLICT).send(err.message);
     });
 };
 
@@ -128,7 +128,7 @@ module.exports.rate = (req, res, next) => {
       res.status(httpStatus.OK).json(`Company ${req.params.id} rated`);
     })
     .catch(err => {
-      res.send(err.message);
+      res.status(httpStatus.CONFLICT).send(err.message);
     });
 };
 
@@ -138,7 +138,7 @@ module.exports.editMain = (req, res, next) => {
     .then(() => {
       res.status(httpStatus.OK).json(`Company ${req.user.id} edited`);
     })
-    .catch(err => res.send(err.message));
+    .catch(err => res.status(httpStatus.CONFLICT).send(err.message));
 };
 
 module.exports.editTypesOfCleaning = (req, res, next) => {
@@ -147,7 +147,7 @@ module.exports.editTypesOfCleaning = (req, res, next) => {
     .then(data => {
       res.status(httpStatus.OK).json(data);
     })
-    .catch(err => res.send(err.message));
+    .catch(err => res.status(httpStatus.CONFLICT).send(err.message));
 };
 
 module.exports.newPassword = (req, res, next) => {
@@ -157,6 +157,6 @@ module.exports.newPassword = (req, res, next) => {
       res.status(httpStatus.OK).json(`Profile ${req.user.id} edited`);
     })
     .catch(err => {
-      res.send(err.message);
+      res.status(httpStatus.CONFLICT).send(err.message);
     });
 };

@@ -19,13 +19,8 @@ module.exports.getById = (req, res) => {
 };
 
 module.exports.create = (req, res) => {
-  const model = {
-    customer: req.user.id,
-    ...req.body
-  };
-
   service
-    .createOrder(model)
+    .createOrder(req.body)
     .then(() => {
       res.status(httpStatus.CREATED).json("Created");
     })

@@ -67,13 +67,23 @@ async function register(values, role) {
     pool
   } = values;
 
+  const workingDaysObj = {
+    0: workingDays.indexOf(0) !== -1 ? true : false,
+    1: workingDays.indexOf(1) !== -1 ? true : false,
+    2: workingDays.indexOf(2) !== -1 ? true : false,
+    3: workingDays.indexOf(3) !== -1 ? true : false,
+    4: workingDays.indexOf(4) !== -1 ? true : false,
+    5: workingDays.indexOf(5) !== -1 ? true : false,
+    6: workingDays.indexOf(6) !== -1 ? true : false,
+  }
+
   const user = new Executor({
     username,
     password,
     companyName,
     description,
     city,
-    workingDays,
+    workingDays: workingDaysObj,
     typesOfCleaning: {
       standart: {
         isAvailable: Boolean(

@@ -16,6 +16,7 @@ function UserProfile(props) {
             <Avatar alt="Avatar" src="https://static.espreso.tv/uploads/article/2596219/images/im578x383-avatar-neytiri-sad.jpg" className={classes.bigAvatar} />
           </Paper>
           <Button component={Link} to="/profile/edit" className={classes.editButton} variant="contained" color="secondary">edit</Button>
+          <Button component={Link} to="/profile/bookings" className={classes.editButton} variant="contained" color="primary">my bookings</Button>
         </div>
         <div className={classes.InfoAndLogOutButton}>
           <div className={classes.logOutButton}>

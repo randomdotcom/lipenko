@@ -14,7 +14,7 @@ module.exports.signin = (req, res, next) => {
             .send("Username or password is incorrect")
     )
     .catch(err => {
-      res.send(err.message);
+      res.status(httpStatus.CONFLICT).send(err.message);
     });
 };
 
@@ -27,7 +27,7 @@ module.exports.signout = (req, res, next) => {
         : res.status(httpStatus.INTERNAL_SERVER_ERROR).send("Internal Error");
     })
     .catch(err => {
-      res.status(httpStatus.BAD_REQUEST).send(err.message);
+      res.status(httpStatus.CONFLICT).status(httpStatus.BAD_REQUEST).send(err.message);
     });
 };
 
@@ -38,7 +38,7 @@ module.exports.register = (req, res, next) => {
       res.status(httpStatus.CREATED).json("Created");
     })
     .catch(err => {
-      res.status(httpStatus.BAD_REQUEST).send(err.message);
+      res.status(httpStatus.CONFLICT).status(httpStatus.BAD_REQUEST).send(err.message);
     });
 };
 
@@ -50,7 +50,7 @@ module.exports.edit = (req, res, next) => {
         res.status(httpStatus.OK).json(`Profile ${req.user.id} edited`);
       })
       .catch(err => {
-        res.send(err.message);
+        res.status(httpStatus.CONFLICT).send(err.message);
       });
-  } else res.send("Введены не все данные");
+  } else res.status(httpStatus.CONFLICT).send("Введены не все данные");
 };

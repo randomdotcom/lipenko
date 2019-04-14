@@ -102,8 +102,7 @@ export default (state = initialState, action) => {
     case EXECUTOR_SIGNIN_NEED_CONFIRM:
     case EXECUTOR_SIGNUP_SUCCESS: {
       return {
-        ...state,
-        isSended: true
+        ...state
       };
     }
     case EXECUTOR_MAIN_INFO_EDITED: {

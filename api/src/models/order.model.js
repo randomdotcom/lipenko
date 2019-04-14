@@ -6,8 +6,8 @@ const validateRegularity = function(regularity) {
   return true;
 };
 
-const validateRecurrent = function(recurrent) {
-  if ((reccurent < 0) | (recurrent > 7)) return false;
+const validateRecurrence = function(recurrence) {
+  if ((recurrence < 0) | (recurrence > 7)) return false;
   return true;
 };
 
@@ -22,13 +22,18 @@ var schema = new mongoose.Schema(
       ref: "Executor",
       required: true
     },
+    city: { type: String, required: true },
     adress: { type: String, required: true },
     type: { type: String, required: true },
     smallRooms: { type: Number },
     bigRooms: { type: Number },
     bathRooms: { type: Number },
     squareMeters: { type: Number },
-    service: [], ///// ??
+    service: {
+      furniture: { type: Boolean },
+      pool: { type: Boolean },
+      carpet: { type: Boolean }
+    }, ///// ??
     smallCarpets: { type: Number },
     bigCarpet: { type: Number },
     startDate: { type: Date, required: true },
@@ -41,6 +46,10 @@ var schema = new mongoose.Schema(
       default: 0,
       validate: [validateRegularity, "must be between 0 and 3"]
     },
+    averageCleaningTime: {
+      type: Number,
+      required: true
+    },
     email: {
       type: String,
       required: true
@@ -49,7 +58,7 @@ var schema = new mongoose.Schema(
       type: Number,
       default: 0,
       required: true,
-      validate: [validateRecurrent, "must be between 0 and 7"]
+      validate: [validateRecurrence, "must be between 0 and 7"]
     },
 
     status: { type: String, required: true, lowercase: true }

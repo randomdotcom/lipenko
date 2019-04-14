@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Formik } from "formik";
-import { string, object } from "yup";
+import { Formik, Field } from "formik";
+import { string, object, array } from "yup";
 import { withSnackbar } from "notistack";
 import {
   TextField,
@@ -12,6 +12,7 @@ import {
   ExpansionPanelDetails,
   Button
 } from "@material-ui/core";
+import { Select } from "material-ui-formik-components/Select";
 import Snackbar from "@material-ui/core/Snackbar";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import IconButton from "@material-ui/core/IconButton";
@@ -21,7 +22,6 @@ import {
   signUpExecutor,
   executorNewVerificationCode
 } from "../../../actions/auth.actions.js";
-import WorkingDaysSelect from "./WorkingDaysSelect";
 
 const validationSchema = object().shape({
   username: string()
@@ -68,8 +68,11 @@ const validationSchema = object().shape({
     .max(20, "Company name must contain less then 14 characters"),
   description: string().max(
     80,
-    "Description msut contain less then 80 characters"
+    "Description must contain less then 80 characters"
   ),
+  workingDays: array()
+    .min(1, "Company must have atleast 1 working day")
+    .max(7, "Wrong data, 7 days at week"),
   standartSmallRoom: string()
     .min(1, "You can type `0`")
     .matches(/^\d{1,5}$/, "This field for money"),
@@ -164,7 +167,7 @@ class ExecutorSignUp extends Component {
             companyName: "",
             description: "",
             city: "",
-            WorkingDays: [],
+            workingDays: [],
             standartSmallRoom: 0,
             standartBigRoom: 0,
             standartBathRoom: 0,
@@ -318,12 +321,23 @@ class ExecutorSignUp extends Component {
                     helperText={errors.city}
                     error={Boolean(errors.city)}
                   />
-                  <WorkingDaysSelect
-                    value={values.topics}
-                    onChange={setFieldValue}
-                    onBlur={setFieldTouched}
-                    error={errors.topics}
-                    touched={touched.topics}
+                  <Field
+                    required
+                    multiple
+                    variant="outlined"
+                    className={classes.input}
+                    name="workingDays"
+                    label="Working days"
+                    options={[
+                      { value: 0, label: "Sunday" },
+                      { value: 1, label: "Monday" },
+                      { value: 2, label: "Tuesday" },
+                      { value: 3, label: "Wednesday" },
+                      { value: 4, label: "Thursday" },
+                      { value: 5, label: "Friday" },
+                      { value: 6, label: "Saturday" }
+                    ]}
+                    component={Select}
                   />
                 </Grid>
                 <Grid container justify="center" spacing={24}>
@@ -629,7 +643,11 @@ const styles = theme => ({
 
 const mapStateToProps = state => ({
   isSended: state.profile.isSended,
-  username: state.profile.data.username,
+  username: state.profile.data
+    ? state.profile.data.username
+      ? state.profile.data.username
+      : undefined
+    : undefined,
   error: state.errors.message
 });
 

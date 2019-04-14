@@ -7,7 +7,8 @@ const { sendOrderStatusMessage } = require("../../config/nodemailer");
 
 async function createOrder({
   customer,
-  executor,
+  company,
+  city,
   adress,
   type,
   smallRooms,
@@ -16,7 +17,7 @@ async function createOrder({
   squareMeters,
   service,
   smallCarpets,
-  bigCarpet,
+  bigCarpets,
   startDate,
   expectedTime,
   cleaningDays,
@@ -24,11 +25,15 @@ async function createOrder({
   email,
   recurrence
 }) {
+  startDate = new Date(startDate);
+  expectedTime = new Date(expectedTime);
+
   const startWeekDay = startDate.getDay();
 
-  let i = 0;
+  let i = startWeekDay;
   const latestDayThatCanBe = i - 1 === -1 ? 7 : i;
   let latestCleaningDay;
+
   while (true) {
     if (i === latestDayThatCanBe) break;
     if (cleaningDays.indexOf(i) !== -1) latestCleaningDay = i;
@@ -40,51 +45,60 @@ async function createOrder({
     startWeekDay < latestCleaningDay
       ? latestCleaningDay - startWeekDay
       : 8 - startWeekDay + latestCleaningDay;
+  let latestCleaningDate = new Date();
 
-  latestCleaningDate = new Date();
   latestCleaningDate.setDate(
     startDate.getDate() + differenceBetweenStartAndLatestDay
   );
 
-  Date.prototype.addMonths = function(m) {
-    var d = new Date(this);
-    var years = Math.floor(m / 12);
-    var months = m - years * 12;
-    if (years) d.setFullYear(d.getFullYear() + years);
-    if (months) d.setMonth(d.getMonth() + months);
-    return d;
-  };
+  let endDate = latestCleaningDate;
 
   switch (recurrence) {
     case 1:
       endDate.setDate(latestCleaningDate.getDate() + 14);
     case 2:
-      endDate.addMonths(1);
+      endDate.setMonth(endDate.getMonth() + 1);
     case 3:
-      endDate.addMonths(2);
+      endDate.setMonth(endDate.getMonth() + 2);
     case 4:
-      endDate.addMonths(3);
+      endDate.setMonth(endDate.getMonth() + 3);
     case 5:
-      endDate.addMonths(4);
+      endDate.setMonth(endDate.getMonth() + 4);
     case 6:
-      endDate.addMonths(5);
+      endDate.setMonth(endDate.getMonth() + 5);
     case 7:
-      endDate.addMonths(6);
+      endDate.setMonth(endDate.getMonth() + 6);
   }
 
   const order = new Order({
-    customer,
-    executor,
+    customer: customer ? customer : undefined,
+    executor: company,
+    city,
     adress,
     type,
-    smallRooms,
-    bigRooms,
-    bathRooms,
-    squareMeters,
-    service,
-    smallCarpets,
-    bigCarpet,
+    smallRooms:
+      (type === "standart") | (type === "general") | (type === "afterRepair")
+        ? smallRooms
+        : undefined,
+    bigRooms:
+      (type === "standart") | (type === "general") | (type === "afterRepair")
+        ? bigRooms
+        : undefined,
+    bathRooms:
+      (type === "standart") | (type === "general") | (type === "afterRepair")
+        ? bathRooms
+        : undefined,
+    squareMeters:
+      (type === "office") | (type === "industrial") ? squareMeters : undefined,
+    service: {
+      pool: service.indexOf("pool") !== -1 ? true : false,
+      furniture: service.indexOf("furniture") !== -1 ? true : false,
+      carpet: service.indexOf("carpet") !== -1 ? true : false
+    },
+    smallCarpets: service.indexOf("carpet") !== -1 ? smallCarpets : undefined,
+    bigCarpet: service.indexOf("carpet") !== -1 ? bigCarpets : undefined,
     startDate,
+    endDate,
     expectedTime,
     cleaningDays,
     regularity,
@@ -92,20 +106,79 @@ async function createOrder({
     recurrence,
     status: Status.New
   });
-  order.save();
-  return order;
+
+  return new Promise((resolve, reject) => {
+    order.save(err => {
+      if (err) reject(err);
+
+      resolve();
+    });
+  });
 }
 
-async function getOrders(user) {
-  if (user.role == Role.User) {
-    return await Order.find({ customer: user.id })
-      // .populate("customer")
-      .exec();
-  } else if (user.role == Role.Executor) {
-    return await Order.find({ executor: user.id })
-      // .populate("executor")
-      .exec();
+async function getOrders({
+  page = 1,
+  perPage = 10,
+  city,
+  adress,
+  sortBy,
+  companyName,
+  type
+}) {
+  let sort = {};
+  if (sortBy === "price" || sortBy === "-price") {
+    const typeOfSort = sortBy === "price" ? 1 : -1;
+    sort.price = typeOfSort;
   }
+
+  if (sortBy === "averageTime" || sortBy === "-averageTime") {
+    const typeOfSort = sortBy === "averageTime" ? -1 : 1;
+    sort.avetageTime = typeOfSort;
+  }
+
+  if (sortBy === "date" || sortBy === "-date") {
+    const typeOfSort = sortBy === "date" ? 1 : -1;
+    sort.startDate = typeOfSort;
+  }
+
+  const options = {
+    page: parseInt(page, 10) || 1,
+    limit: parseInt(perPage, 10) || 10,
+    select:
+      "type city adress smallRooms bigRooms bathRooms squareMeters startDate cleaningDays expectedTime regularity recurrence endDate executor price averageTime status",
+    sort
+  };
+
+  let query = {};
+
+  if (adress) query.adress = { $regex: adress };
+  if (city) query.city = { $regex: city };
+  if (companyName) query.companyName = { $regex: companyName };
+  if (type) query.type = `${type}`;
+  if (carpet) query["service.carpet"] = true;
+  if (furniture) query["service.furniture"] = true;
+  if (pool) query["service.pool"] = true;
+
+  const companies = await Order.paginate(query, options);
+
+  return companies;
+}
+
+async function getCompanyById(companyId) {
+  return await Executor.findById({ _id: companyId });
+}
+
+async function blockCompany(userId, data) {
+  return await Executor.findByIdAndUpdate(
+    userId,
+    {
+      $set: { isBlocked: true, blockReason: `${data.blockReason}` }
+    },
+    (err, user) => {
+      if (err) throw new Error(err);
+      sendProfileBlockMessage(user.email, user.username, data.blockReason);
+    }
+  );
 }
 
 async function acceptOrder(orderId) {
@@ -123,7 +196,6 @@ async function acceptOrder(orderId) {
 }
 
 async function cancelOrder(orderId) {
-  console.log(`orderId = ${orderId}`);
   return await Order.findByIdAndUpdate(
     orderId,
     {

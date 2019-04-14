@@ -15,17 +15,20 @@ export function* watchLoadCompaniesSaga() {
     if (query.type === undefined) query.type = 'standart';
     query = stringify(query);
     
-    const response = yield call(axios.get, `/api/companies?${payload}`);
+    const response = yield call(axios.get, `/api/companies?${query}`);
     yield put(companiesLoaded(response.data));
   });
 }
 
 export function* watchChangeFiltersCompaniesSaga() {
   yield takeEvery(CHANGE_FILTERS_COMPANIES, function*({ payload }) {
-    const { name, value, path } = payload;
-
+    const { name, value, path } = payload; 
     let query = parse(payload.query);
+
+    if (name) {
     query[`${name}`] = value;
+    }
+
     yield put(push(`${path}?${stringify(query)}`));
     yield put(loadCompanies(stringify(query)));
   });

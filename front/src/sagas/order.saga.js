@@ -6,7 +6,9 @@ import {
   CHOOSE_COMPANY,
   companyChosen,
   BOOK_CLEANING,
-  cleaningBooked
+  cleaningBooked,
+  LOOK_OFFERS,
+  offersFound
 } from "../actions/order.actions";
 import { returnErrors } from "../actions/errors.actions";
 
@@ -24,6 +26,28 @@ export function* watchBookCleaning() {
 
       yield put(cleaningBooked(response.data));
       yield put(push("/profile"));
+    } catch (errors) {
+      yield put(returnErrors(errors));
+    }
+  });
+}
+
+export function* watchLookOffers() {
+  yield takeLatest(LOOK_OFFERS, function*({ payload }) {
+    try {
+      const query = {
+        city: payload.city,
+        type: payload.type,
+        pool: payload.service.indexOf("pool") != -1 ? true : undefined,
+        furniture:
+          payload.service.indexOf("furniture") !== -1 ? true : undefined,
+        carpet: payload.service.indexOf("carpet") !== -1 ? true : undefined,
+        cleaningDays: { ...payload.cleaningDays }
+      };
+
+      yield put(push(`/companies?${stringify(query)}`));
+
+      yield put(offersFound(payload));
     } catch (errors) {
       yield put(returnErrors(errors));
     }

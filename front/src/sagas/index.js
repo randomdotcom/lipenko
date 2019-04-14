@@ -24,7 +24,11 @@ import {
   watchChangeFiltersCompaniesSaga
 } from "./companies.saga";
 import { watchLoadCompanySaga } from "./company.saga";
-import { watchChooseCompany, watchBookCleaning } from "./order.saga";
+import {
+  watchChooseCompany,
+  watchBookCleaning,
+  watchLookOffers
+} from "./order.saga";
 
 export default function*() {
   yield spawn(watchUserSignInSaga);
@@ -50,6 +54,7 @@ export default function*() {
 
   yield spawn(watchChooseCompany);
   yield spawn(watchBookCleaning);
+  yield spawn(watchLookOffers);
 
   yield spawn(watchSignOutSaga);
 
