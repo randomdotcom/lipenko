@@ -9,17 +9,40 @@ import {
 } from "@material-ui/core";
 import { Link, NavLink } from "react-router-dom";
 import indigo from "@material-ui/core/colors/indigo";
+import { withRouter } from "react-router-dom";
 
-const Main = ({ isAuthenticated, username, classes, children }) => {
+const Main = ({
+  role,
+  history,
+  isAuthenticated,
+  username,
+  classes,
+  children
+}) => {
+  const handleClickBookCleaning = () => {
+    history.push("/book");
+  };
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" color="inherit" className={classes.logoAndBook}>
+          <Typography
+            variant="h6"
+            color="inherit"
+            className={classes.logoAndBook}
+          >
             <span>CLEANING PLATFORM</span>
-            <Button className={classes.bookButton} variant="contained"
-              color="secondary"
-            >book cleaning</Button>
+            {role !== "executor" ? (
+              <Button
+                className={classes.bookButton}
+                variant="contained"
+                color="secondary"
+                onClick={handleClickBookCleaning}
+              >
+                book cleaning
+              </Button>
+            ) : null}
           </Typography>
           <Button
             component={NavLink}
@@ -37,10 +60,10 @@ const Main = ({ isAuthenticated, username, classes, children }) => {
               {username}
             </Button>
           ) : (
-              <Button component={Link} to="/auth" color="inherit">
-                Login
+            <Button component={Link} to="/auth" color="inherit">
+              Login
             </Button>
-            )}
+          )}
         </Toolbar>
       </AppBar>
       {children}
@@ -54,7 +77,7 @@ const styles = {
   },
   logoAndBook: {
     flexGrow: 1,
-    alignItems: 'center'
+    alignItems: "center"
   },
   bookButton: {
     marginLeft: 15
@@ -70,10 +93,15 @@ const styles = {
 
 const mapStateToProps = state => ({
   isAuthenticated: state.profile.isAuthenticated,
-  username: state.profile.isAuthenticated === true ? state.profile.data.username : undefined,
-  error: state.profile.isAuthenticated === true ? state.errors.message : undefined
+  role: state.profile.role,
+  username:
+    state.profile.isAuthenticated === true
+      ? state.profile.data.username
+      : undefined,
+  error:
+    state.profile.isAuthenticated === true ? state.errors.message : undefined
 });
 
 const MainContainer = connect(mapStateToProps)(Main);
 
-export default withStyles(styles)(MainContainer);
+export default withRouter(withStyles(styles)(MainContainer));

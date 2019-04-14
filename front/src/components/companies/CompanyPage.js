@@ -3,12 +3,18 @@ import { withStyles } from "@material-ui/core/styles";
 import { Typography, Button, Paper, Avatar } from "@material-ui/core";
 import { connect } from "react-redux";
 import { loadCompany } from "../../actions/companies.actions";
+import { chooseCompany } from "../../actions/order.actions";
 
 class CompanyPage extends Component {
   componentDidMount() {
     const { id } = this.props.match.params;
     this.props.loadCompany(id);
   }
+
+  handleClickOrder = () => {
+    const { _id } = this.props.company;
+    this.props.chooseCompany(_id);
+  };
 
   render() {
     const { classes, company, toc } = this.props;
@@ -25,7 +31,16 @@ class CompanyPage extends Component {
                   className={classes.bigAvatar}
                 />
               </Paper>
-              <Button>Заказать уборку</Button>
+              {this.props.role !== "executor" ? (
+                <Button
+                  onClick={this.handleClickOrder}
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                >
+                  Book cleaning
+                </Button>
+              ) : null}
             </div>
             <div className={classes.InfoAndLogOutButton}>
               <div className={classes.profileInfo}>
@@ -107,6 +122,9 @@ const styles = theme => ({
     boxShadow: "0 1px 7px 1px rgba(0, 0, 0, .25)",
     padding: 25
   },
+  button: {
+    margin: theme.spacing.unit
+  },
   bigAvatar: {
     width: 160,
     height: 160
@@ -146,11 +164,12 @@ const styles = theme => ({
 });
 
 const mapStateToProps = state => ({
+  role: state.profile.role,
   company: state.company,
   toc: state.company.typesOfCleaning
 });
 
 export default connect(
   mapStateToProps,
-  { loadCompany }
+  { loadCompany, chooseCompany }
 )(withStyles(styles)(CompanyPage));

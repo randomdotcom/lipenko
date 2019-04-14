@@ -194,12 +194,6 @@ export const executorLoaded = data => ({
   payload: data
 });
 
-export const EXECUTOR_LOAD_FAILED = "EXECUTOR: LOAD IS FAILED";
-export const executorLoadFail = err => ({
-  type: EXECUTOR_LOAD_FAILED,
-  payload: err
-}); //// ??????????????????????
-
 export const EDIT_MAIN_INFO_EXECUTOR = "EXECUTOR: EDIT MAIN INFO...";
 export const editMainExecutor = data => ({
   type: EDIT_MAIN_INFO_EXECUTOR,

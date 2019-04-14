@@ -11,6 +11,7 @@ import ProfileEdit from "./profile/edit";
 import NotFound from "./NotFound";
 import withMainLayout from "../routes/MainRoute";
 import PrivateRoute from "../routes/PrivateRoute";
+import Book from './book';
 
 class App extends Component {
   MainRedirect = () => <Redirect to="/companies" />;
@@ -40,6 +41,12 @@ class App extends Component {
             path="/profile/edit"
             isAuthenticated={isAuthenticated}
             component={withMainLayout(ProfileEdit)}
+          />
+          <Route
+            exact
+            path="/book"
+            isAuthenticated={isAuthenticated}
+            component={withMainLayout(Book)}
           />
           <Route component={NotFound} />
         </Switch>

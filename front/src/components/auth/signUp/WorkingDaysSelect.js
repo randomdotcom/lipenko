@@ -13,12 +13,10 @@ const options = [
 
 export default class WorkingDaysSelect extends Component {
   handleChange = value => {
-    // this is going to call setFieldValue and manually update values.topcis
     this.props.onChange("workingDays", value);
   };
 
   handleBlur = () => {
-    // this is going to call setFieldTouched and manually update touched.topcis
     this.props.onBlur("workingDays", true);
   };
 

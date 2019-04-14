@@ -3,27 +3,93 @@ const Status = require("../../enums/status.enum");
 const httpStatus = require("http-status");
 const Role = require("../../enums/roles.enum");
 
-const { sendOrderStatusMessage } = require("../../config/nodemailer")
+const { sendOrderStatusMessage } = require("../../config/nodemailer");
 
 async function createOrder({
   customer,
   executor,
   adress,
-  typeOfCleaning,
-  description,
-  date,
+  type,
+  smallRooms,
+  bigRooms,
+  bathRooms,
+  squareMeters,
+  service,
+  smallCarpets,
+  bigCarpet,
+  startDate,
   expectedTime,
-  regularity
+  cleaningDays,
+  regularity,
+  email,
+  recurrence
 }) {
+  const startWeekDay = startDate.getDay();
+
+  let i = 0;
+  const latestDayThatCanBe = i - 1 === -1 ? 7 : i;
+  let latestCleaningDay;
+  while (true) {
+    if (i === latestDayThatCanBe) break;
+    if (cleaningDays.indexOf(i) !== -1) latestCleaningDay = i;
+    i++;
+    if (i > 7) i = 0;
+  }
+
+  let differenceBetweenStartAndLatestDay =
+    startWeekDay < latestCleaningDay
+      ? latestCleaningDay - startWeekDay
+      : 8 - startWeekDay + latestCleaningDay;
+
+  latestCleaningDate = new Date();
+  latestCleaningDate.setDate(
+    startDate.getDate() + differenceBetweenStartAndLatestDay
+  );
+
+  Date.prototype.addMonths = function(m) {
+    var d = new Date(this);
+    var years = Math.floor(m / 12);
+    var months = m - years * 12;
+    if (years) d.setFullYear(d.getFullYear() + years);
+    if (months) d.setMonth(d.getMonth() + months);
+    return d;
+  };
+
+  switch (recurrence) {
+    case 1:
+      endDate.setDate(latestCleaningDate.getDate() + 14);
+    case 2:
+      endDate.addMonths(1);
+    case 3:
+      endDate.addMonths(2);
+    case 4:
+      endDate.addMonths(3);
+    case 5:
+      endDate.addMonths(4);
+    case 6:
+      endDate.addMonths(5);
+    case 7:
+      endDate.addMonths(6);
+  }
+
   const order = new Order({
     customer,
     executor,
     adress,
-    typeOfCleaning,
-    description,
-    date,
+    type,
+    smallRooms,
+    bigRooms,
+    bathRooms,
+    squareMeters,
+    service,
+    smallCarpets,
+    bigCarpet,
+    startDate,
     expectedTime,
+    cleaningDays,
     regularity,
+    email,
+    recurrence,
     status: Status.New
   });
   order.save();
@@ -43,36 +109,48 @@ async function getOrders(user) {
 }
 
 async function acceptOrder(orderId) {
-  return await Order.findByIdAndUpdate(orderId, {
-    status: Status.Accepted
-  }, (err, order) => {
-    const user = User.findById(order.customer)
+  return await Order.findByIdAndUpdate(
+    orderId,
+    {
+      status: Status.Accepted
+    },
+    (err, order) => {
+      const user = User.findById(order.customer);
 
-    sendOrderStatusMessage(user.email, orderId, Status.Accepted)
-  }).exec();
+      sendOrderStatusMessage(user.email, orderId, Status.Accepted);
+    }
+  ).exec();
 }
 
 async function cancelOrder(orderId) {
   console.log(`orderId = ${orderId}`);
-  return await Order.findByIdAndUpdate(orderId, {
-    status: Status.Canceled
-  }, (err, order) => {
-    const user = User.findById(order.customer);
-    const executor = Executor.findById(order.executor);
+  return await Order.findByIdAndUpdate(
+    orderId,
+    {
+      status: Status.Canceled
+    },
+    (err, order) => {
+      const user = User.findById(order.customer);
+      const executor = Executor.findById(order.executor);
 
-    sendOrderStatusMessage(user.email, orderId, Status.Canceled)
-    sendOrderStatusMessage(executor.email, orderId, Status.Canceled)
-  }).exec();
+      sendOrderStatusMessage(user.email, orderId, Status.Canceled);
+      sendOrderStatusMessage(executor.email, orderId, Status.Canceled);
+    }
+  ).exec();
 }
 
 async function confirmOrder(orderId) {
-  return await Order.findByIdAndUpdate(orderId, {
-    status: Status.Done
-  }, (err, order) => {
-    const executor = Executor.findById(order.executor);
+  return await Order.findByIdAndUpdate(
+    orderId,
+    {
+      status: Status.Done
+    },
+    (err, order) => {
+      const executor = Executor.findById(order.executor);
 
-    sendOrderStatusMessage(executor.email, orderId, Status.Done)
-  }).exec();
+      sendOrderStatusMessage(executor.email, orderId, Status.Done);
+    }
+  ).exec();
 }
 
 async function ordersHistory(user) {

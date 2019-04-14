@@ -24,12 +24,13 @@ import {
   watchChangeFiltersCompaniesSaga
 } from "./companies.saga";
 import { watchLoadCompanySaga } from "./company.saga";
-//import { watchLoadExecutorSaga } from "./executorLoad.saga";
+import { watchChooseCompany, watchBookCleaning } from "./order.saga";
 
 export default function*() {
   yield spawn(watchUserSignInSaga);
   yield spawn(watchUserSignUpSaga);
   yield spawn(watchUserConfirmSaga);
+  yield spawn(watchUserNewVerificationCode);
   yield spawn(watchLoadUserSaga);
   yield spawn(watchEditUser);
   yield spawn(watchChangePasswordUser);
@@ -37,7 +38,6 @@ export default function*() {
   yield spawn(watchExecutorSignInSaga);
   yield spawn(watchExecutorConfirmSaga);
   yield spawn(watchExecutorSignUpSaga);
-  yield spawn(watchUserNewVerificationCode);
   yield spawn(watchExecutorNewVerificationCode);
   yield spawn(watchChangePasswordExecutor);
   yield spawn(watchEditMainInfoExecutor);
@@ -47,6 +47,9 @@ export default function*() {
   yield spawn(watchChangeFiltersCompaniesSaga);
 
   yield spawn(watchLoadCompanySaga);
+
+  yield spawn(watchChooseCompany);
+  yield spawn(watchBookCleaning);
 
   yield spawn(watchSignOutSaga);
 
