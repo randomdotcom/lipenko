@@ -97,12 +97,6 @@ export default (state = initialState, action) => {
         }
       };
     }
-    // case USER_CONFIRM_FAILED: {
-    //   const error = action.payload.data;
-    //   return {
-    //     error
-    //   };
-    // }
     case EXECUTOR_SIGNIN_NEED_CONFIRM:
     case EXECUTOR_SIGNUP_SUCCESS: {
       return {

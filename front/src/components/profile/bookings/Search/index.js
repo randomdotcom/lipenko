@@ -5,7 +5,7 @@ import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
-import { changeFiltersCompanies } from "../../../actions/companies.actions";
+import { changeFiltersBookings } from "../../../../actions/bookings.actions";
 
 const styles = {
   root: {
@@ -35,9 +35,9 @@ class Search extends Component {
     const query = this.props.search;
     const path = this.props.pathname;
 
-    this.props.changeFiltersCompanies({
+    this.props.changeFiltersBookings({
       query,
-      name: "name",
+      name: "companyName",
       value: this.state.value,
       path
     });
@@ -76,5 +76,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { changeFiltersCompanies }
+  { changeFiltersBookings }
 )(withStyles(styles)(Search));

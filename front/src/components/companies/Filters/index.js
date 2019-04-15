@@ -17,7 +17,7 @@ class Filters extends Component {
   query = parse(this.props.search);
 
   state = {
-    type: this.query.type ? this.query.type : "standart",
+    type: this.query.type ? this.query.type : '',
     carpet: this.query.carpet ? true : false,
     furniture: this.query.furniture ? true : false,
     pool: this.query.pool ? true : false,

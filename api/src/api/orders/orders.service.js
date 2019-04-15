@@ -34,7 +34,7 @@ async function createOrder({
 
   const executor = await Executor.findById(company);
   const companyName = executor.companyName;
-  
+
   const price = calculatePrice({
     values: {
       smallRooms,
@@ -165,6 +165,7 @@ async function getOrders(
     pool,
     sortBy,
     companyId,
+    companyName,
     type
   }
 ) {
@@ -188,13 +189,14 @@ async function getOrders(
     page: parseInt(page, 10) || 1,
     limit: parseInt(perPage, 10) || 10,
     select:
-      "type city adress smallRooms bigRooms bathRooms squareMeters startDate cleaningDays expectedTime regularity service recurrence endDate executor price time averageTime status",
+      "type city adress companyName smallRooms bigRooms bathRooms squareMeters startDate cleaningDays expectedTime regularity service recurrence endDate executor price time averageTime status",
     sort
   };
 
   let query = {};
 
   query.customer = id;
+  if (companyName) query.companyName = { $regex: companyName };
   if (adress) query.adress = { $regex: adress };
   if (city) query.city = { $regex: city };
   if (companyId) query.executor = companyId;

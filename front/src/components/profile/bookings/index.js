@@ -8,8 +8,8 @@ import {
   changeFiltersBookings
 } from "../../../actions/bookings.actions";
 import BookingsList from "./BookingsList";
-//import Filters from "./Filters";
-//import Search from "./Search";
+import Filters from "./Filters";
+import Search from "./Search";
 //import Sort from './Sort'
 
 class Bookings extends Component {
@@ -30,19 +30,23 @@ class Bookings extends Component {
   };
 
   render() {
-    console.log(this.props.bookings)
+    console.log(this.props.bookings);
     const { classes, page, limit, total } = this.props;
     return (
       <div className={classes.root}>
-        {/* <Search /> */}
+        <Search />
+        <Filters />
+        {/* <Sort /> */}
         <div className={classes.listAndFilters}>
           <div className={classes.sortAndList}>
-            {/* <Sort /> */}
+            
             <List className={classes.list}>
-              <BookingsList bookings={this.props.bookings} />
+              {this.props.bookings ? (
+                <BookingsList bookings={this.props.bookings} />
+              ) : null}
             </List>
           </div>
-          {/* <Filters /> */}
+          
         </div>
         <PagePicker
           page={page}
@@ -80,12 +84,12 @@ const styles = theme => ({
 });
 
 const mapStateToProps = state => ({
-  bookings: state.profile.bookings.docs,
-  total: state.profile.bookings.total,
-  page: state.profile.bookings.page,
-  limit: state.profile.bookings.limit,
-  search: state.router.location.search,
-  pathname: state.router.location.pathname
+  bookings: state.profile.bookings ? state.profile.bookings.docs : undefined,
+  total: state.profile.bookings ? state.profile.bookings.total : undefined,
+  page: state.profile.bookings ? state.profile.bookings.page : undefined,
+  limit: state.profile.bookings ? state.profile.bookings.limit : undefined,
+  search: state.profile.bookings ? state.router.location.search : undefined,
+  pathname: state.profile.bookings ? state.router.location.pathname : undefined
 });
 
 export default connect(

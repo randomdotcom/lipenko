@@ -1,23 +1,20 @@
 import React, { Component } from "react";
 import { RadioGroup, Radio, FormControlLabel } from "@material-ui/core";
 import { withStyles } from "@material-ui/core";
-import AttachMoney from '@material-ui/icons/AttachMoney';
-import StarRate from '@material-ui/icons/StarRate';
-import ShowChart from '@material-ui/icons/ShowChart';
-import green from '@material-ui/core/colors/green';
+import AttachMoney from "@material-ui/icons/AttachMoney";
+import StarRate from "@material-ui/icons/StarRate";
+import ShowChart from "@material-ui/icons/ShowChart";
+import green from "@material-ui/core/colors/green";
 import { connect } from "react-redux";
-import {
-  changeFiltersCompanies
-} from "../../../actions/companies.actions";
+import { changeFiltersCompanies } from "../../../actions/companies.actions";
+import { parse } from "query-string";
 
 class Sort extends Component {
-  constructor(props) {
-    super(props);
+  query = parse(this.props.search);
 
-    this.state = {
-      sortBy: ""
-    };
-  }
+  state = {
+    sortBy: this.query.sortBy ? this.query.sortBy : ""
+  };
 
   handleChange = event => {
     this.setState({ sortBy: event.target.value });
@@ -42,24 +39,50 @@ class Sort extends Component {
         value={this.state.sortBy}
         onChange={this.handleChange}
       >
-
         <FormControlLabel
           value="price"
-          control={<Radio icon={<AttachMoney />} checkedIcon={<AttachMoney />} color="secondary" classes={{ colorSecondary: classes.radio, checked: classes.checked }} />}
+          control={
+            <Radio
+              icon={<AttachMoney />}
+              checkedIcon={<AttachMoney />}
+              color="secondary"
+              classes={{
+                colorSecondary: classes.radio,
+                checked: classes.checked
+              }}
+            />
+          }
         />
-
 
         <FormControlLabel
           value="rating"
-          control={<Radio icon={<StarRate />} checkedIcon={<StarRate />} color="secondary" classes={{ colorSecondary: classes.radio, checked: classes.checked }} />}
+          control={
+            <Radio
+              icon={<StarRate />}
+              checkedIcon={<StarRate />}
+              color="secondary"
+              classes={{
+                colorSecondary: classes.radio,
+                checked: classes.checked
+              }}
+            />
+          }
         />
-
 
         <FormControlLabel
           value="popularity"
-          control={<Radio icon={<ShowChart />} checkedIcon={<ShowChart />} color="secondary" classes={{ colorSecondary: classes.radio, checked: classes.checked }} />}
+          control={
+            <Radio
+              icon={<ShowChart />}
+              checkedIcon={<ShowChart />}
+              color="secondary"
+              classes={{
+                colorSecondary: classes.radio,
+                checked: classes.checked
+              }}
+            />
+          }
         />
-
       </RadioGroup>
     );
   }
@@ -70,15 +93,15 @@ const styles = theme => ({
     marginLeft: 35
   },
   radio: {
-    transition: 'color 0.1s linear',
-    '&$checked': {
-      color: green[500],
+    transition: "color 0.1s linear",
+    "&$checked": {
+      color: green[500]
     },
-    '&:hover': {
+    "&:hover": {
       color: green[500]
     }
   },
-  checked: {},
+  checked: {}
 });
 
 const mapStateToProps = state => ({

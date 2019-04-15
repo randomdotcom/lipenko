@@ -267,7 +267,7 @@ function BookingForm(props) {
             />
           ) : null}
 
-          {values.email ? null : (
+          {props.isAuthenticated ? null : (
             <TextField
               required
               id="email"
@@ -367,6 +367,7 @@ const styles = theme => ({
 
 const mapStateToProps = state => ({
   company: state.order.company ? state.order.company : undefined,
+  isAuthenticated: state.profile.isAuthenticated,
   availableWorkingDays: state.order.company
     ? state.order.availableWorkingDays
     : undefined,

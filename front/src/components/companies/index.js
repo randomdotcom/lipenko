@@ -10,7 +10,7 @@ import {
 import CompaniesList from "./CompaniesList";
 import Filters from "./Filters";
 import Search from "./Search";
-import Sort from './Sort'
+import Sort from "./Sort";
 
 class Companies extends Component {
   componentDidMount() {
@@ -38,7 +38,9 @@ class Companies extends Component {
           <div className={classes.sortAndList}>
             <Sort />
             <List className={classes.list}>
-              <CompaniesList companies={this.props.companies} />
+              {this.props.companies ? (
+                <CompaniesList companies={this.props.companies} />
+              ) : null}
             </List>
           </div>
           <Filters />

@@ -3,7 +3,11 @@ import { connect } from "react-redux";
 import { Formik } from "formik";
 import BookingForm from "./BookingForm";
 import validationSchema from "./BookingFormValidation";
-import { lookOffers, bookCleaning, resetSelectedCompany } from "../../actions/order.actions";
+import {
+  lookOffers,
+  bookCleaning,
+  resetSelectedCompany
+} from "../../actions/order.actions";
 
 class Book extends Component {
   render() {
@@ -24,7 +28,6 @@ class Book extends Component {
       recurrence,
       email,
       company,
-      availableWorkingDays,
       cleaningDays
     } = this.props;
     return (
@@ -90,7 +93,11 @@ const mapStateToProps = state => ({
   cleaningDays: state.order.cleaningDays ? state.order.cleaningDays : undefined,
   regularity: state.order.regularity ? state.order.regularity : undefined,
   recurrence: state.order.recurrence ? state.order.recurrence : undefined,
-  email: state.profile.data.email ? state.profile.data.email : undefined,
+  email: state.profile.data.email
+    ? state.profile.data.email
+    : state.order.email
+    ? state.order.email
+    : undefined,
   company: state.order.company ? state.order.company : undefined,
   availableWorkingDays: state.order.company
     ? state.order.availableWorkingDays

@@ -36,7 +36,7 @@ export function* watchBookCleaning() {
       const response = yield call(axios.post, "/api/orders/create", payload);
 
       yield put(cleaningBooked(response.data));
-      yield put(push("/profile"));
+      yield put(push("/companies"));
     } catch (errors) {
       yield put(returnErrors(errors));
     }
