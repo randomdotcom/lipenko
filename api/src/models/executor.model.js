@@ -133,8 +133,9 @@ var schema = new mongoose.Schema(
       industrial: { type: Number, required: true },
       pool: { type: Number, required: true }
     },
-    ratingList: { type: Object, required: false, default: {} },
-    rating: { type: Number, required: false, default: 0 },
+    ratingList: { type: Object, default: {} },
+    rating: { type: Number, default: 0 },
+    popularity: { type: Number, default: 0 },
     email: {
       type: String,
       trim: true,

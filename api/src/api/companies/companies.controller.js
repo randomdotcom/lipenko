@@ -11,7 +11,7 @@ module.exports.get = (req, res, next) => {
     .getCompanies(req.query)
     .then(companies => res.status(httpStatus.OK).json(companies))
     .catch(err => {
-      res.send(err.message);
+      res.status(httpStatus.CONFLICT).send(err.message);
     });
 };
 
@@ -20,7 +20,7 @@ module.exports.getById = (req, res, next) => {
     .getCompanyById(req.params.id)
     .then(company => res.status(httpStatus.OK).json(company))
     .catch(err => {
-      res.send(err.message);
+      res.status(httpStatus.CONFLICT).send(err.message);
     });
 };
 

@@ -33,20 +33,25 @@ var schema = new mongoose.Schema(
       furniture: { type: Boolean },
       pool: { type: Boolean },
       carpet: { type: Boolean }
-    }, ///// ??
+    },
     smallCarpets: { type: Number },
     bigCarpet: { type: Number },
     startDate: { type: Date, required: true },
     endDate: { type: Date },
     expectedTime: { type: Date, required: true },
-    cleaningDays: [], //// ??
+    cleaningDays: [],
+    companyName: { type: String, required: true },
     regularity: {
       type: Number,
       required: true,
       default: 0,
       validate: [validateRegularity, "must be between 0 and 3"]
     },
-    averageCleaningTime: {
+    price: {
+      type: Number,
+      required: true
+    },
+    time: {
       type: Number,
       required: true
     },

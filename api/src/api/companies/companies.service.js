@@ -74,8 +74,8 @@ async function register(values, role) {
     3: workingDays.indexOf(3) !== -1 ? true : false,
     4: workingDays.indexOf(4) !== -1 ? true : false,
     5: workingDays.indexOf(5) !== -1 ? true : false,
-    6: workingDays.indexOf(6) !== -1 ? true : false,
-  }
+    6: workingDays.indexOf(6) !== -1 ? true : false
+  };
 
   const user = new Executor({
     username,
@@ -208,7 +208,8 @@ async function getCompanies({
   carpet,
   furniture,
   pool,
-  type
+  type,
+  workingDays
 }) {
   let sort = {};
   if (sortBy === "price" || sortBy === "-price") {
@@ -231,20 +232,33 @@ async function getCompanies({
     sort.rating = typeOfSort;
   }
 
-  // if (sortBy === 'popularity' || sortBy === '-popularity') {
-  //   const typeOfSort = sortBy === 'popularity' ? 1 : -1;
-  //   sort.popularity = typeOfSort;
-  // }
+  if (sortBy === "popularity" || sortBy === "-popularity") {
+    const typeOfSort = sortBy === "popularity" ? -1 : 1;
+    sort.popularity = typeOfSort;
+  }
 
   const options = {
     page: parseInt(page, 10) || 1,
     limit: parseInt(perPage, 10) || 10,
-    select: "companyName description city rating typesOfCleaning",
+    select:
+      "companyName description city rating typesOfCleaning workingDays popularity",
     sort
   };
 
   let query = {};
-
+  
+  let workingDaysArray;
+  if (workingDays) {
+    workingDaysArray = workingDays.split(",");
+    if (workingDaysArray.indexOf("0") !== -1) query['workingDays.0'] = true;
+    if (workingDaysArray.indexOf("1") !== -1) query['workingDays.1'] = true;
+    if (workingDaysArray.indexOf("2") !== -1) query['workingDays.2'] = true;
+    if (workingDaysArray.indexOf("3") !== -1) query['workingDays.3'] = true;
+    if (workingDaysArray.indexOf("4") !== -1) query['workingDays.4'] = true;
+    if (workingDaysArray.indexOf("5") !== -1) query['workingDays.5'] = true;
+    if (workingDaysArray.indexOf("6") !== -1) query['workingDays.6'] = true;
+  }
+  console.log(query)
   if (city) query.city = { $regex: city };
   if (name) query.companyName = { $regex: name };
   if (type === "standart") query["typesOfCleaning.standart.isAvailable"] = true;

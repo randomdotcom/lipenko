@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Formik } from "formik";
 import BookingForm from "./BookingForm";
 import validationSchema from "./BookingFormValidation";
-import { lookOffers, bookCleaning } from "../../actions/order.actions";
+import { lookOffers, bookCleaning, resetSelectedCompany } from "../../actions/order.actions";
 
 class Book extends Component {
   render() {
@@ -24,6 +24,7 @@ class Book extends Component {
       recurrence,
       email,
       company,
+      availableWorkingDays,
       cleaningDays
     } = this.props;
     return (
@@ -45,13 +46,19 @@ class Book extends Component {
           regularity: regularity ? regularity : 0,
           recurrence: recurrence ? recurrence : 0,
           email: email ? email : "",
-          company: company ? company : undefined
+          price: 0,
+          average: 0
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { setFieldError }) => {
           try {
             if (company) {
-              this.props.bookCleaning({...values, company: this.props.company, customer: this.props.customer});
+              this.props.bookCleaning({
+                ...values,
+                company: this.props.company,
+                customer: this.props.customer,
+                city: this.props.city
+              });
             } else {
               this.props.lookOffers(values);
             }
@@ -85,10 +92,13 @@ const mapStateToProps = state => ({
   recurrence: state.order.recurrence ? state.order.recurrence : undefined,
   email: state.profile.data.email ? state.profile.data.email : undefined,
   company: state.order.company ? state.order.company : undefined,
+  availableWorkingDays: state.order.company
+    ? state.order.availableWorkingDays
+    : undefined,
   customer: state.profile.data.id ? state.profile.data.id : undefined
 });
 
 export default connect(
   mapStateToProps,
-  { lookOffers, bookCleaning }
+  { lookOffers, bookCleaning, resetSelectedCompany }
 )(Book);

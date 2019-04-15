@@ -12,12 +12,16 @@ import {
   EXECUTOR_TOC_EDITED,
   EXECUTOR_MAIN_INFO_EDITED
 } from "../actions/auth.actions";
+import { BOOKINGS_LOADED } from "../actions/bookings.actions";
 
 const initialState = {
   isAuthenticated: false,
   isSended: false,
   role: "",
-  data: {}
+  data: {},
+  bookings: {
+    docs: {}
+  }
 };
 
 export default (state = initialState, action) => {
@@ -120,7 +124,7 @@ export default (state = initialState, action) => {
       };
     }
     case EXECUTOR_TOC_EDITED: {
-      console.log(action.payload)
+      console.log(action.payload);
       return {
         ...state,
         data: {
@@ -134,7 +138,11 @@ export default (state = initialState, action) => {
         }
       };
     }
+    case BOOKINGS_LOADED: {
+      const bookings = action.payload;
 
+      return { ...state, bookings: { ...bookings } };
+    }
     default:
       return state;
   }

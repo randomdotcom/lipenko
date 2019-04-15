@@ -27,8 +27,11 @@ import { watchLoadCompanySaga } from "./company.saga";
 import {
   watchChooseCompany,
   watchBookCleaning,
-  watchLookOffers
+  watchLookOffers,
+  watchResetSelectedCompany,
+  watchCalculateTimePrice
 } from "./order.saga";
+import { watchLoadBookingsSaga, watchChangeFiltersBookingsSaga } from "./bookings.saga";
 
 export default function*() {
   yield spawn(watchUserSignInSaga);
@@ -47,14 +50,19 @@ export default function*() {
   yield spawn(watchEditMainInfoExecutor);
   yield spawn(watchEditTOCExecutor);
 
+  yield spawn(watchLoadBookingsSaga);
+  yield spawn(watchChangeFiltersBookingsSaga);
+
   yield spawn(watchLoadCompaniesSaga);
   yield spawn(watchChangeFiltersCompaniesSaga);
 
   yield spawn(watchLoadCompanySaga);
 
   yield spawn(watchChooseCompany);
+  yield spawn(watchResetSelectedCompany);
   yield spawn(watchBookCleaning);
   yield spawn(watchLookOffers);
+  yield spawn(watchCalculateTimePrice);
 
   yield spawn(watchSignOutSaga);
 

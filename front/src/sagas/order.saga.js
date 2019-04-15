@@ -8,14 +8,25 @@ import {
   BOOK_CLEANING,
   cleaningBooked,
   LOOK_OFFERS,
-  offersFound
+  offersFound,
+  RESET_SELECTED_COMPANY,
+  selectedCompanyReset,
+  CALCULATE_TIME_PRICE,
+  timePriceCalculated
 } from "../actions/order.actions";
 import { returnErrors } from "../actions/errors.actions";
+import { calculatePrice, calculateTime } from "../services/priceTimeCalculate";
 
 export function* watchChooseCompany() {
   yield takeLatest(CHOOSE_COMPANY, function*({ payload }) {
     yield put(companyChosen(payload));
     yield put(push("/book"));
+  });
+}
+
+export function* watchResetSelectedCompany() {
+  yield takeLatest(RESET_SELECTED_COMPANY, function*() {
+    yield put(selectedCompanyReset());
   });
 }
 
@@ -32,6 +43,15 @@ export function* watchBookCleaning() {
   });
 }
 
+export function* watchCalculateTimePrice() {
+  yield takeLatest(CALCULATE_TIME_PRICE, function*({ payload }) {
+    const price = yield call(calculatePrice, payload);
+    const time = yield call(calculateTime, payload);
+
+    yield put(timePriceCalculated({ price, time }));
+  });
+}
+
 export function* watchLookOffers() {
   yield takeLatest(LOOK_OFFERS, function*({ payload }) {
     try {
@@ -42,14 +62,14 @@ export function* watchLookOffers() {
         furniture:
           payload.service.indexOf("furniture") !== -1 ? true : undefined,
         carpet: payload.service.indexOf("carpet") !== -1 ? true : undefined,
-        cleaningDays: { ...payload.cleaningDays }
+        workingDays: payload.cleaningDays.join(',')
       };
-
+      
       yield put(push(`/companies?${stringify(query)}`));
 
       yield put(offersFound(payload));
-    } catch (errors) {
-      yield put(returnErrors(errors));
+    } catch (error) {
+      yield put(returnErrors(error.response.data));
     }
   });
 }

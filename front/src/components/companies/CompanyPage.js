@@ -12,8 +12,8 @@ class CompanyPage extends Component {
   }
 
   handleClickOrder = () => {
-    const { _id } = this.props.company;
-    this.props.chooseCompany(_id);
+    const { _id, workingDays, typesOfCleaning, city } = this.props.company;
+    this.props.chooseCompany(_id, workingDays, typesOfCleaning, city);
   };
 
   render() {

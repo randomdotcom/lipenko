@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import List from "@material-ui/core/List";
 import { withStyles } from "@material-ui/core";
-// import PagePicker from "./PagePicker";
+import PagePicker from "./PagePicker";
 import { connect } from "react-redux";
-// import {
-//   loadCompanies,
-//   changeFiltersCompanies
-// } from "../../actions/companies.actions";
+import {
+  loadBookings,
+  changeFiltersBookings
+} from "../../../actions/bookings.actions";
 import BookingsList from "./BookingsList";
 //import Filters from "./Filters";
 //import Search from "./Search";
@@ -14,14 +14,14 @@ import BookingsList from "./BookingsList";
 
 class Bookings extends Component {
   componentDidMount() {
-    this.props.loadCompanies(this.props.search);
+    this.props.loadBookings(this.props.search);
   }
 
   handleQueryChange = current => {
     const query = this.props.search;
     const path = this.props.pathname;
 
-    this.props.changeFiltersCompanies({
+    this.props.changeFiltersBookings({
       query,
       name: "page",
       value: current,
@@ -30,6 +30,7 @@ class Bookings extends Component {
   };
 
   render() {
+    console.log(this.props.bookings)
     const { classes, page, limit, total } = this.props;
     return (
       <div className={classes.root}>
@@ -38,17 +39,17 @@ class Bookings extends Component {
           <div className={classes.sortAndList}>
             {/* <Sort /> */}
             <List className={classes.list}>
-              {/* <BookingsList companies={this.props.bookings} /> */}
+              <BookingsList bookings={this.props.bookings} />
             </List>
           </div>
           {/* <Filters /> */}
         </div>
-        {/* <PagePicker
+        <PagePicker
           page={page}
           limit={limit}
           total={total}
           handleQueryChange={this.handleQueryChange}
-        /> */}
+        />
       </div>
     );
   }
@@ -89,5 +90,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  // { loadCompanies, changeFiltersCompanies }
+  { loadBookings, changeFiltersBookings }
 )(withStyles(styles)(Bookings));

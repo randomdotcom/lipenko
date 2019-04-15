@@ -1,9 +1,13 @@
 const Order = require("../../models/order.model");
+const Executor = require("../../models/executor.model");
 const Status = require("../../enums/status.enum");
 const httpStatus = require("http-status");
 const Role = require("../../enums/roles.enum");
-
 const { sendOrderStatusMessage } = require("../../config/nodemailer");
+const {
+  calculateTime,
+  calculatePrice
+} = require("../../services/priceTimeCalculate");
 
 async function createOrder({
   customer,
@@ -28,6 +32,36 @@ async function createOrder({
   startDate = new Date(startDate);
   expectedTime = new Date(expectedTime);
 
+  const executor = await Executor.findById(company);
+  const companyName = executor.companyName;
+  
+  const price = calculatePrice({
+    values: {
+      smallRooms,
+      bigRooms,
+      bathRooms,
+      squareMeters,
+      smallCarpets,
+      bigCarpets,
+      service,
+      type
+    },
+    typesOfCleaning: executor.typesOfCleaning
+  });
+  const time = calculateTime({
+    values: {
+      smallRooms,
+      bigRooms,
+      bathRooms,
+      squareMeters,
+      smallCarpets,
+      bigCarpets,
+      service,
+      type
+    },
+    typesOfCleaning: executor.typesOfCleaning
+  });
+
   const startWeekDay = startDate.getDay();
 
   let i = startWeekDay;
@@ -35,10 +69,10 @@ async function createOrder({
   let latestCleaningDay;
 
   while (true) {
-    if (i === latestDayThatCanBe) break;
     if (cleaningDays.indexOf(i) !== -1) latestCleaningDay = i;
     i++;
     if (i > 7) i = 0;
+    if (i === latestDayThatCanBe) break;
   }
 
   let differenceBetweenStartAndLatestDay =
@@ -71,7 +105,7 @@ async function createOrder({
   }
 
   const order = new Order({
-    customer: customer ? customer : undefined,
+    customer,
     executor: company,
     city,
     adress,
@@ -101,7 +135,10 @@ async function createOrder({
     endDate,
     expectedTime,
     cleaningDays,
+    companyName,
     regularity,
+    price,
+    time,
     email,
     recurrence,
     status: Status.New
@@ -116,15 +153,21 @@ async function createOrder({
   });
 }
 
-async function getOrders({
-  page = 1,
-  perPage = 10,
-  city,
-  adress,
-  sortBy,
-  companyName,
-  type
-}) {
+async function getOrders(
+  id,
+  {
+    page = 1,
+    perPage = 10,
+    city,
+    adress,
+    carpet,
+    furniture,
+    pool,
+    sortBy,
+    companyId,
+    type
+  }
+) {
   let sort = {};
   if (sortBy === "price" || sortBy === "-price") {
     const typeOfSort = sortBy === "price" ? 1 : -1;
@@ -145,40 +188,24 @@ async function getOrders({
     page: parseInt(page, 10) || 1,
     limit: parseInt(perPage, 10) || 10,
     select:
-      "type city adress smallRooms bigRooms bathRooms squareMeters startDate cleaningDays expectedTime regularity recurrence endDate executor price averageTime status",
+      "type city adress smallRooms bigRooms bathRooms squareMeters startDate cleaningDays expectedTime regularity service recurrence endDate executor price time averageTime status",
     sort
   };
 
   let query = {};
 
+  query.customer = id;
   if (adress) query.adress = { $regex: adress };
   if (city) query.city = { $regex: city };
-  if (companyName) query.companyName = { $regex: companyName };
+  if (companyId) query.executor = companyId;
   if (type) query.type = `${type}`;
   if (carpet) query["service.carpet"] = true;
   if (furniture) query["service.furniture"] = true;
   if (pool) query["service.pool"] = true;
 
-  const companies = await Order.paginate(query, options);
+  const orders = await Order.paginate(query, options);
 
-  return companies;
-}
-
-async function getCompanyById(companyId) {
-  return await Executor.findById({ _id: companyId });
-}
-
-async function blockCompany(userId, data) {
-  return await Executor.findByIdAndUpdate(
-    userId,
-    {
-      $set: { isBlocked: true, blockReason: `${data.blockReason}` }
-    },
-    (err, user) => {
-      if (err) throw new Error(err);
-      sendProfileBlockMessage(user.email, user.username, data.blockReason);
-    }
-  );
+  return orders;
 }
 
 async function acceptOrder(orderId) {

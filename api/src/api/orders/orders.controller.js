@@ -7,7 +7,7 @@ const Order = require("../../models/order.model");
 
 module.exports.get = (req, res, next) => {
   service
-    .getOrders(req.user)
+    .getOrders(req.user.id, req.query)
     .then(orders => res.status(httpStatus.OK).json(orders))
     .catch(err => {
       res.send(err.message);
@@ -25,7 +25,7 @@ module.exports.create = (req, res) => {
       res.status(httpStatus.CREATED).json("Created");
     })
     .catch(err => {
-      res.send(err.message);
+      res.status(httpStatus.CONFLICT).send(err.message);
     });
 };
 
@@ -46,7 +46,7 @@ module.exports.accept = (req, res) => {
           res.status(httpStatus.OK).json("Order accepted");
         })
         .catch(err => {
-          res.send(err.message);
+          res.status(httpStatus.CONFLICT).send(err.message);
         });
     }
   );
@@ -71,7 +71,7 @@ module.exports.cancel = (req, res) => {
           res.status(httpStatus.OK).json("Order canceled");
         })
         .catch(err => {
-          res.send(err.message);
+          res.status(httpStatus.CONFLICT).send(err.message);
         });
     }
   );
@@ -95,7 +95,7 @@ module.exports.confirm = (req, res) => {
           res.status(httpStatus.OK).json("Order confirmed");
         })
         .catch(err => {
-          res.send(err.message);
+          res.status(httpStatus.CONFLICT).send(err.message);
         });
     }
   );
@@ -108,6 +108,6 @@ module.exports.history = (req, res, next) => {
       res.status(httpStatus.OK).json(orders);
     })
     .catch(err => {
-      res.send(err.message);
+      res.status(httpStatus.CONFLICT).send(err.message);
     });
 };
