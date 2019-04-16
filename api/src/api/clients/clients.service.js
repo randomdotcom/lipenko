@@ -173,7 +173,7 @@ async function newPassword(userId, data) {
   if (user === null) throw new Error("The user is not found");
 
   let success = await user.comparePassword(data.oldPassword);
-  if (success === false) throw "The password is incorrect";
+  if (success === false) throw new Error("The password is incorrect");
 
   user.password = data.newPassword;
   return new Promise((resolve, reject) => {

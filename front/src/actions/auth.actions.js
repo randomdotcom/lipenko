@@ -228,3 +228,36 @@ export const EXECUTOR_PASSWORD_CHANGED = "EXECUTOR: PASSWORD CHANGED";
 export const executorPasswordChanged = () => ({
   type: EXECUTOR_PASSWORD_CHANGED
 });
+
+export const ACCEPT_BOOK = "EXECUTOR: CONFIRM BOOK...";
+export const acceptBook = data => ({
+  type: ACCEPT_BOOK,
+  payload: data
+});
+
+export const BOOK_ACCEPTED = "EXECUTOR: BOOK CONFIRMED";
+export const bookAccepted = () => ({
+  type: BOOK_ACCEPTED
+});
+
+export const CANCEL_BOOK = "EXECUTOR/USER: CANCEL BOOK...";
+export const cancelBook = data => ({
+  type: CANCEL_BOOK,
+  payload: data
+});
+
+export const BOOK_CANCELED = "EXECUTOR/USER: BOOK CANCELED";
+export const bookCanceled = () => ({
+  type: BOOK_CANCELED
+});
+
+export const CONFIRM_BOOK = "USER: CONFIRM BOOK...";
+export const confirmBook = data => ({
+  type: CONFIRM_BOOK,
+  payload: data
+});
+
+export const BOOK_CONFIRMED = "USER: BOOK CONFIRMED";
+export const bookConfirmed = () => ({
+  type: BOOK_CONFIRMED
+});

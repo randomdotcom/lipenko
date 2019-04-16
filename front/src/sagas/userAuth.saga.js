@@ -15,7 +15,7 @@ import {
   USER_NEW_VERIFICATION_CODE,
   userNewVerificationCodeSuccess
 } from "../actions/auth.actions";
-import { returnErrors } from "../actions/errors.actions";
+import { returnError } from "../actions/events.actions";
 
 export function* watchUserSignUpSaga() {
   yield takeLeading(SIGNUP_USER, function* ({ payload }) {
@@ -23,7 +23,7 @@ export function* watchUserSignUpSaga() {
       yield call(axios.post, "/api/clients/register", payload);
       yield put(userSignUpSuccess(payload.username));
     } catch (error) {
-      yield put(returnErrors(error.response.data));
+      yield put(returnError(error.response.data));
     }
   });
 }
@@ -38,7 +38,7 @@ export function* watchUserConfirmSaga() {
       yield call(storeToken, response.data);
       yield put(push("/"));
     } catch (error) {
-      yield put(returnErrors(error.response.data));
+      yield put(returnError(error.response.data));
     }
   });
 }
@@ -49,7 +49,7 @@ export function* watchUserNewVerificationCode() {
       yield call(axios.put, "/api/clients/newVerificationCode", payload);
       yield put(userNewVerificationCodeSuccess());
     } catch (error) {
-      yield put(returnErrors(error.response.data));
+      yield put(returnError(error.response.data));
     }
   });
 }
@@ -72,7 +72,7 @@ export function* watchUserSignInSaga() {
         yield take(SIGNOUT);
       }
     } catch (error) {
-      yield put(returnErrors(error.response.data));
+      yield put(returnError(error.response.data));
     }
   });
 }
@@ -83,7 +83,7 @@ export function* watchSignOutSaga() {
       yield call(clearToken);
       yield put(signOutSuccess());
     } catch (error) {
-      yield put(returnErrors(error.response.data));
+      yield put(returnError(error.response.data));
     }
   });
 }

@@ -97,9 +97,7 @@ const mapStateToProps = state => ({
   username:
     state.profile.isAuthenticated === true
       ? state.profile.data.username
-      : undefined,
-  error:
-    state.profile.isAuthenticated === true ? state.errors.message : undefined
+      : undefined
 });
 
 const MainContainer = connect(mapStateToProps)(Main);

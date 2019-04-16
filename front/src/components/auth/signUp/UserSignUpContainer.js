@@ -1,20 +1,15 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withSnackbar } from "notistack";
 import { Formik } from "formik";
 import { string, object } from "yup";
 import { TextField, withStyles, Button } from "@material-ui/core";
 import teal from "@material-ui/core/colors/teal";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
-import Snackbar from "@material-ui/core/Snackbar";
 import VerificationCodeField from "../../../components/auth/VerificationCodeField";
 import {
   signUpUser,
   confirmUser,
   userNewVerificationCode
 } from "../../../actions/auth.actions";
-import { clearErrors } from "../../../actions/errors.actions";
 
 const validationSchema = object().shape({
   username: string()
@@ -77,7 +72,7 @@ class UserSignUp extends Component {
 
   handleNewVerificationCode = () => {
     this.props.userNewVerificationCode(this.props.username);
-  }
+  };
 
   handleConfirm = () => {
     this.props.confirmUser({
@@ -90,27 +85,6 @@ class UserSignUp extends Component {
     const { classes } = this.props;
     return (
       <>
-        <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left"
-          }}
-          open={Boolean(this.props.error)}
-          message={<span>{this.props.error}</span>}
-          autoHideDuration={4000}
-          onClose={this.props.clearErrors}
-          action={[
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="secondary"
-              className={classes.close}
-              onClick={this.props.clearErrors}
-            >
-              <CloseIcon />
-            </IconButton>
-          ]}
-        />
         <Formik
           initialValues={{
             username: "",
@@ -248,7 +222,11 @@ class UserSignUp extends Component {
                     >
                       CONFIRM
                     </Button>
-                    <Button size="small" onClick={this.handleNewVerificationCode} className={classes.margin}>
+                    <Button
+                      size="small"
+                      onClick={this.handleNewVerificationCode}
+                      className={classes.margin}
+                    >
                       Отправить ещё раз
                     </Button>
                   </>
@@ -303,9 +281,6 @@ const styles = theme => ({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center"
-  },
-  close: {
-    padding: theme.spacing.unit / 2
   }
 });
 
@@ -317,7 +292,7 @@ const mapStateToProps = state => ({
 
 const UserSignUpContainer = connect(
   mapStateToProps,
-  { signUpUser, confirmUser, userNewVerificationCode, clearErrors }
+  { signUpUser, confirmUser, userNewVerificationCode }
 )(UserSignUp);
 
-export default withStyles(styles)(withSnackbar(UserSignUpContainer));
+export default withStyles(styles)(UserSignUpContainer);

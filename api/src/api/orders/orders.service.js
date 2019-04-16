@@ -1,5 +1,6 @@
 const Order = require("../../models/order.model");
 const Executor = require("../../models/executor.model");
+const User = require("../../models/user.model");
 const Status = require("../../enums/status.enum");
 const httpStatus = require("http-status");
 const Role = require("../../enums/roles.enum");
@@ -154,7 +155,7 @@ async function createOrder({
 }
 
 async function getOrders(
-  id,
+  user,
   {
     page = 1,
     perPage = 10,
@@ -169,19 +170,22 @@ async function getOrders(
     type
   }
 ) {
+  const id = user.id;
+  const role = user.role;
+
   let sort = {};
   if (sortBy === "price" || sortBy === "-price") {
     const typeOfSort = sortBy === "price" ? 1 : -1;
     sort.price = typeOfSort;
   }
 
-  if (sortBy === "averageTime" || sortBy === "-averageTime") {
-    const typeOfSort = sortBy === "averageTime" ? -1 : 1;
+  if (sortBy === "time" || sortBy === "-time") {
+    const typeOfSort = sortBy === "time" ? -1 : 1;
     sort.avetageTime = typeOfSort;
   }
 
   if (sortBy === "date" || sortBy === "-date") {
-    const typeOfSort = sortBy === "date" ? 1 : -1;
+    const typeOfSort = sortBy === "date" ? -1 : 1;
     sort.startDate = typeOfSort;
   }
 
@@ -189,13 +193,17 @@ async function getOrders(
     page: parseInt(page, 10) || 1,
     limit: parseInt(perPage, 10) || 10,
     select:
-      "type city adress companyName smallRooms bigRooms bathRooms squareMeters startDate cleaningDays expectedTime regularity service recurrence endDate executor price time averageTime status",
+      "type city adress companyName smallRooms bigRooms bathRooms squareMeters startDate cleaningDays expectedTime regularity service recurrence endDate customer executor price time averageTime status",
     sort
   };
 
   let query = {};
 
-  query.customer = id;
+  if (role === Role.Executor) {
+    query.executor = id;
+  } else if (role === Role.User) {
+    query.customer = id;
+  }
   if (companyName) query.companyName = { $regex: companyName };
   if (adress) query.adress = { $regex: adress };
   if (city) query.city = { $regex: city };
@@ -211,47 +219,49 @@ async function getOrders(
 }
 
 async function acceptOrder(orderId) {
-  return await Order.findByIdAndUpdate(
-    orderId,
-    {
-      status: Status.Accepted
-    },
-    (err, order) => {
-      const user = User.findById(order.customer);
+  const order = await Order.findByIdAndUpdate(orderId, {
+    status: Status.Accepted
+  });
 
-      sendOrderStatusMessage(user.email, orderId, Status.Accepted);
-    }
-  ).exec();
+  if (!order.status) throw new Error("Нет доступа");
+  if (order.status != Status.New) throw new Error("Заказ не новый");
+
+  const user = await User.findById(order.customer);
+  sendOrderStatusMessage(order.email, orderId, null, Status.Accepted);
 }
 
-async function cancelOrder(orderId) {
-  return await Order.findByIdAndUpdate(
-    orderId,
-    {
-      status: Status.Canceled
-    },
-    (err, order) => {
-      const user = User.findById(order.customer);
-      const executor = Executor.findById(order.executor);
+async function cancelOrder(data) {
+  const { orderId, reason } = data;
 
-      sendOrderStatusMessage(user.email, orderId, Status.Canceled);
-      sendOrderStatusMessage(executor.email, orderId, Status.Canceled);
-    }
-  ).exec();
+  const order = await Order.findByIdAndUpdate(orderId, {
+    status: Status.Canceled
+  });
+
+  if (!order.status) throw new Error("Нет доступа");
+  if (order.status != Status.New) throw new Error("Заказ не новый");
+
+  const user = await User.findById(order.customer);
+  const executor = await Executor.findById(order.executor);
+
+  sendOrderStatusMessage(user ? user.email : order.email, orderId, reason, Status.Canceled);
+  sendOrderStatusMessage(executor.email, orderId, reason, Status.Canceled);
 }
 
 async function confirmOrder(orderId) {
-  return await Order.findByIdAndUpdate(
-    orderId,
-    {
-      status: Status.Done
-    },
-    (err, order) => {
-      const executor = Executor.findById(order.executor);
+  const order = await Order.findById(orderId);
 
-      sendOrderStatusMessage(executor.email, orderId, Status.Done);
-    }
-  ).exec();
+  if (new Date(order.endDate) > new Date()) throw new Error('Рано')
+
+  if (!order.status) throw new Error("Нет доступа");
+  if (order.status != Status.Accepted) throw new Error("Заказ не принят");
+
+  order.status = Status.Done;
+  order.save();
+
+  const executor = await Executor.findByIdAndUpdate(order.executor, {
+    $inc: { popularity: 1 }
+  });
+  sendOrderStatusMessage(executor.email, orderId, null, Status.Done);
 }
 
 async function ordersHistory(user) {

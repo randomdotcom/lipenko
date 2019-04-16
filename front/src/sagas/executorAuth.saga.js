@@ -1,5 +1,5 @@
 import axios from "axios";
-import { push, goBack } from "connected-react-router";
+import { push } from "connected-react-router";
 import {
   call,
   put,
@@ -22,7 +22,7 @@ import {
   SIGNOUT,
   signOutSuccess
 } from "../actions/auth.actions";
-import { returnErrors } from "../actions/errors.actions";
+import { returnError } from "../actions/events.actions";
 
 export function* watchExecutorSignUpSaga() {
   yield takeLeading(SIGNUP_EXECUTOR, function*({ payload }) {
@@ -30,7 +30,7 @@ export function* watchExecutorSignUpSaga() {
       yield call(axios.post, "/api/companies/register", payload);
       yield put(executorSignUpSuccess());
     } catch (error) {
-      yield put(returnErrors(error.response.data));
+      yield put(returnError(error.response.data));
     }
   });
 }
@@ -45,7 +45,7 @@ export function* watchExecutorConfirmSaga() {
       yield call(storeToken, response.data);
       yield put(push("/"));
     } catch (error) {
-      yield put(returnErrors(error.response.data));
+      yield put(returnError(error.response.data));
     }
   });
 }
@@ -58,7 +58,7 @@ export function* watchExecutorNewVerificationCode() {
       yield call(axios.put, "/api/companies/newVerificationCode", payload);
       yield put(executorNewVerificationCodeSuccess());
     } catch (error) {
-      yield put(returnErrors(error.response.data));
+      yield put(returnError(error.response.data));
     }
   });
 }
@@ -80,7 +80,7 @@ export function* watchExecutorSignInSaga() {
         yield take(SIGNOUT);
       }
     } catch (error) {
-      yield put(returnErrors(error.response.data));
+      yield put(returnError(error.response.data));
     }
   });
 }
@@ -91,7 +91,7 @@ export function* watchSignOutSaga() {
       yield call(clearToken);
       yield put(signOutSuccess());
     } catch (error) {
-      yield put(returnErrors(error.response.data));
+      yield put(returnError(error.response.data));
     }
   });
 }

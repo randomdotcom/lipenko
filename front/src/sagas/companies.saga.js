@@ -8,7 +8,7 @@ import {
   CHANGE_FILTERS_COMPANIES,
   loadCompanies
 } from "../actions/companies.actions";
-import { returnErrors } from "../actions/errors.actions";
+import { returnError } from "../actions/events.actions";
 
 export function* watchLoadCompaniesSaga() {
   yield takeLatest(LOAD_COMPANIES, function*({ payload }) {
@@ -20,21 +20,25 @@ export function* watchLoadCompaniesSaga() {
       const response = yield call(axios.get, `/api/companies?${query}`);
       yield put(companiesLoaded(response.data));
     } catch (error) {
-      yield put(returnErrors(error.response.data));
+      yield put(returnError(error.response.data));
     }
   });
 }
 
 export function* watchChangeFiltersCompaniesSaga() {
   yield takeEvery(CHANGE_FILTERS_COMPANIES, function*({ payload }) {
-    const { name, value, path } = payload;
-    let query = parse(payload.query);
+    try {
+      const { name, value, path } = payload;
+      let query = parse(payload.query);
 
-    if (name) {
-      query[`${name}`] = value;
+      if (name) {
+        query[`${name}`] = value;
+      }
+
+      yield put(push(`${path}?${stringify(query)}`));
+      yield put(loadCompanies(stringify(query)));
+    } catch (error) {
+      yield put(returnError(error.response.data));
     }
-
-    yield put(push(`${path}?${stringify(query)}`));
-    yield put(loadCompanies(stringify(query)));
   });
 }

@@ -7,8 +7,8 @@ import ShowChart from '@material-ui/icons/ShowChart';
 import green from '@material-ui/core/colors/green';
 import { connect } from "react-redux";
 import {
-  changeFiltersCompanies
-} from "../../../actions/companies.actions";
+  changeFiltersBookings
+} from "../../../../actions/bookings.actions";
 
 class Sort extends Component {
   constructor(props) {
@@ -25,7 +25,7 @@ class Sort extends Component {
     const query = this.props.search;
     const path = this.props.pathname;
 
-    this.props.changeFiltersCompanies({
+    this.props.changeFiltersBookings({
       query,
       name: "sortBy",
       value: event.target.value,
@@ -50,13 +50,13 @@ class Sort extends Component {
 
 
         <FormControlLabel
-          value="rating"
+          value="time"
           control={<Radio icon={<StarRate />} checkedIcon={<StarRate />} color="secondary" classes={{ colorSecondary: classes.radio, checked: classes.checked }} />}
         />
 
 
         <FormControlLabel
-          value="popularity"
+          value="date"
           control={<Radio icon={<ShowChart />} checkedIcon={<ShowChart />} color="secondary" classes={{ colorSecondary: classes.radio, checked: classes.checked }} />}
         />
 
@@ -82,15 +82,12 @@ const styles = theme => ({
 });
 
 const mapStateToProps = state => ({
-  companies: state.companies.docs,
-  total: state.companies.total,
-  page: state.companies.page,
-  limit: state.companies.limit,
-  search: state.router.location.search,
-  pathname: state.router.location.pathname
+  bookings: state.profile.bookings ? state.profile.bookings.docs : undefined,
+  search: state.profile.bookings ? state.router.location.search : undefined,
+  pathname: state.profile.bookings ? state.router.location.pathname : undefined
 });
 
 export default connect(
   mapStateToProps,
-  { changeFiltersCompanies }
+  { changeFiltersBookings }
 )(withStyles(styles)(Sort));

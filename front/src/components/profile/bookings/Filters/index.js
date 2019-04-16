@@ -7,7 +7,8 @@ import {
   FormLabel,
   TextField,
   MenuItem,
-  Select
+  Select,
+  InputLabel
 } from "@material-ui/core";
 import { changeFiltersBookings } from "../../../../actions/bookings.actions";
 
@@ -67,20 +68,14 @@ class Filters extends Component {
     const { classes } = this.props;
     return (
       <FormControl component="fieldset" className={classes.formControl}>
-        <FormLabel component="legend" />
-        <TextField
-          color="secondary"
-          name="city"
-          label="City"
-          value={this.state.city}
-          onChange={this.handleChange}
-          className={classes.city}
-        />
+        <InputLabel htmlFor="type">Cleaning type</InputLabel>
         <Select
           value={this.state.type}
           onChange={this.handleChange}
+          className={classes.input}
           inputProps={{
-            name: "type"
+            name: "type",
+            id: "type"
           }}
         >
           <MenuItem value="">
@@ -92,31 +87,28 @@ class Filters extends Component {
           <MenuItem value="office">Office</MenuItem>
           <MenuItem value="industrial">Industrial</MenuItem>
         </Select>
+        <TextField
+          color="secondary"
+          name="city"
+          label="City"
+          value={this.state.city}
+          onChange={this.handleChange}
+          className={classes.input}
+        />
       </FormControl>
     );
   }
 }
 
 const styles = theme => ({
-  root: {
-    display: "flex"
-  },
   formControl: {
     margin: theme.spacing.unit * 2,
     marginTop: theme.spacing.unit * 2,
     minWidth: 120
   },
-  radio: {
-    padding: 0,
-    margin: theme.spacing.unit / 2,
-    marginRight: 12
-  },
-  checkbox: {},
-  group: {
-    margin: `${theme.spacing.unit}px 0`
-  },
-  city: {
-    marginBottom: 10
+  input: {
+    margin: theme.spacing.unit,
+    marginLeft: 0
   }
 });
 

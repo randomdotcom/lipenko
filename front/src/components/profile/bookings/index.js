@@ -10,7 +10,7 @@ import {
 import BookingsList from "./BookingsList";
 import Filters from "./Filters";
 import Search from "./Search";
-//import Sort from './Sort'
+import Sort from './Sort'
 
 class Bookings extends Component {
   componentDidMount() {
@@ -30,23 +30,20 @@ class Bookings extends Component {
   };
 
   render() {
-    console.log(this.props.bookings);
     const { classes, page, limit, total } = this.props;
     return (
       <div className={classes.root}>
         <Search />
-        <Filters />
-        {/* <Sort /> */}
         <div className={classes.listAndFilters}>
           <div className={classes.sortAndList}>
-            
+            <Sort />
             <List className={classes.list}>
               {this.props.bookings ? (
                 <BookingsList bookings={this.props.bookings} />
               ) : null}
             </List>
           </div>
-          
+          <Filters />
         </div>
         <PagePicker
           page={page}

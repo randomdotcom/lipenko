@@ -38,7 +38,7 @@ class CompanyPage extends Component {
                   color="primary"
                   className={classes.button}
                 >
-                  Book cleaning
+                  <b>Book cleaning</b>
                 </Button>
               ) : null}
             </div>

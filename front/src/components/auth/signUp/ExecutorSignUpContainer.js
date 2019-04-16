@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Formik, Field } from "formik";
 import { string, object, array } from "yup";
-import { withSnackbar } from "notistack";
 import {
   TextField,
   withStyles,
@@ -13,11 +12,7 @@ import {
   Button
 } from "@material-ui/core";
 import { Select } from "material-ui-formik-components/Select";
-import Snackbar from "@material-ui/core/Snackbar";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
-import { clearErrors } from "../../../actions/errors.actions";
 import {
   signUpExecutor,
   executorNewVerificationCode
@@ -137,27 +132,6 @@ class ExecutorSignUp extends Component {
     const { classes } = this.props;
     return (
       <>
-        <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left"
-          }}
-          open={Boolean(this.props.error)}
-          message={<span>{this.props.error}</span>}
-          autoHideDuration={4000}
-          onClose={this.props.clearErrors}
-          action={[
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="secondary"
-              className={classes.close}
-              onClick={this.props.clearErrors}
-            >
-              <CloseIcon />
-            </IconButton>
-          ]}
-        />
         <Formik
           initialValues={{
             username: "",
@@ -635,9 +609,6 @@ const styles = theme => ({
   },
   mainInfo: {
     maxWidth: 560
-  },
-  close: {
-    padding: theme.spacing.unit / 2
   }
 });
 
@@ -647,13 +618,12 @@ const mapStateToProps = state => ({
     ? state.profile.data.username
       ? state.profile.data.username
       : undefined
-    : undefined,
-  error: state.errors.message
+    : undefined
 });
 
 const ExecutorSignUpContainer = connect(
   mapStateToProps,
-  { signUpExecutor, clearErrors, executorNewVerificationCode }
+  { signUpExecutor, executorNewVerificationCode }
 )(ExecutorSignUp);
 
-export default withStyles(styles)(withSnackbar(ExecutorSignUpContainer));
+export default withStyles(styles)(ExecutorSignUpContainer);

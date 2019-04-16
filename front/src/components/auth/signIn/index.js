@@ -3,18 +3,12 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Formik } from "formik";
 import { string, object } from "yup";
-import Snackbar from "@material-ui/core/Snackbar";
 import TextField from "@material-ui/core/TextField";
-import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import teal from "@material-ui/core/colors/teal";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
 import VerificationCodeField from "../VerificationCodeField";
-import { clearErrors } from "../../../actions/errors.actions";
 import {
   signInUser,
   confirmUser,
@@ -73,7 +67,6 @@ class SignIn extends Component {
   };
 
   render() {
-    const { classes } = this.props;
     return (
       <>
         <Formik
@@ -94,27 +87,6 @@ class SignIn extends Component {
             }
           }}
           component={this.form}
-        />
-        <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left"
-          }}
-          open={Boolean(this.props.error)}
-          message={<span>{this.props.error}</span>}
-          autoHideDuration={4000}
-          onClose={this.props.clearErrors}
-          action={[
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="secondary"
-              className={classes.close}
-              onClick={this.props.clearErrors}
-            >
-              <CloseIcon />
-            </IconButton>
-          ]}
         />
       </>
     );
@@ -227,51 +199,9 @@ SignIn.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-const styles = theme => ({
-  margin: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 150
-  },
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    flexWrap: "wrap"
-  },
-  group: {
-    display: "flex"
-  },
-  button: {
-    margin: theme.spacing.unit
-  },
-  confirmButton: {
-    margin: theme.spacing.unit,
-    backgroundColor: teal[500],
-    "&:hover": {
-      backgroundColor: teal[300]
-    }
-  },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 250
-  },
-  VerifyAndConfirmContainer: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  close: {
-    padding: theme.spacing.unit / 2
-  }
-});
-
 const mapStateToProps = state => ({
   isSended: state.profile.isSended,
-  username: state.profile.data ? state.profile.data.username : undefined,
-  error: state.errors.message
+  username: state.profile.data ? state.profile.data.username : undefined
 });
 
 const SignInContainer = connect(
@@ -281,9 +211,8 @@ const SignInContainer = connect(
     signInUser,
     confirmUser,
     userNewVerificationCode,
-    executorNewVerificationCode,
-    clearErrors
+    executorNewVerificationCode
   }
 )(SignIn);
 
-export default withStyles(styles)(SignInContainer);
+export default (SignInContainer);

@@ -7,7 +7,7 @@ const Order = require("../../models/order.model");
 
 module.exports.get = (req, res, next) => {
   service
-    .getOrders(req.user.id, req.query)
+    .getOrders(req.user, req.query)
     .then(orders => res.status(httpStatus.OK).json(orders))
     .catch(err => {
       res.send(err.message);
@@ -30,75 +30,36 @@ module.exports.create = (req, res) => {
 };
 
 module.exports.accept = (req, res) => {
-  Order.find(
-    {
-      _id: req.body.orderId,
-      executor: req.user.id
-    },
-    (err, order) => {
-      if (err) return res.send(err);
-      if (!order[0].status) return res.send("Нет доступа");
-      if (order[0].status != Status.New) return res.send("Заказ не новый");
-
-      service
-        .acceptOrder(req.body.orderId)
-        .then(() => {
-          res.status(httpStatus.OK).json("Order accepted");
-        })
-        .catch(err => {
-          res.status(httpStatus.CONFLICT).send(err.message);
-        });
-    }
-  );
+  service
+    .acceptOrder(req.body.orderId)
+    .then(() => {
+      res.status(httpStatus.OK).json("Order accepted");
+    })
+    .catch(err => {
+      res.status(httpStatus.CONFLICT).send(err.message);
+    });
 };
 
 module.exports.cancel = (req, res) => {
-  Order.find(
-    {
-      $or: [
-        { _id: req.body.orderId, customer: req.user.id },
-        { _id: req.body.orderId, executor: req.user.id }
-      ]
-    },
-    (err, order) => {
-      if (err) return res.send(err);
-      if (!order[0].status) return res.send("Нет доступа");
-      if (order[0].status != Status.New) return res.send("Заказ не новый");
-
-      service
-        .cancelOrder(req.body.orderId)
-        .then(() => {
-          res.status(httpStatus.OK).json("Order canceled");
-        })
-        .catch(err => {
-          res.status(httpStatus.CONFLICT).send(err.message);
-        });
-    }
-  );
+  service
+    .cancelOrder(req.body)
+    .then(() => {
+      res.status(httpStatus.OK).json("Order canceled");
+    })
+    .catch(err => {
+      res.status(httpStatus.CONFLICT).send(err.message);
+    });
 };
 
 module.exports.confirm = (req, res) => {
-  Order.find(
-    {
-      _id: req.body.orderId,
-      customer: req.user.id
-    },
-    (err, order) => {
-      if (err) return res.send(err);
-      if (!order[0].status) return res.send("Нет доступа");
-      if (order[0].status != Status.Accepted)
-        return res.send(`Заказ не со статусом "Accepted"`);
-
-      service
-        .confirmOrder(req.body.orderId)
-        .then(() => {
-          res.status(httpStatus.OK).json("Order confirmed");
-        })
-        .catch(err => {
-          res.status(httpStatus.CONFLICT).send(err.message);
-        });
-    }
-  );
+  service
+    .confirmOrder(req.body.orderId)
+    .then(() => {
+      res.status(httpStatus.OK).json("Order confirmed");
+    })
+    .catch(err => {
+      res.status(httpStatus.CONFLICT).send(err.message);
+    });
 };
 
 module.exports.history = (req, res, next) => {

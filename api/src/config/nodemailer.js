@@ -63,14 +63,21 @@ const sendProfileUnblockMessage = (to, username) => {
   transporter.sendMail(mailOptions);
 };
 
-const sendOrderStatusMessage = (to, orderId, status) => {
+const sendOrderStatusMessage = (to, orderId, reason, status) => {
+  const html = reason ? 
+  `<div style="width: 100%, display: flex, justify-content: center"><h2>Заказ <a href="http://${
+    process.env.HOST
+  }/api/orders/${orderId}">${orderId}</a> изменил статус: ${status}. Причина: ${reason}</h2>` 
+  : 
+  `<div style="width: 100%, display: flex, justify-content: center"><h2>Заказ <a href="http://${
+    process.env.HOST
+  }/api/orders/${orderId}">${orderId}</a> изменил статус: ${status}.</h2>`
+
   const mailOptions = {
     from: `TEST API`,
     to: `${to}`,
     subject: "TEST API - Изменение статуса чистки",
-    html: `<div style="width: 100%, display: flex, justify-content: center"><h2>Заказ <a href="http://${
-      process.env.HOST
-    }/api/orders/${orderId}">${orderId}</a> изменил статус: ${status}</h2>`
+    html
   };
 
   transporter.sendMail(mailOptions);

@@ -7,9 +7,12 @@ import {
   EDIT_TOC_EXECUTOR,
   executorTypesOfCleaningEdited,
   CHANGE_PASSWORD_EXECUTOR,
-  executorPasswordChanged
+  executorPasswordChanged,
+  ACCEPT_BOOK,
+  bookAccepted
 } from "../actions/auth.actions";
-import { returnErrors } from "../actions/errors.actions";
+import { loadBookings } from "../actions/bookings.actions";
+import { returnError } from "../actions/events.actions";
 import { getAuthHeader } from "../services/jwtHeader";
 
 export function* watchEditMainInfoExecutor() {
@@ -21,7 +24,7 @@ export function* watchEditMainInfoExecutor() {
       yield put(executorMainInfoEdited(payload));
       yield put(push("/profile"));
     } catch (error) {
-      yield put(returnErrors(error.response.data));
+      yield put(returnError(error.response.data));
     }
   });
 }
@@ -42,7 +45,7 @@ export function* watchEditTOCExecutor() {
       yield put(executorTypesOfCleaningEdited(response.data));
       yield put(push("/profile"));
     } catch (error) {
-      yield put(returnErrors(error.response.data));
+      yield put(returnError(error.response.data));
     }
   });
 }
@@ -58,7 +61,30 @@ export function* watchChangePasswordExecutor() {
       yield put(executorPasswordChanged());
       yield put(push("/profile"));
     } catch (error) {
-      yield put(returnErrors(error.response.data));
+      yield put(returnError(error.response.data));
+    }
+  });
+}
+
+export function* watchAcceptBook() {
+  yield takeLeading(ACCEPT_BOOK, function*({ payload }) {
+    try {
+      const { orderId, query } = payload;
+
+      const headers = getAuthHeader();
+      yield call(
+        axios.put,
+        "/api/orders/accept",
+        { orderId },
+        {
+          headers
+        }
+      );
+
+      yield put(bookAccepted());
+      yield put(loadBookings(query));
+    } catch (error) {
+      yield put(returnError(error.response.data));
     }
   });
 }

@@ -8,7 +8,9 @@ function PagePicker(props) {
   return (
     <Pagination
       showQuickJumper
+      hideOnSinglePage={true}
       pageSize={limit}
+      showTitle={false}
       currrent={page}
       onChange={handleQueryChange}
       total={total}

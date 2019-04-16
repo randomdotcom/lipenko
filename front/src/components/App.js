@@ -13,7 +13,9 @@ import withMainLayout from "../routes/MainRoute";
 import PrivateRoute from "../routes/PrivateRoute";
 import Book from "./book";
 import NotAuthRoute from "../routes/NotAuthRoute";
-import Bookings from './profile/bookings'
+import Bookings from "./profile/bookings";
+import ErrorHandle from "./ErrorHandle";
+import EventHandle from './EventHandle'
 
 class App extends Component {
   MainRedirect = () => <Redirect to="/companies" />;
@@ -21,44 +23,52 @@ class App extends Component {
   render() {
     const { isAuthenticated } = this.props;
     return (
-      <Switch>
-        <Route exact path="/admin" component={Admin} />
-        <NotAuthRoute
-          exact
-          path="/auth"
-          isAuthenticated={isAuthenticated}
-          component={Auth}
-        />
-        <Route exact path="/confirm" component={ConfirmEmailContainer} />
-        <Route exact path="/" component={this.MainRedirect} />
-        <Route exact path="/companies" component={withMainLayout(Companies)} />
-        <Route path="/companies/:id" component={withMainLayout(Company)} />
-        <PrivateRoute
-          exact
-          path="/profile"
-          isAuthenticated={isAuthenticated}
-          component={withMainLayout(Profile)}
-        />
-        <PrivateRoute
-          exact
-          path="/profile/edit"
-          isAuthenticated={isAuthenticated}
-          component={withMainLayout(ProfileEdit)}
-        />
-        <PrivateRoute
-          exact
-          path="/profile/bookings"
-          isAuthenticated={isAuthenticated}
-          component={withMainLayout(Bookings)}
-        />
-        <Route
-          exact
-          path="/book"
-          isAuthenticated={isAuthenticated}
-          component={withMainLayout(Book)}
-        />
-        <Route component={NotFound} />
-      </Switch>
+      <>
+        <ErrorHandle />
+        <EventHandle />
+        <Switch>
+          <Route exact path="/admin" component={Admin} />
+          <NotAuthRoute
+            exact
+            path="/auth"
+            isAuthenticated={isAuthenticated}
+            component={Auth}
+          />
+          <Route exact path="/confirm" component={ConfirmEmailContainer} />
+          <Route exact path="/" component={this.MainRedirect} />
+          <Route
+            exact
+            path="/companies"
+            component={withMainLayout(Companies)}
+          />
+          <Route path="/companies/:id" component={withMainLayout(Company)} />
+          <PrivateRoute
+            exact
+            path="/profile"
+            isAuthenticated={isAuthenticated}
+            component={withMainLayout(Profile)}
+          />
+          <PrivateRoute
+            exact
+            path="/profile/edit"
+            isAuthenticated={isAuthenticated}
+            component={withMainLayout(ProfileEdit)}
+          />
+          <PrivateRoute
+            exact
+            path="/profile/bookings"
+            isAuthenticated={isAuthenticated}
+            component={withMainLayout(Bookings)}
+          />
+          <Route
+            exact
+            path="/book"
+            isAuthenticated={isAuthenticated}
+            component={withMainLayout(Book)}
+          />
+          <Route component={NotFound} />
+        </Switch>
+      </>
     );
   }
 }

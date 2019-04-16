@@ -81,7 +81,7 @@ module.exports.get = (req, res, next) => {
     .getClients()
     .then(companies => res.status(httpStatus.OK).json(companies))
     .catch(err => {
-      res.send(err.message);
+      res.status(httpStatus.CONFLICT).send(err.message);
     });
 };
 
@@ -94,7 +94,7 @@ module.exports.block = (req, res, next) => {
         .json(`Пользователь ${req.params.id} заблокирован`);
     })
     .catch(err => {
-      res.send(err.message);
+      res.status(httpStatus.CONFLICT).send(err.message);
     });
 };
 
@@ -107,7 +107,7 @@ module.exports.unblock = (req, res, next) => {
         .json(`Пользователь ${req.params.id} разблокирован`);
     })
     .catch(err => {
-      res.send(err.message);
+      res.status(httpStatus.CONFLICT).send(err.message);
     });
 };
 
@@ -118,7 +118,7 @@ module.exports.edit = (req, res, next) => {
         res.status(httpStatus.OK).json(`Profile ${req.user.id} edited`);
       })
       .catch(err => {
-        res.send(err.message);
+        res.status(httpStatus.CONFLICT).send(err.message);
       });
 };
 
@@ -129,7 +129,7 @@ module.exports.newPassword = (req, res, next) => {
       res.status(httpStatus.OK).json(`Profile ${req.user.id} edited`);
     })
     .catch(err => {
-      res.send(err.message);
+      res.status(httpStatus.CONFLICT).send(err.message);
     });
 };
 
@@ -138,6 +138,6 @@ module.exports.authSocialNetwork = (req, res, next) => {
     .authSocialNetwork(req.user)
     .then(data => res.status(httpStatus.OK).json(data))
     .catch(err => {
-      res.send(err.message);
+      res.status(httpStatus.CONFLICT).send(err.message);
     });
 };

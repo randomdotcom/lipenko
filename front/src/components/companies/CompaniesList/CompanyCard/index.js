@@ -35,7 +35,7 @@ function CompanyCard(props) {
                   pathname: `/companies/${props.id}`
                 }}
               >
-                <b>Заказать услугу</b>
+                <b>order service</b>
               </Button>
             </>
           }
