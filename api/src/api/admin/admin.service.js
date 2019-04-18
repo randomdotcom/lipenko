@@ -38,8 +38,42 @@ async function editProfile(userId, data) {
   });
 }
 
+async function editProfile(userId, data) {
+  if (!userId) throw new Error("Unauthorized");
+  if (!data.username | !data.email) {
+    throw new Error("Wrong data");
+  }
+
+  return await User.findByIdAndUpdate(userId, {
+    username: data.username,
+    email: data.email,
+    phoneNumber: data.phoneNumber,
+    adress: data.adress
+  });
+}
+
+async function newPassword(userId, data) {
+  const user = await Admin.findById(userId)
+    .select("+password")
+    .exec();
+  if (user === null) throw new Error("The user is not found");
+
+  let success = await user.comparePassword(data.oldPassword);
+  if (success === false) throw new Error("The password is incorrect");
+
+  user.password = data.newPassword;
+  return new Promise((resolve, reject) => {
+    user.save(err => {
+      if (err) reject(err);
+
+      resolve();
+    });
+  });
+}
+
 module.exports = {
   authenticate,
   register,
-  editProfile
+  editProfile,
+  newPassword
 };

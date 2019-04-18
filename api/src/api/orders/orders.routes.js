@@ -14,6 +14,6 @@ router.put('/confirm', permit(Role.User), controller.confirm);
 
 router.get('/history', permit([Role.User, Role.Executor]), controller.history);
 
-router.get('/', permit([Role.User, Role.Executor]), controller.get)
+router.get('/', permit([Role.User, Role.Executor, Role.Admin]), controller.get)
 
 module.exports = router;

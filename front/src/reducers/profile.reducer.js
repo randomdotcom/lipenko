@@ -11,7 +11,8 @@ import {
   EXECUTOR_CONFIRM_SUCCESS,
   EXECUTOR_TOC_EDITED,
   EXECUTOR_MAIN_INFO_EDITED,
-  ADMIN_SIGNIN_SUCCESS
+  ADMIN_SIGNIN_SUCCESS,
+  ADMIN_EDITED
 } from "../actions/auth.actions";
 import { BOOKINGS_LOADED } from "../actions/bookings.actions";
 
@@ -151,6 +152,15 @@ export default (state = initialState, action) => {
       const bookings = action.payload;
 
       return { ...state, bookings: { ...bookings } };
+    }
+    case ADMIN_EDITED: {
+      return {
+        ...state,
+        data: {
+          username: action.payload.username,
+          email: action.payload.email
+        }
+      };
     }
     default:
       return state;

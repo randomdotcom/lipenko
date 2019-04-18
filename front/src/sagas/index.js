@@ -42,8 +42,9 @@ import {
   watchChangeFiltersBookingsSaga
 } from "./bookings.saga";
 import { watchAdminSignInSaga } from "./adminAuth.saga";
+import { watchEditAdmin, watchChangePasswordAdmin } from "./admin.saga";
 
-export default function*() {
+export default function* () {
   yield spawn(watchUserSignInSaga);
   yield spawn(watchUserSignUpSaga);
   yield spawn(watchUserConfirmSaga);
@@ -81,6 +82,7 @@ export default function*() {
   yield spawn(watchSignOutSaga);
 
   yield spawn(watchAdminSignInSaga);
-
+  yield spawn(watchEditAdmin);
+  yield spawn(watchChangePasswordAdmin);
   // yield spawn(watchLoadExecutorSaga);
 }

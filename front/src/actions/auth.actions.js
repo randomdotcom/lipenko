@@ -263,3 +263,26 @@ export const adminSignInSuccess = data => ({
   type: ADMIN_SIGNIN_SUCCESS,
   payload: data
 });
+
+export const EDIT_ADMIN = "ADMIN: EDIT...";
+export const editAdmin = data => ({
+  type: EDIT_ADMIN,
+  payload: data
+});
+
+export const ADMIN_EDITED = "ADMIN: EDITED SUCCESSFUL";
+export const adminEdited = data => ({
+  type: ADMIN_EDITED,
+  payload: data
+});
+
+export const CHANGE_PASSWORD_ADMIN = "ADMIN: CHANGE PASWORD...";
+export const changePasswordAdmin = data => ({
+  type: CHANGE_PASSWORD_ADMIN,
+  payload: data
+});
+
+export const ADMIN_PASSWORD_CHANGED = "ADMIN: PASSWORD CHANGED";
+export const adminPasswordChanged = () => ({
+  type: ADMIN_PASSWORD_CHANGED
+});

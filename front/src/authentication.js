@@ -1,6 +1,7 @@
 import {
   userSignInSuccess,
-  executorSignInSuccess
+  executorSignInSuccess,
+  adminSignInSuccess
 } from "./actions/auth.actions";
 
 const AUTH_TOKEN_KEY = "auth token";
@@ -11,9 +12,11 @@ export const initializePreviousToken = store => {
   const user = JSON.parse(localStorage.getItem(USER_KEY));
   if (user) {
     if (user.role === "user") {
-      if (token) store.dispatch(userSignInSuccess({token, user}));
+      if (token) store.dispatch(userSignInSuccess({ token, user }));
     } else if (user.role === "executor") {
-      if (token) store.dispatch(executorSignInSuccess({token, user}));
+      if (token) store.dispatch(executorSignInSuccess({ token, user }));
+    } else if (user.role === 'admin') {
+      if (token) store.dispatch(adminSignInSuccess({ token, user }))
     }
   }
 };

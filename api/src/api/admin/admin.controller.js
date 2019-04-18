@@ -1,17 +1,17 @@
 const entity = "admin";
 const httpStatus = require("http-status");
-const userService = require(`./${entity}.service`);
+const service = require(`./${entity}.service`);
 const Role = require("../../enums/roles.enum");
 
 module.exports.signin = (req, res, next) => {
-  userService
+  service
     .authenticate(req.body)
     .then(user =>
       user
         ? res.json(user)
         : res
-            .status(httpStatus.UNAUTHORIZED)
-            .send("Username or password is incorrect")
+          .status(httpStatus.UNAUTHORIZED)
+          .send("Username or password is incorrect")
     )
     .catch(err => {
       res.status(httpStatus.CONFLICT).send(err.message);
@@ -19,7 +19,7 @@ module.exports.signin = (req, res, next) => {
 };
 
 module.exports.register = (req, res, next) => {
-  userService
+  service
     .register(req.body, Role.Admin)
     .then(() => {
       res.status(httpStatus.CREATED).json("Created");
@@ -30,14 +30,23 @@ module.exports.register = (req, res, next) => {
 };
 
 module.exports.edit = (req, res, next) => {
-  if (req.body.password) {
-    service
-      .editProfile(req.user.id, req.body)
-      .then(() => {
-        res.status(httpStatus.OK).json(`Profile ${req.user.id} edited`);
-      })
-      .catch(err => {
-        res.status(httpStatus.CONFLICT).send(err.message);
-      });
-  } else res.status(httpStatus.CONFLICT).send("Введены не все данные");
+  service
+    .editProfile(req.user.id, req.body)
+    .then(() => {
+      res.status(httpStatus.OK).json(`Profile ${req.user.id} edited`);
+    })
+    .catch(err => {
+      res.status(httpStatus.CONFLICT).send(err.message);
+    });
+};
+
+module.exports.newPassword = (req, res, next) => {
+  service
+    .newPassword(req.user.id, req.body)
+    .then(() => {
+      res.status(httpStatus.OK).json(`Profile ${req.user.id} edited`);
+    })
+    .catch(err => {
+      res.status(httpStatus.CONFLICT).send(err.message);
+    });
 };

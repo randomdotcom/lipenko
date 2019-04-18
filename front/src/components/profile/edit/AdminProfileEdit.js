@@ -4,7 +4,7 @@ import { Button, TextField } from "@material-ui/core";
 import { Formik } from "formik";
 import { string, object } from "yup";
 import { connect } from "react-redux";
-import { editUser, changePasswordUser } from "../../../actions/auth.actions";
+import { editAdmin, changePasswordAdmin } from "../../../actions/auth.actions";
 
 const validationEditProfile = object().shape({
   username: string()
@@ -22,19 +22,7 @@ const validationEditProfile = object().shape({
     .matches(
       /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
       "The email is incorrect"
-    ),
-  phoneNumber: string()
-    .required("Phone number is required")
-    .min(13, "Phone number is incorrect, example: +375296667788")
-    .max(13, "Phone number is incorrect, example: +375296667788")
-    .matches(
-      /\+375(29|33|44|25)\d{7}$/,
-      "Phone number is incorrect, example: +375296667788"
-    ),
-  adress: string()
-    .required("Adress is required")
-    .min(6, "Type your city and street atleast")
-    .max(26, "Adress is too long")
+    )
 });
 
 const validationNewPassword = object().shape({
@@ -50,25 +38,25 @@ const validationNewPassword = object().shape({
     .matches(/^[\S]{5,18}$/, "The password cannot contain spaces"),
   confirmNewPassword: string()
     .required("Enter your password again")
-    .test("passwords-match", "Passwords must match ya fool", function(value) {
+    .test("passwords-match", "Passwords must match ya fool", function (value) {
       return this.parent.newPassword === value;
     })
 });
 
-class UserProfileEdit extends Component {
+class AdminProfileEdit extends Component {
   render() {
-    const { classes, username, email, phoneNumber, adress } = this.props;
+    const { classes, username, email } = this.props;
     return (
       <div className={classes.root}>
         <Formik
-          initialValues={{ username, email, phoneNumber, adress }}
+          initialValues={{ username, email }}
           validationSchema={validationEditProfile}
           onSubmit={(
-            { username, email, phoneNumber, adress },
+            { username, email },
             { setFieldError }
           ) => {
             try {
-              this.props.editUser({ username, email, phoneNumber, adress });
+              this.props.editAdmin({ username, email });
             } catch (errors) {
               errors.forEach(err => {
                 setFieldError(err.field, err.error);
@@ -86,7 +74,7 @@ class UserProfileEdit extends Component {
           validationSchema={validationNewPassword}
           onSubmit={({ oldPassword, newPassword }, { setFieldError }) => {
             try {
-              this.props.changePasswordUser({ oldPassword, newPassword });
+              this.props.changePasswordAdmin({ oldPassword, newPassword });
             } catch (errors) {
               errors.forEach(err => {
                 setFieldError(err.field, err.error);
@@ -135,32 +123,6 @@ class UserProfileEdit extends Component {
           value={values.email}
           helperText={errors.email}
           error={Boolean(errors.email)}
-        />
-        <TextField
-          label="Phone number"
-          autoComplete="tel"
-          className={classes.textField}
-          margin="normal"
-          variant="outlined"
-          name="phoneNumber"
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={values.phoneNumber}
-          helperText={errors.phoneNumber}
-          error={Boolean(errors.phoneNumber)}
-        />
-        <TextField
-          label="Your adress"
-          autoComplete="tel"
-          className={classes.textField}
-          margin="normal"
-          variant="outlined"
-          name="adress"
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={values.adress}
-          helperText={errors.adress}
-          error={Boolean(errors.adress)}
         />
         <Button
           key="submit"
@@ -270,5 +232,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { editUser, changePasswordUser }
-)(withStyles(styles)(UserProfileEdit));
+  { editAdmin, changePasswordAdmin }
+)(withStyles(styles)(AdminProfileEdit));

@@ -170,6 +170,7 @@ async function getOrders(
     type
   }
 ) {
+  console.log('order');
   const id = user.id;
   const role = user.role;
 

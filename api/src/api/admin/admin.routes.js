@@ -7,5 +7,6 @@ const Role = require("../../enums/roles.enum");
 router.post("/signin", controller.signin);
 router.post("/register", permit(Role.Admin), controller.register);
 router.put("/edit", permit(Role.Admin), controller.edit);
+router.put('/newPassword', permit(Role.Admin), controller.newPassword);
 
 module.exports = router;

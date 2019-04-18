@@ -6,11 +6,14 @@ const Status = require("../../enums/status.enum");
 const Order = require("../../models/order.model");
 
 module.exports.get = (req, res, next) => {
+  console.log('order');
+  console.log(req.user);
+  console.log(req.query)
   service
     .getOrders(req.user, req.query)
     .then(orders => res.status(httpStatus.OK).json(orders))
     .catch(err => {
-      res.send(err.message);
+      res.status(httpStatus.CONFLICT).send(err.message);
     });
 };
 
