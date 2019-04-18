@@ -7,6 +7,7 @@ import App from "./components/App";
 import * as serviceWorker from "./serviceWorker";
 import store, { history } from "./redux";
 import { initializePreviousToken } from "./authentication";
+import './index.css'
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 initializePreviousToken(store);
@@ -14,7 +15,7 @@ initializePreviousToken(store);
 ReactDOM.render(
   <Provider store={store}>
     <Router history={history}>
-      <App />
+      <App className='root'/>
     </Router>
   </Provider>,
   document.getElementById("root")

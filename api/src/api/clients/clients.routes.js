@@ -1,15 +1,12 @@
 const entity = 'clients';
-
 const router = require('express').Router();
 const controller = require(`./${entity}.controller`);
 const permit = require("../../middleware/permission");
-
 const { authenticateGoogle, authenticateVKontakte, authenticateGitHub} = require('../../config/passport');
 
 const Role = require("../../enums/roles.enum");
 
 router.post("/signin", controller.signin);
-router.post("/signout", controller.signout);
 
 router.post("/register", controller.register);
 router.put("/confirm", controller.confirm);

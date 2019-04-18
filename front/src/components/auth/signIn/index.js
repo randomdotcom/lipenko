@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
 import { Formik } from "formik";
 import { string, object } from "yup";
+import { withStyles } from "@material-ui/core/styles";
+import teal from "@material-ui/core/colors/teal";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Radio from "@material-ui/core/Radio";
@@ -195,9 +196,46 @@ class SignIn extends Component {
   };
 }
 
-SignIn.propTypes = {
-  classes: PropTypes.object.isRequired
-};
+const styles = theme => ({
+  margin: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 150
+  },
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    flexWrap: "wrap"
+  },
+  group: {
+    display: "flex"
+  },
+  button: {
+    margin: theme.spacing.unit
+  },
+  confirmButton: {
+    margin: theme.spacing.unit,
+    backgroundColor: teal[500],
+    "&:hover": {
+      backgroundColor: teal[300]
+    }
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 250
+  },
+  VerifyAndConfirmContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  close: {
+    padding: theme.spacing.unit / 2
+  }
+});
 
 const mapStateToProps = state => ({
   isSended: state.profile.isSended,
@@ -215,4 +253,4 @@ const SignInContainer = connect(
   }
 )(SignIn);
 
-export default (SignInContainer);
+export default withStyles(styles)(SignInContainer);

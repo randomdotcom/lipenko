@@ -15,7 +15,7 @@ import Book from "./book";
 import NotAuthRoute from "../routes/NotAuthRoute";
 import Bookings from "./profile/bookings";
 import ErrorHandle from "./ErrorHandle";
-import EventHandle from './EventHandle'
+import EventHandle from "./EventHandle";
 
 class App extends Component {
   MainRedirect = () => <Redirect to="/companies" />;
@@ -27,7 +27,12 @@ class App extends Component {
         <ErrorHandle />
         <EventHandle />
         <Switch>
-          <Route exact path="/admin" component={Admin} />
+          <NotAuthRoute
+            exact
+            path="/admin"
+            isAuthenticated={isAuthenticated}
+            component={Admin}
+          />
           <NotAuthRoute
             exact
             path="/auth"

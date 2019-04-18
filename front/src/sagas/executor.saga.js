@@ -12,7 +12,7 @@ import {
   bookAccepted
 } from "../actions/auth.actions";
 import { loadBookings } from "../actions/bookings.actions";
-import { returnError } from "../actions/events.actions";
+import { returnError, returnEvent } from "../actions/events.actions";
 import { getAuthHeader } from "../services/jwtHeader";
 
 export function* watchEditMainInfoExecutor() {
@@ -23,6 +23,7 @@ export function* watchEditMainInfoExecutor() {
 
       yield put(executorMainInfoEdited(payload));
       yield put(push("/profile"));
+      yield put(returnEvent("Your profile is changed"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }
@@ -44,6 +45,7 @@ export function* watchEditTOCExecutor() {
 
       yield put(executorTypesOfCleaningEdited(response.data));
       yield put(push("/profile"));
+      yield put(returnEvent("Your profile is changed"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }
@@ -60,6 +62,7 @@ export function* watchChangePasswordExecutor() {
 
       yield put(executorPasswordChanged());
       yield put(push("/profile"));
+      yield put(returnEvent("Your password is changed"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }
@@ -83,6 +86,7 @@ export function* watchAcceptBook() {
 
       yield put(bookAccepted());
       yield put(loadBookings(query));
+      yield put(returnEvent("The book is accepted"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }

@@ -1,9 +1,9 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { Typography, Button, Paper, Avatar } from "@material-ui/core";
-import { connect } from 'react-redux'
-import LogOutButton from './LogOutButton'
-import {Link} from 'react-router-dom'
+import { connect } from "react-redux";
+import LogOutButton from "./LogOutButton";
+import { Link } from "react-router-dom";
 
 function UserProfile(props) {
   const { classes } = props;
@@ -13,10 +13,30 @@ function UserProfile(props) {
         <div className={classes.AvatarAndEdit}>
           <Paper className={classes.AvatarAndUsername}>
             <p>{props.username}</p>
-            <Avatar alt="Avatar" src="https://static.espreso.tv/uploads/article/2596219/images/im578x383-avatar-neytiri-sad.jpg" className={classes.bigAvatar} />
+            <Avatar
+              alt="Avatar"
+              src="https://static.espreso.tv/uploads/article/2596219/images/im578x383-avatar-neytiri-sad.jpg"
+              className={classes.bigAvatar}
+            />
           </Paper>
-          <Button component={Link} to="/profile/edit" className={classes.editButton} variant="contained" color="secondary">edit</Button>
-          <Button component={Link} to="/profile/bookings" className={classes.editButton} variant="contained" color="primary">my bookings</Button>
+          <Button
+            component={Link}
+            to="/profile/edit"
+            className={classes.editButton}
+            variant="contained"
+            color="secondary"
+          >
+            edit
+          </Button>
+          <Button
+            component={Link}
+            to="/profile/bookings"
+            className={classes.editButton}
+            variant="contained"
+            color="primary"
+          >
+            my bookings
+          </Button>
         </div>
         <div className={classes.InfoAndLogOutButton}>
           <div className={classes.logOutButton}>
@@ -25,6 +45,9 @@ function UserProfile(props) {
           <div className={classes.profileInfo}>
             <Typography>
               <b>Account type:</b> {props.role}
+            </Typography>
+            <Typography>
+              <b>Email:</b> {props.email}
             </Typography>
             <Typography>
               <b>Phone number:</b> {props.phoneNumber}
@@ -105,38 +128,38 @@ const styles = theme => ({
     height: 160
   },
   profileInfo: {
-    marginLeft: 20,
+    marginLeft: 20
   },
   logOutButton: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    width: '100%'
+    display: "flex",
+    justifyContent: "flex-end",
+    width: "100%"
   },
   InfoAndLogOutButton: {
-    width: '100%'
+    width: "100%"
   },
   AvatarAndUsername: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
     paddingLeft: 15,
     paddingBottom: 15,
-    paddingRight: 15,
+    paddingRight: 15
   },
   AvatarAndEdit: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
   },
   editButton: {
     marginTop: 10,
-    width: '100%',
-    fontWeight: 'bold'
+    width: "100%",
+    fontWeight: "bold"
   },
   AvatarAndInfo: {
-    display: 'flex',
+    display: "flex"
   }
-})
+});
 
 const mapStateToProps = state => ({
   role: state.profile.role,
@@ -146,21 +169,26 @@ const mapStateToProps = state => ({
   phoneNumber: state.profile.data.phoneNumber,
   companyName: state.profile.data.companyName,
   description: state.profile.data.description,
-  standartSmallRoom: state.profile.data.typesOfCleaning.standart.standartSmallRoom,
+  standartSmallRoom:
+    state.profile.data.typesOfCleaning.standart.standartSmallRoom,
   standartBigRoom: state.profile.data.typesOfCleaning.standart.standartBigRoom,
-  standartBathRoom: state.profile.data.typesOfCleaning.standart.standartBathRoom,
+  standartBathRoom:
+    state.profile.data.typesOfCleaning.standart.standartBathRoom,
   generalBigRoom: state.profile.data.typesOfCleaning.general.generalBigRoom,
   generalSmallRoom: state.profile.data.typesOfCleaning.general.generalSmallRoom,
   generalBathRoom: state.profile.data.typesOfCleaning.general.generalBathRoom,
-  afterRepairBigRoom: state.profile.data.typesOfCleaning.afterRepair.afterRepairBigRoom,
-  afterRepairSmallRoom: state.profile.data.typesOfCleaning.afterRepair.afterRepairSmallRoom,
-  afterRepairBathRoom: state.profile.data.typesOfCleaning.afterRepair.afterRepairBathRoom,
+  afterRepairBigRoom:
+    state.profile.data.typesOfCleaning.afterRepair.afterRepairBigRoom,
+  afterRepairSmallRoom:
+    state.profile.data.typesOfCleaning.afterRepair.afterRepairSmallRoom,
+  afterRepairBathRoom:
+    state.profile.data.typesOfCleaning.afterRepair.afterRepairBathRoom,
   bigCarpet: state.profile.data.typesOfCleaning.carpet.bigCarpet,
   smallCarpet: state.profile.data.typesOfCleaning.carpet.smallCarpet,
   office: state.profile.data.typesOfCleaning.office,
   industrial: state.profile.data.typesOfCleaning.industrial,
   furniture: state.profile.data.typesOfCleaning.furniture,
-  pool: state.profile.data.typesOfCleaning.pool,
+  pool: state.profile.data.typesOfCleaning.pool
 });
 
-export default connect(mapStateToProps)(withStyles(styles)(UserProfile))
+export default connect(mapStateToProps)(withStyles(styles)(UserProfile));

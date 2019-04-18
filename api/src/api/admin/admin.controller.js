@@ -18,19 +18,6 @@ module.exports.signin = (req, res, next) => {
     });
 };
 
-module.exports.signout = (req, res, next) => {
-  userService
-    .logout(req.body)
-    .then(result => {
-      result
-        ? res.status(httpStatus.OK).json("Ok")
-        : res.status(httpStatus.INTERNAL_SERVER_ERROR).send("Internal Error");
-    })
-    .catch(err => {
-      res.status(httpStatus.CONFLICT).status(httpStatus.BAD_REQUEST).send(err.message);
-    });
-};
-
 module.exports.register = (req, res, next) => {
   userService
     .register(req.body, Role.Admin)

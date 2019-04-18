@@ -22,13 +22,14 @@ import {
   SIGNOUT,
   signOutSuccess
 } from "../actions/auth.actions";
-import { returnError } from "../actions/events.actions";
+import { returnError, returnEvent } from "../actions/events.actions";
 
 export function* watchExecutorSignUpSaga() {
   yield takeLeading(SIGNUP_EXECUTOR, function*({ payload }) {
     try {
       yield call(axios.post, "/api/companies/register", payload);
       yield put(executorSignUpSuccess());
+      yield put(returnEvent("Verification link is sended by e-mail"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }
@@ -57,6 +58,7 @@ export function* watchExecutorNewVerificationCode() {
     try {
       yield call(axios.put, "/api/companies/newVerificationCode", payload);
       yield put(executorNewVerificationCodeSuccess());
+      yield put(returnEvent("New verification code is sended by e-mail"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }

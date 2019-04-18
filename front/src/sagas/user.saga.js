@@ -23,6 +23,7 @@ export function* watchEditUser() {
 
       yield put(userEdited(payload));
       yield put(push("/profile"));
+      yield put(returnEvent("Your profile is changed"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }
@@ -36,7 +37,7 @@ export function* watchChangePasswordUser() {
       yield call(axios.put, "/api/clients/newPassword", payload, { headers });
 
       yield put(userPasswordChanged());
-      yield put(returnEvent('The password is changed', 'success'))
+      yield put(returnEvent("Your password is changed"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }
@@ -60,6 +61,7 @@ export function* watchCancelBook() {
 
       yield put(bookCanceled());
       yield put(loadBookings(query));
+      yield put(returnEvent("The book is canceled"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }
@@ -83,6 +85,7 @@ export function* watchConfirmBook() {
 
       yield put(bookConfirmed());
       yield put(loadBookings(query));
+      yield put(returnEvent("The book is confirmed"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }

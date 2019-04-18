@@ -14,7 +14,7 @@ import {
   CALCULATE_TIME_PRICE,
   timePriceCalculated
 } from "../actions/order.actions";
-import { returnError } from "../actions/events.actions";
+import { returnError, returnEvent } from "../actions/events.actions";
 import { calculatePrice, calculateTime } from "../services/priceTimeCalculate";
 
 export function* watchChooseCompany() {
@@ -45,6 +45,7 @@ export function* watchBookCleaning() {
 
       yield put(cleaningBooked(response.data));
       yield put(push("/companies"));
+      yield put(returnEvent("The cleaning booked, expect an e-mail message"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }

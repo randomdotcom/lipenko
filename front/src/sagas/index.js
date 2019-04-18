@@ -13,7 +13,12 @@ import {
   watchExecutorNewVerificationCode
 } from "./executorAuth.saga";
 import { watchLoadUserSaga } from "./userLoad.saga";
-import { watchEditUser, watchChangePasswordUser, watchCancelBook, watchConfirmBook } from "./user.saga";
+import {
+  watchEditUser,
+  watchChangePasswordUser,
+  watchCancelBook,
+  watchConfirmBook
+} from "./user.saga";
 import {
   watchEditMainInfoExecutor,
   watchEditTOCExecutor,
@@ -32,7 +37,11 @@ import {
   watchResetSelectedCompany,
   watchCalculateTimePrice
 } from "./order.saga";
-import { watchLoadBookingsSaga, watchChangeFiltersBookingsSaga } from "./bookings.saga";
+import {
+  watchLoadBookingsSaga,
+  watchChangeFiltersBookingsSaga
+} from "./bookings.saga";
+import { watchAdminSignInSaga } from "./adminAuth.saga";
 
 export default function*() {
   yield spawn(watchUserSignInSaga);
@@ -51,7 +60,7 @@ export default function*() {
   yield spawn(watchChangePasswordExecutor);
   yield spawn(watchEditMainInfoExecutor);
   yield spawn(watchEditTOCExecutor);
-  yield spawn(watchAcceptBook)
+  yield spawn(watchAcceptBook);
 
   yield spawn(watchCancelBook);
 
@@ -70,6 +79,8 @@ export default function*() {
   yield spawn(watchCalculateTimePrice);
 
   yield spawn(watchSignOutSaga);
+
+  yield spawn(watchAdminSignInSaga);
 
   // yield spawn(watchLoadExecutorSaga);
 }

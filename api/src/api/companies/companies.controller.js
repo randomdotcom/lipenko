@@ -43,19 +43,6 @@ module.exports.signin = (req, res, next) => {
     });
 };
 
-module.exports.signout = (req, res, next) => {
-  service
-    .logout(req.body)
-    .then(result => {
-      result
-        ? res.status(httpStatus.OK).json("Ok")
-        : res.status(httpStatus.INTERNAL_SERVER_ERROR).send("Internal Error");
-    })
-    .catch(err => {
-      res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err.message);
-    });
-};
-
 module.exports.register = (req, res, next) => {
   service
     .register(req.body, Role.Executor)

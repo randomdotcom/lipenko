@@ -34,10 +34,6 @@ async function authenticate({ username, password }) {
   }
 }
 
-async function logout({ token }) {
-  return true;
-}
-
 async function register(values, role) {
   var verificationCode = randtoken.generate(6);
 
@@ -456,7 +452,6 @@ async function editTypesOfCleaning(userId, values) {
 
 module.exports = {
   authenticate,
-  logout,
   register,
   getCompanies,
   blockCompany,

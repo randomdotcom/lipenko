@@ -15,13 +15,14 @@ import {
   USER_NEW_VERIFICATION_CODE,
   userNewVerificationCodeSuccess
 } from "../actions/auth.actions";
-import { returnError } from "../actions/events.actions";
+import { returnError, returnEvent } from "../actions/events.actions";
 
 export function* watchUserSignUpSaga() {
   yield takeLeading(SIGNUP_USER, function* ({ payload }) {
     try {
       yield call(axios.post, "/api/clients/register", payload);
       yield put(userSignUpSuccess(payload.username));
+      yield put(returnEvent("Verification code is sended by e-mail"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }
@@ -48,6 +49,7 @@ export function* watchUserNewVerificationCode() {
     try {
       yield call(axios.put, "/api/clients/newVerificationCode", payload);
       yield put(userNewVerificationCodeSuccess());
+      yield put(returnEvent("New verification code is sended by email"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }

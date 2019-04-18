@@ -37,10 +37,6 @@ async function authenticate({ username, password }) {
   }
 }
 
-async function logout({ token }) {
-  return true;
-}
-
 async function newVerificationCode({ username }) {
   var verificationCode = randtoken.generate(6);
 
@@ -206,7 +202,6 @@ async function authSocialNetwork(data) {
 
 module.exports = {
   authenticate,
-  logout,
   register,
   getClients,
   blockClient,

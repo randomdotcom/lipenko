@@ -11,28 +11,22 @@ export const userSignUpSuccess = username => ({
 });
 
 export const CONFIRM_USER = "USER: CONFIRMATION..";
-export const confirmUser = data => {
-  return {
-    type: CONFIRM_USER,
-    payload: data
-  };
-};
+export const confirmUser = data => ({
+  type: CONFIRM_USER,
+  payload: data
+});
 
 export const USER_NEW_VERIFICATION_CODE = "USER: NEW VERIFICATION CODE..";
-export const userNewVerificationCode = username => {
-  return {
-    type: USER_NEW_VERIFICATION_CODE,
-    payload: { username }
-  };
-};
+export const userNewVerificationCode = username => ({
+  type: USER_NEW_VERIFICATION_CODE,
+  payload: { username }
+});
 
 export const USER_NEW_VERIFICATION_CODE_SUCCESS =
   "USER: NEW VERIFICATION CODE SUCCESS";
-export const userNewVerificationCodeSuccess = () => {
-  return {
-    type: USER_NEW_VERIFICATION_CODE_SUCCESS
-  };
-};
+export const userNewVerificationCodeSuccess = () => ({
+  type: USER_NEW_VERIFICATION_CODE_SUCCESS
+});
 
 export const USER_CONFIRM_SUCCESS = "USER: CONFIRMATION IS SUCCESS";
 export const userConfirmSuccess = data => ({
@@ -102,7 +96,6 @@ export const userPasswordChanged = () => ({
   type: USER_PASSWORD_CHANGED
 });
 
-
 //////////////////////// EEEXXXEEECCCUUUTTTOOORRRR ///////////////////
 
 export const SIGNUP_EXECUTOR = "EXECUTOR: SIGNUP..";
@@ -132,20 +125,16 @@ export const confirmExecutor = token => {
 
 export const EXECUTOR_NEW_VERIFICATION_CODE =
   "EXECUTOR: NEW VERIFICATION CODE..";
-export const executorNewVerificationCode = username => {
-  return {
-    type: EXECUTOR_NEW_VERIFICATION_CODE,
-    payload: { username }
-  };
-};
+export const executorNewVerificationCode = username => ({
+  type: EXECUTOR_NEW_VERIFICATION_CODE,
+  payload: { username }
+});
 
 export const EXECUTOR_NEW_VERIFICATION_CODE_SUCCESS =
   "EXECUTOR: NEW VERIFICATION CODE SUCCESS";
-export const executorNewVerificationCodeSuccess = () => {
-  return {
-    type: EXECUTOR_NEW_VERIFICATION_CODE_SUCCESS
-  };
-};
+export const executorNewVerificationCodeSuccess = () => ({
+  type: EXECUTOR_NEW_VERIFICATION_CODE_SUCCESS
+});
 
 export const EXECUTOR_CONFIRM_SUCCESS = "EXECUTOR: CONFIRMATION IS SUCCESS";
 export const executorConfirmSuccess = data => ({
@@ -200,7 +189,8 @@ export const editMainExecutor = data => ({
   payload: data
 });
 
-export const EXECUTOR_MAIN_INFO_EDITED = "EXECUTOR: MAIN INFO EDITED SUCCESSFUL";
+export const EXECUTOR_MAIN_INFO_EDITED =
+  "EXECUTOR: MAIN INFO EDITED SUCCESSFUL";
 export const executorMainInfoEdited = data => ({
   type: EXECUTOR_MAIN_INFO_EDITED,
   payload: data
@@ -260,4 +250,16 @@ export const confirmBook = data => ({
 export const BOOK_CONFIRMED = "USER: BOOK CONFIRMED";
 export const bookConfirmed = () => ({
   type: BOOK_CONFIRMED
+});
+
+export const SIGNIN_ADMIN = "ADMIN: SIGN IN..";
+export const signInAdmin = data => ({
+  type: SIGNIN_ADMIN,
+  payload: data
+});
+
+export const ADMIN_SIGNIN_SUCCESS = "ADMIN: SIGN IN SUCCESS";
+export const adminSignInSuccess = data => ({
+  type: ADMIN_SIGNIN_SUCCESS,
+  payload: data
 });

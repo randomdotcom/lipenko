@@ -10,7 +10,8 @@ import {
   EXECUTOR_SIGNUP_SUCCESS,
   EXECUTOR_CONFIRM_SUCCESS,
   EXECUTOR_TOC_EDITED,
-  EXECUTOR_MAIN_INFO_EDITED
+  EXECUTOR_MAIN_INFO_EDITED,
+  ADMIN_SIGNIN_SUCCESS
 } from "../actions/auth.actions";
 import { BOOKINGS_LOADED } from "../actions/bookings.actions";
 
@@ -32,6 +33,20 @@ export default (state = initialState, action) => {
 
     //   return { ...state, ...user };
     // }
+    case ADMIN_SIGNIN_SUCCESS: {
+      const user = action.payload.user;
+      return {
+        ...state,
+        isAuthenticated: !!action.payload.token,
+        role: user.role,
+        data: {
+          id: user._id,
+          username: user.username,
+          email: user.email,
+          phoneNumber: user.phoneNumber
+        }
+      };
+    }
     case USER_SIGNIN_SUCCESS:
     case USER_CONFIRM_SUCCESS: {
       const user = action.payload.user;
