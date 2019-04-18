@@ -4,17 +4,16 @@ import { withStyles } from "@material-ui/core";
 import PagePicker from "./PagePicker";
 import { connect } from "react-redux";
 import {
-  loadCompanies,
-  changeFiltersCompanies
-} from "../../actions/companies.actions";
-import CompaniesList from "./CompaniesList";
+  loadCustomers,
+  changeFiltersCustomers
+} from "../../../actions/admin.actions";
+import CustomersList from "./CustomersList";
 import Filters from "./Filters";
-import Search from "./Search";
-import Sort from "./Sort";
 
-class Companies extends Component {
+class Customers extends Component {
   componentDidMount() {
-    this.props.loadCompanies(this.props.search);
+    console.log("dsdss");
+    this.props.loadCustomers(this.props.search);
   }
 
   handleQueryChange = current => {
@@ -33,13 +32,16 @@ class Companies extends Component {
     const { classes, page, limit, total } = this.props;
     return (
       <div className={classes.root}>
-        <Search />
+        {/* <Search /> */}
         <div className={classes.listAndFilters}>
           <div className={classes.sortAndList}>
-            <Sort />
+            {/* <Sort /> */}
             <List className={classes.list}>
-              {this.props.companies ? (
-                <CompaniesList companies={this.props.companies} role={this.props.role} />
+              {this.props.customers ? (
+                <CustomersList
+                  customers={this.props.customers}
+                  role={this.props.role}
+                />
               ) : null}
             </List>
           </div>
@@ -81,15 +83,15 @@ const styles = theme => ({
 });
 
 const mapStateToProps = state => ({
-  companies: state.companies.docs,
-  total: state.companies.total,
-  page: state.companies.page,
-  limit: state.companies.limit,
+  customers: state.admin.customers ? state.admin.customers.docs : undefined,
+  total: state.admin.customers ? state.admin.customers.total : undefined,
+  page: state.admin.customers ? state.admin.customers.page : undefined,
+  limit: state.admin.customers ? state.admin.customers.limit : undefined,
   search: state.router.location.search,
   pathname: state.router.location.pathname
 });
 
 export default connect(
   mapStateToProps,
-  { loadCompanies, changeFiltersCompanies }
-)(withStyles(styles)(Companies));
+  { loadCustomers, changeFiltersCustomers }
+)(withStyles(styles)(Customers));

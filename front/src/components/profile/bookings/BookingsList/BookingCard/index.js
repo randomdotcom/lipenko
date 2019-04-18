@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogContent,
   TextField,
-  DialogActions
+  DialogActions,
 } from "@material-ui/core";
 import {
   acceptBook,
@@ -48,7 +48,6 @@ class BookingCard extends Component {
   }
 
   handleCancelBook = () => {
-    console.log(this.props)
     if (this.props.role === "user") {
       this.props.cancelBook({
         orderId: this.props.booking._id,

@@ -90,7 +90,6 @@ export const Users = mongoose.model("Users", schema);
 schema.pre("save", function (next) {
   bcrypt.hash(this.password, 10, (err, hash) => {
     this.password = hash;
-    console.log("presave password: " + this.password);
     next();
   });
 });

@@ -11,17 +11,19 @@ import ProfileEdit from "./profile/edit";
 import NotFound from "./NotFound";
 import withMainLayout from "../routes/MainRoute";
 import PrivateRoute from "../routes/PrivateRoute";
+import AdminRoute from "../routes/AdminRoute";
 import Book from "./book";
 import NotAuthRoute from "../routes/NotAuthRoute";
 import Bookings from "./profile/bookings";
 import ErrorHandle from "./ErrorHandle";
 import EventHandle from "./EventHandle";
+import CustomersList from "./admin/CustomersListPage";
 
 class App extends Component {
   MainRedirect = () => <Redirect to="/companies" />;
 
   render() {
-    const { isAuthenticated } = this.props;
+    const { isAuthenticated, role } = this.props;
     return (
       <>
         <ErrorHandle />
@@ -65,6 +67,13 @@ class App extends Component {
             isAuthenticated={isAuthenticated}
             component={withMainLayout(Bookings)}
           />
+          <AdminRoute
+            exact
+            path="/admin/customers"
+            isAuthenticated={isAuthenticated}
+            role={role}
+            component={withMainLayout(CustomersList)}
+          />
           <Route
             exact
             path="/book"
@@ -79,7 +88,8 @@ class App extends Component {
 }
 
 const mapStateToProps = state => ({
-  isAuthenticated: state.profile.isAuthenticated
+  isAuthenticated: state.profile.isAuthenticated,
+  role: state.profile.role
 });
 
 export default connect(mapStateToProps)(App);

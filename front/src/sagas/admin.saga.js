@@ -7,11 +7,17 @@ import {
   CHANGE_PASSWORD_ADMIN,
   adminPasswordChanged
 } from "../actions/auth.actions";
+import {
+  BLOCK_COMPANY,
+  companyBlocked,
+  UNBLOCK_COMPANY,
+  companyUnblocked
+} from "../actions/admin.actions";
 import { returnError, returnEvent } from "../actions/events.actions";
 import { getAuthHeader } from "../services/jwtHeader";
 
 export function* watchEditAdmin() {
-  yield takeLeading(EDIT_ADMIN, function* ({ payload }) {
+  yield takeLeading(EDIT_ADMIN, function*({ payload }) {
     try {
       const headers = getAuthHeader();
       yield call(axios.put, "/api/admin/edit", payload, { headers });
@@ -26,13 +32,41 @@ export function* watchEditAdmin() {
 }
 
 export function* watchChangePasswordAdmin() {
-  yield takeLeading(CHANGE_PASSWORD_ADMIN, function* ({ payload }) {
+  yield takeLeading(CHANGE_PASSWORD_ADMIN, function*({ payload }) {
     try {
       const headers = getAuthHeader();
       yield call(axios.put, "/api/admin/newPassword", payload, { headers });
 
       yield put(adminPasswordChanged());
       yield put(returnEvent("Your password is changed"));
+    } catch (error) {
+      yield put(returnError(error.response.data));
+    }
+  });
+}
+
+export function* watchBlockCompany() {
+  yield takeLeading(BLOCK_COMPANY, function*({ payload }) {
+    try {
+      const headers = getAuthHeader();
+      yield call(axios.put, `/api/companies/${payload.companyId}/block`, payload, { headers });
+
+      yield put(companyBlocked(payload));
+      yield put(returnEvent("The company is blocked"));
+    } catch (error) {
+      yield put(returnError(error.response.data));
+    }
+  });
+}
+
+export function* watchUnblockCompany() {
+  yield takeLeading(UNBLOCK_COMPANY, function*({ payload }) {
+    try {
+      const headers = getAuthHeader();
+      yield call(axios.put, `/api/companies/${payload.companyId}/unblock`, payload, { headers });
+
+      yield put(companyUnblocked());
+      yield put(returnEvent("The company is unblocked"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }

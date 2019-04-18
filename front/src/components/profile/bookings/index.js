@@ -10,7 +10,7 @@ import {
 import BookingsList from "./BookingsList";
 import Filters from "./Filters";
 import Search from "./Search";
-import Sort from './Sort'
+import Sort from "./Sort";
 
 class Bookings extends Component {
   componentDidMount() {
@@ -85,8 +85,8 @@ const mapStateToProps = state => ({
   total: state.profile.bookings ? state.profile.bookings.total : undefined,
   page: state.profile.bookings ? state.profile.bookings.page : undefined,
   limit: state.profile.bookings ? state.profile.bookings.limit : undefined,
-  search: state.profile.bookings ? state.router.location.search : undefined,
-  pathname: state.profile.bookings ? state.router.location.pathname : undefined
+  search: state.router.location.search,
+  pathname: state.router.location.pathname
 });
 
 export default connect(

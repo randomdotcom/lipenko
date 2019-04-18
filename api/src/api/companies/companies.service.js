@@ -1,7 +1,7 @@
 const { createToken } = require("../../config/passport");
 const Executor = require("../../models/executor.model");
 
-const { sendExecutorConfirmationMessage } = require("../../config/nodemailer");
+const { sendExecutorConfirmationMessage, sendProfileBlockMessage, sendProfileUnblockMessage } = require("../../config/nodemailer");
 
 var randtoken = require("rand-token");
 
@@ -197,7 +197,7 @@ async function newVerificationCode({ username }) {
 
 async function getCompanies({
   page = 1,
-  perPage = 5,
+  perPage = 10,
   city,
   sortBy,
   name,
@@ -237,24 +237,24 @@ async function getCompanies({
     page: parseInt(page, 10) || 1,
     limit: parseInt(perPage, 10) || 10,
     select:
-      "companyName description city rating typesOfCleaning workingDays popularity isBlocked isVerified",
+      "companyName description city rating typesOfCleaning workingDays popularity isBlocked blockReason isVerified",
     sort
   };
 
   let query = {};
-  
+
   let workingDaysArray;
   if (workingDays) {
     workingDaysArray = workingDays.split(",");
-    if (workingDaysArray.indexOf("0") !== -1) query['workingDays.0'] = true;
-    if (workingDaysArray.indexOf("1") !== -1) query['workingDays.1'] = true;
-    if (workingDaysArray.indexOf("2") !== -1) query['workingDays.2'] = true;
-    if (workingDaysArray.indexOf("3") !== -1) query['workingDays.3'] = true;
-    if (workingDaysArray.indexOf("4") !== -1) query['workingDays.4'] = true;
-    if (workingDaysArray.indexOf("5") !== -1) query['workingDays.5'] = true;
-    if (workingDaysArray.indexOf("6") !== -1) query['workingDays.6'] = true;
+    if (workingDaysArray.indexOf("0") !== -1) query["workingDays.0"] = true;
+    if (workingDaysArray.indexOf("1") !== -1) query["workingDays.1"] = true;
+    if (workingDaysArray.indexOf("2") !== -1) query["workingDays.2"] = true;
+    if (workingDaysArray.indexOf("3") !== -1) query["workingDays.3"] = true;
+    if (workingDaysArray.indexOf("4") !== -1) query["workingDays.4"] = true;
+    if (workingDaysArray.indexOf("5") !== -1) query["workingDays.5"] = true;
+    if (workingDaysArray.indexOf("6") !== -1) query["workingDays.6"] = true;
   }
-  
+
   if (city) query.city = { $regex: city };
   if (name) query.companyName = { $regex: name };
   if (type === "standart") query["typesOfCleaning.standart.isAvailable"] = true;
@@ -267,8 +267,8 @@ async function getCompanies({
   if (type === "industrial") query["typesOfCleaning.industrial"] = { $gte: 1 };
   if (pool) query["typesOfCleaning.pool"] = { $gte: 1 };
 
-  query['isVerified'] = true;
-  query['isBlocked'] = false;
+  query["isVerified"] = true;
+  query["isBlocked"] = false;
 
   const companies = await Executor.paginate(query, options);
 
@@ -283,11 +283,11 @@ async function blockCompany(userId, data) {
   return await Executor.findByIdAndUpdate(
     userId,
     {
-      $set: { isBlocked: true, blockReason: `${data.blockReason}` }
+      $set: { isBlocked: true, blockReason: `${data.reason}` }
     },
     (err, user) => {
       if (err) throw new Error(err);
-      sendProfileBlockMessage(user.email, user.username, data.blockReason);
+      sendProfileBlockMessage(user.email, user.username, data.reason);
     }
   );
 }

@@ -6,7 +6,6 @@ const Role = require("../../enums/roles.enum");
 const { sendUserConfirmationMessage } = require("../../config/nodemailer");
 
 module.exports.signin = (req, res, next) => {
-  console.log(`req.body: ${req.body}`);
   service
     .authenticate(req.body)
     .then(user => {
@@ -68,8 +67,8 @@ module.exports.confirm = (req, res, next) => {
 
 module.exports.get = (req, res, next) => {
   service
-    .getClients()
-    .then(companies => res.status(httpStatus.OK).json(companies))
+    .getClients(req.query)
+    .then(clients => res.status(httpStatus.OK).json(clients))
     .catch(err => {
       res.status(httpStatus.CONFLICT).send(err.message);
     });

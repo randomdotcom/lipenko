@@ -6,9 +6,6 @@ const Status = require("../../enums/status.enum");
 const Order = require("../../models/order.model");
 
 module.exports.get = (req, res, next) => {
-  console.log('order');
-  console.log(req.user);
-  console.log(req.query)
   service
     .getOrders(req.user, req.query)
     .then(orders => res.status(httpStatus.OK).json(orders))
@@ -24,6 +21,9 @@ module.exports.getById = (req, res) => {
 module.exports.create = (req, res) => {
   service
     .createOrder(req.body)
+    .then(data => {
+      sendOrderStatusMessage(data.email, data.orderId, null, Status.Done);
+    })
     .then(() => {
       res.status(httpStatus.CREATED).json("Created");
     })

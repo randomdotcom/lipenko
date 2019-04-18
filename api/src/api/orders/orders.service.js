@@ -149,7 +149,7 @@ async function createOrder({
     order.save(err => {
       if (err) reject(err);
 
-      resolve();
+      resolve({email: executor.email, orderId});
     });
   });
 }
@@ -170,7 +170,7 @@ async function getOrders(
     type
   }
 ) {
-  console.log('order');
+  
   const id = user.id;
   const role = user.role;
 
@@ -220,14 +220,14 @@ async function getOrders(
 }
 
 async function acceptOrder(orderId) {
-  const order = await Order.findByIdAndUpdate(orderId, {
-    status: Status.Accepted
-  });
+  const order = await Order.findById(orderId);
 
   if (!order.status) throw new Error("Нет доступа");
   if (order.status != Status.New) throw new Error("Заказ не новый");
 
-  const user = await User.findById(order.customer);
+  order.status = Status.Accepted;
+  order.save();
+
   sendOrderStatusMessage(order.email, orderId, null, Status.Accepted);
 }
 
@@ -244,14 +244,19 @@ async function cancelOrder(data) {
   const user = await User.findById(order.customer);
   const executor = await Executor.findById(order.executor);
 
-  sendOrderStatusMessage(user ? user.email : order.email, orderId, reason, Status.Canceled);
+  sendOrderStatusMessage(
+    user ? user.email : order.email,
+    orderId,
+    reason,
+    Status.Canceled
+  );
   sendOrderStatusMessage(executor.email, orderId, reason, Status.Canceled);
 }
 
 async function confirmOrder(orderId) {
   const order = await Order.findById(orderId);
 
-  if (new Date(order.endDate) > new Date()) throw new Error('Рано')
+  if (new Date(order.endDate) > new Date()) throw new Error("Рано");
 
   if (!order.status) throw new Error("Нет доступа");
   if (order.status != Status.Accepted) throw new Error("Заказ не принят");

@@ -40,7 +40,11 @@ const Main = ({
                 color="secondary"
                 onClick={handleClickBookCleaning}
               >
-                book cleaning
+                {role === "user" ? (
+                  <span>book cleaning</span>
+                ) : (
+                  <span>book cleaning as guest</span>
+                )}
               </Button>
             ) : null}
           </Typography>

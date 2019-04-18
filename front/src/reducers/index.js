@@ -2,9 +2,10 @@ import { combineReducers } from "redux";
 import { connectRouter } from "connected-react-router";
 import profile from "./profile.reducer";
 import events from "./events.reducer";
-import companies from './companies.reducer'
-import company from './company.reducer'
-import order from './order.reducer'
+import companies from "./companies.reducer";
+import company from "./company.reducer";
+import order from "./order.reducer";
+import admin from "./admin.reducer";
 
 export default history =>
   combineReducers({
@@ -13,5 +14,6 @@ export default history =>
     companies,
     company,
     order,
+    admin,
     events
   });

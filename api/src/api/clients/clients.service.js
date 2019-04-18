@@ -81,8 +81,30 @@ async function register(
   });
 }
 
-async function getClients() {
-  return await User.find();
+async function getClients({
+  page = 1,
+  perPage = 10,
+  adress,
+  username,
+  email,
+  phone
+}) {
+  const options = {
+    page: parseInt(page, 10) || 1,
+    limit: parseInt(perPage, 10) || 10,
+    select: "username email adress phoneNumber isBlocked blockReason"
+  };
+
+  let query = {};
+
+  if (username) query.username = { $regex: username };
+  if (email) query.email = { $regex: email };
+  if (phone) query.phoneNumber = { $regex: phone };
+  if (adress) query.adress = { $regex: adress };
+
+  const clients = await User.paginate(query, options);
+
+  return clients;
 }
 
 async function confirmEmail({ username, verificationCode }) {
@@ -123,12 +145,12 @@ async function blockClient(userId, data) {
   return await User.findByIdAndUpdate(
     userId,
     {
-      $set: { isBlocked: true, blockReason: `${data.blockReason}` }
+      $set: { isBlocked: true, blockReason: `${data.reason}` }
     },
     (err, user) => {
       console.log("BLOCKED");
       if (err) throw new Error(err);
-      sendProfileBlockMessage(user.email, user.username, data.blockReason);
+      sendProfileBlockMessage(user.email, user.username, data.reason);
     }
   );
 }

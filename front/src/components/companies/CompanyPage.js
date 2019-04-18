@@ -1,15 +1,61 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import { Typography, Button, Paper, Avatar } from "@material-ui/core";
+import {
+  Typography,
+  Button,
+  Paper,
+  Avatar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField
+} from "@material-ui/core";
 import { connect } from "react-redux";
 import { loadCompany } from "../../actions/companies.actions";
 import { chooseCompany } from "../../actions/order.actions";
+import { blockCompany, unblockCompany } from "../../actions/admin.actions";
 
 class CompanyPage extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      open: false,
+      reason: ""
+    };
+  }
+
   componentDidMount() {
     const { id } = this.props.match.params;
     this.props.loadCompany(id);
   }
+
+  handleClickOpen = () => {
+    this.setState({ open: true });
+  };
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+
+  handleChangeReason = event => {
+    this.setState({ reason: event.target.value });
+  };
+
+  handleBlockCompany = () => {
+    this.props.blockCompany({
+      companyId: this.props.company._id,
+      reason: this.state.reason
+    });
+    this.handleClose();
+  };
+
+  handleUnblockCompany = () => {
+    this.props.unblockCompany({
+      companyId: this.props.company._id
+    });
+  };
 
   handleClickOrder = () => {
     const { _id, workingDays, typesOfCleaning, city } = this.props.company;
@@ -31,7 +77,7 @@ class CompanyPage extends Component {
                   className={classes.bigAvatar}
                 />
               </Paper>
-              {this.props.role !== "executor" ? (
+              {this.props.role !== "executor" && !company.isBlocked ? (
                 <Button
                   onClick={this.handleClickOrder}
                   variant="contained"
@@ -41,72 +87,130 @@ class CompanyPage extends Component {
                   <b>Book cleaning</b>
                 </Button>
               ) : null}
+              {this.props.role === "admin" && !company.isBlocked ? (
+                <Button
+                  onClick={this.handleClickOpen}
+                  variant="outlined"
+                  color="secondary"
+                  className={classes.button}
+                >
+                  <b>block company</b>
+                </Button>
+              ) : null}
+              {this.props.role === "admin" && company.isBlocked === true ? (
+                <>
+                <span>Blocked, reason: {company.blockReason}</span>
+                <Button
+                  onClick={this.handleUnblockCompany}
+                  variant="outlined"
+                  color="secondary"
+                  className={classes.button}
+                >
+                  <b>unblock company</b>
+                </Button>
+                </>
+              ) : null}
             </div>
             <div className={classes.InfoAndLogOutButton}>
               <div className={classes.profileInfo}>
-                <Typography>
-                  <b>City:</b> {company.city}
-                </Typography>
-                <Typography>
-                  <b>Description:</b> {company.description}
-                </Typography>
-                <Typography>
-                  <b>Phone number:</b> {company.phoneNumber}
-                </Typography>
-                <Typography>
-                  <b>TypesOfCleaning</b>
-                </Typography>
-                <Typography>
-                  <b>Standart small room:</b> {toc.standart.standartSmallRoom}
-                </Typography>
-                <Typography>
-                  <b>Standart big room:</b> {toc.standart.standartBigRoom}
-                </Typography>
-                <Typography>
-                  <b>Standart bathroom:</b> {toc.standart.standartBathRoom}
-                </Typography>
-                <Typography>
-                  <b>General small room:</b> {toc.general.generalSmallRoom}
-                </Typography>
-                <Typography>
-                  <b>General big room:</b> {toc.general.generalBigRoom}
-                </Typography>
-                <Typography>
-                  <b>General bathroom:</b> {toc.general.generalBathRoom}
-                </Typography>
-                <Typography>
-                  <b>After repair small room:</b>{" "}
-                  {toc.afterRepair.afterRepairSmallRoom}
-                </Typography>
-                <Typography>
-                  <b>After repair big room:</b>{" "}
-                  {toc.afterRepair.afterRepairBigRoom}
-                </Typography>
-                <Typography>
-                  <b>After repair bathroom:</b>{" "}
-                  {toc.afterRepair.afterRepairBathRoom}
-                </Typography>
-                <Typography>
-                  <b>Carpet small:</b> {toc.carpet.smallCarpet}
-                </Typography>
-                <Typography>
-                  <b>Carpet big:</b> {toc.carpet.bigCarpet}
-                </Typography>
-                <Typography>
-                  <b>Office:</b> {toc.office}
-                </Typography>
-                <Typography>
-                  <b>Furniture:</b> {toc.furniture}
-                </Typography>
-                <Typography>
-                  <b>Industrial:</b> {toc.industrial}
-                </Typography>
-                <Typography>
-                  <b>Pool:</b> {toc.pool}
-                </Typography>
+                {company.isBlocked && this.props.role !== "admin" ? (
+                  <span>Company is blocked, reason: {company.blockReason}</span>
+                ) : (
+                  <>
+                    <Typography>
+                      <b>City:</b> {company.city}
+                    </Typography>
+                    <Typography>
+                      <b>Description:</b> {company.description}
+                    </Typography>
+                    <Typography>
+                      <b>Phone number:</b> {company.phoneNumber}
+                    </Typography>
+                    <Typography>
+                      <b>TypesOfCleaning</b>
+                    </Typography>
+                    <Typography>
+                      <b>Standart small room:</b>{" "}
+                      {toc.standart.standartSmallRoom}
+                    </Typography>
+                    <Typography>
+                      <b>Standart big room:</b> {toc.standart.standartBigRoom}
+                    </Typography>
+                    <Typography>
+                      <b>Standart bathroom:</b> {toc.standart.standartBathRoom}
+                    </Typography>
+                    <Typography>
+                      <b>General small room:</b> {toc.general.generalSmallRoom}
+                    </Typography>
+                    <Typography>
+                      <b>General big room:</b> {toc.general.generalBigRoom}
+                    </Typography>
+                    <Typography>
+                      <b>General bathroom:</b> {toc.general.generalBathRoom}
+                    </Typography>
+                    <Typography>
+                      <b>After repair small room:</b>{" "}
+                      {toc.afterRepair.afterRepairSmallRoom}
+                    </Typography>
+                    <Typography>
+                      <b>After repair big room:</b>{" "}
+                      {toc.afterRepair.afterRepairBigRoom}
+                    </Typography>
+                    <Typography>
+                      <b>After repair bathroom:</b>{" "}
+                      {toc.afterRepair.afterRepairBathRoom}
+                    </Typography>
+                    <Typography>
+                      <b>Carpet small:</b> {toc.carpet.smallCarpet}
+                    </Typography>
+                    <Typography>
+                      <b>Carpet big:</b> {toc.carpet.bigCarpet}
+                    </Typography>
+                    <Typography>
+                      <b>Office:</b> {toc.office}
+                    </Typography>
+                    <Typography>
+                      <b>Furniture:</b> {toc.furniture}
+                    </Typography>
+                    <Typography>
+                      <b>Industrial:</b> {toc.industrial}
+                    </Typography>
+                    <Typography>
+                      <b>Pool:</b> {toc.pool}
+                    </Typography>
+                  </>
+                )}
               </div>
             </div>
           </div>
+          <Dialog
+            open={this.state.open}
+            onClose={this.handleClose}
+            aria-labelledby="form-dialog-title"
+          >
+            <DialogTitle id="form-dialog-title">Cancel book</DialogTitle>
+            <DialogContent>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="name"
+                value={this.state.reason}
+                onChange={this.handleChangeReason}
+                label="Reason"
+                fullWidth
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handleClose}>Back</Button>
+              <Button
+                onClick={this.handleBlockCompany}
+                variant="outlined"
+                color="secondary"
+              >
+                Confirm
+              </Button>
+            </DialogActions>
+          </Dialog>
         </div>
       );
     } else {
@@ -123,7 +227,7 @@ const styles = theme => ({
     padding: 25
   },
   button: {
-    margin: theme.spacing.unit
+    marginTop: 8
   },
   bigAvatar: {
     width: 160,
@@ -171,5 +275,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { loadCompany, chooseCompany }
+  { loadCompany, chooseCompany, blockCompany, unblockCompany }
 )(withStyles(styles)(CompanyPage));
