@@ -207,7 +207,6 @@ function BookingForm(props) {
             label="Expected time of cleaning"
           />
           <Field
-            required
             multiple
             fullWidth={false}
             className={classes.input}

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Formik } from "formik";
 import BookingForm from "../../containers/book/BookingFormContainer";
-import validationSchema from "./BookingFormValidation";
 
 export default class Book extends Component {
   render() {
@@ -46,7 +45,6 @@ export default class Book extends Component {
           price: 0,
           average: 0
         }}
-        validationSchema={validationSchema}
         onSubmit={(values, { setFieldError }) => {
           try {
             if (company) {

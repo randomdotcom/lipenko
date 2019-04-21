@@ -23,7 +23,7 @@ const validatePassword = function (password) {
 };
 
 const validateAdress = function (adress) {
-  const re = /^.{,26}$/
+  const re = /^.{0,26}$/
   return re.test(adress)
 }
 

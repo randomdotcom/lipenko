@@ -14,7 +14,11 @@ function ExecutorProfile(props) {
             <p>{props.username}</p>
             <Avatar
               alt="Avatar"
-              src={props.logoUrl ? props.logoUrl : process.env.REACT_APP_API_URL + 'company.jpg'}
+              src={
+                props.logoUrl
+                  ? props.logoUrl
+                  : process.env.REACT_APP_API_URL + "public/company.jpg"
+              }
               className={classes.bigAvatar}
             />
           </Paper>
@@ -63,51 +67,95 @@ function ExecutorProfile(props) {
             <Typography>
               <b>TypesOfCleaning</b>
             </Typography>
-            <Typography>
-              <b>Standart small room:</b> {props.standartSmallRoom}
-            </Typography>
-            <Typography>
-              <b>Standart big room:</b> {props.standartBigRoom}
-            </Typography>
-            <Typography>
-              <b>Standart bathroom:</b> {props.standartBathRoom}
-            </Typography>
-            <Typography>
-              <b>General small room:</b> {props.generalSmallRoom}
-            </Typography>
-            <Typography>
-              <b>General big room:</b> {props.generalBigRoom}
-            </Typography>
-            <Typography>
-              <b>General bathroom:</b> {props.generalBathRoom}
-            </Typography>
-            <Typography>
-              <b>After repair small room:</b> {props.afterRepairSmallRoom}
-            </Typography>
-            <Typography>
-              <b>After repair big room:</b> {props.afterRepairBigRoom}
-            </Typography>
-            <Typography>
-              <b>After repair bathroom:</b> {props.afterRepairBathRoom}
-            </Typography>
-            <Typography>
-              <b>Carpet small:</b> {props.smallCarpet}
-            </Typography>
-            <Typography>
-              <b>Carpet big:</b> {props.bigCarpet}
-            </Typography>
-            <Typography>
-              <b>Office:</b> {props.office}
-            </Typography>
-            <Typography>
-              <b>Furniture:</b> {props.furniture}
-            </Typography>
-            <Typography>
-              <b>Industrial:</b> {props.industrial}
-            </Typography>
-            <Typography>
-              <b>Pool:</b> {props.pool}
-            </Typography>
+            {props.standartSmallRoom ? (
+              <Typography>
+                <b>Standart small room:</b> {props.standartSmallRoom}
+              </Typography>
+            ) : null}
+
+            {props.standartBigRoom ? (
+              <Typography>
+                <b>Standart big room:</b> {props.standartBigRoom}
+              </Typography>
+            ) : null}
+
+            {props.standartBathRoom ? (
+              <Typography>
+                <b>Standart bathroom:</b> {props.standartBathRoom}
+              </Typography>
+            ) : null}
+
+            {props.generalSmallRoom ? (
+              <Typography>
+                <b>General small room:</b> {props.generalSmallRoom}
+              </Typography>
+            ) : null}
+
+            {props.generalBigRoom ? (
+              <Typography>
+                <b>General big room:</b> {props.generalBigRoom}
+              </Typography>
+            ) : null}
+
+            {props.generalBathRoom ? (
+              <Typography>
+                <b>General bathroom:</b> {props.generalBathRoom}
+              </Typography>
+            ) : null}
+
+            {props.afterRepairSmallRoom ? (
+              <Typography>
+                <b>After repair small room:</b> {props.afterRepairSmallRoom}
+              </Typography>
+            ) : null}
+
+            {props.afterRepairBigRoom ? (
+              <Typography>
+                <b>After repair big room:</b> {props.afterRepairBigRoom}
+              </Typography>
+            ) : null}
+
+            {props.afterRepairBathRoom ? (
+              <Typography>
+                <b>After repair bathroom:</b> {props.afterRepairBathRoom}
+              </Typography>
+            ) : null}
+
+            {props.SmallCarpet ? (
+              <Typography>
+                <b>Carpet small:</b> {props.smallCarpet}
+              </Typography>
+            ) : null}
+
+            {props.bigCarpet ? (
+              <Typography>
+                <b>Carpet big:</b> {props.bigCarpet}
+              </Typography>
+            ) : null}
+
+            {props.office ? (
+              <Typography>
+                <b>Office:</b> {props.office}
+              </Typography>
+            ) : null}
+
+            {props.furniture ? (
+              <Typography>
+                <b>Furniture:</b> {props.furniture}
+              </Typography>
+            ) : null}
+
+            {props.industrial ? (
+              <Typography>
+                <b>Industrial:</b> {props.industrial}
+              </Typography>
+            ) : null}
+
+            {props.pool ? (
+              <Typography>
+                <b>Pool:</b> {props.pool}
+              </Typography>
+            ) : null}
           </div>
         </div>
       </div>

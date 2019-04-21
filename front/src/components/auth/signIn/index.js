@@ -183,10 +183,12 @@ class SignIn extends Component {
               >
                 SIGN IN
               </Button>
-              <GoogleAuthButton
-                authSocial={this.props.authSocial}
-                returnError={this.props.authSocial}
-              />
+              {this.state.selectedForm === "user" ? (
+                <GoogleAuthButton
+                  authSocial={this.props.authSocial}
+                  returnError={this.props.authSocial}
+                />
+              ) : null}
             </>
           )}
         </div>

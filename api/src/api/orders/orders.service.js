@@ -160,10 +160,7 @@ async function getOrders(
     page = 1,
     perPage = 10,
     city,
-    adress,
-    carpet,
-    furniture,
-    pool,
+    status,
     sortBy,
     orderId,
     companyName,
@@ -207,13 +204,10 @@ async function getOrders(
   }
 
   if (companyName) query.companyName = { $regex: companyName };
-  if (adress) query.adress = { $regex: adress };
   if (city) query.city = { $regex: city };
   if (orderId) query._id = orderId;
+  if (status) query.status = status;
   if (type) query.type = `${type}`;
-  if (carpet) query["service.carpet"] = true;
-  if (furniture) query["service.furniture"] = true;
-  if (pool) query["service.pool"] = true;
 
   const orders = await Order.paginate(query, options);
 
