@@ -12,7 +12,8 @@ import {
   EXECUTOR_TOC_EDITED,
   EXECUTOR_MAIN_INFO_EDITED,
   ADMIN_SIGNIN_SUCCESS,
-  ADMIN_EDITED
+  ADMIN_EDITED,
+  PROFILE_LOADED
 } from "../actions/auth.actions";
 import { BOOKINGS_LOADED } from "../actions/bookings.actions";
 
@@ -50,6 +51,7 @@ export default (state = initialState, action) => {
     }
     case USER_SIGNIN_SUCCESS:
     case USER_CONFIRM_SUCCESS: {
+      console.log(action.payload)
       const user = action.payload.user;
       return {
         ...state,
@@ -88,12 +90,6 @@ export default (state = initialState, action) => {
         }
       };
     }
-    // case EXECUTOR_LOADED: {
-    //   const user = action.payload;
-    //   // user.orders.forEach(o => (o.date = new Date(o.date))); // преобр даты?
-
-    //   return { ...state, ...user };
-    // }
     case EXECUTOR_SIGNIN_SUCCESS:
     case EXECUTOR_CONFIRM_SUCCESS: {
       const user = action.payload.user;
@@ -134,7 +130,6 @@ export default (state = initialState, action) => {
       };
     }
     case EXECUTOR_TOC_EDITED: {
-      console.log(action.payload);
       return {
         ...state,
         data: {
@@ -159,6 +154,17 @@ export default (state = initialState, action) => {
         data: {
           username: action.payload.username,
           email: action.payload.email
+        }
+      };
+    }
+    case PROFILE_LOADED: {
+      const { role, ...user } = action.payload;
+      return {
+        ...state,
+        isAuthenticated: true,
+        role: role,
+        data: {
+          ...user
         }
       };
     }

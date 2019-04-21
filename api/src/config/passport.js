@@ -1,9 +1,7 @@
 const passport = require("passport");
 
 const { ExtractJwt, Strategy } = require("passport-jwt");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const VKontakteStrategy = require("passport-vkontakte").Strategy;
-const GitHubStrategy = require("passport-github").Strategy;
+const GoogleStrategy = require("passport-google-token").Strategy;
 
 const randtoken = require("rand-token");
 const jwt = require("jsonwebtoken");
@@ -23,7 +21,6 @@ function jwtStrategy() {
   };
 
   const strategy = new Strategy(opts, async (token, done) => {
-    console.log(token)
     const user = await User.findOne({ _id: token.id });
     const executor = await Executor.findOne({ _id: token.id });
     const admin = await Admin.findOne({ _id: token.id });
@@ -46,94 +43,30 @@ function googleStrategy() {
   passport.use(
     new GoogleStrategy(
       {
-        clientID: `${process.env.GOOGLE_CLIENT_ID}`,
-        clientSecret: `${process.env.GOOGLE_CLIENT_SECRET}`,
-        callbackURL: "/api/clients/google/callback"
+        clientID: `819223369500-aupgq5mbr3nemhukfim72qq4kbgrjqta.apps.googleusercontent.com`,
+        clientSecret: `81gyZ-au7pTyKhdxmudGa2tv`
       },
       (accessToken, refreshToken, profile, done) => {
         User.findOne({ googleId: profile.id }, (err, user) => {
           if (user) {
             done(err, user);
           } else {
+            let username;
+            const re = /^[a-zA-Z][a-zA-Z0-9-_\.]{1,9}$/;
+            if (re.test(profile.displayName)) {
+              username = profile.displayName;
+            } else {
+              username = "User" + `${randtoken.generate(4)}`;
+            }
             new User({
-              username: profile.displayName,
+              username,
               email: profile.emails[0].value,
               role: Role.User,
-              isVerified: false,
-              verificationCode: randtoken.generate(16),
+              isVerified: true,
               googleId: profile.id
             })
               .save()
               .then(user => {
-                console.log(`new user from google: ${user}`);
-                done(null, user);
-              });
-          }
-        });
-      }
-    )
-  );
-}
-
-function vkontakteStrategy() {
-  passport.use(
-    new VKontakteStrategy(
-      {
-        clientID: `${process.env.VK_CLIENT_ID}`,
-        clientSecret: `${process.env.VK_CLIENT_SECRET}`,
-        callbackURL: "/api/clients/vk/callback"
-      },
-      (accessToken, refreshToken, params, profile, done) => {
-        if (!params.email) throw new Error('Нет почты');
-        User.findOne({ vkontakteId: profile.id }, (err, user) => {
-          if (user) {
-            done(err, user);
-          } else {
-            new User({
-              username: profile.username,
-              email: params.email,
-              role: Role.User,
-              isVerified: false,
-              verificationCode: randtoken.generate(16),
-              vkontakteId: profile.id
-            })
-              .save()
-              .then(user => {
-                console.log(`new user from vk: ${user}`);
-                done(null, user);
-              });
-          }
-        });
-      }
-    )
-  );
-}
-
-function githubStrategy() {
-  passport.use(
-    new GitHubStrategy(
-      {
-        clientID: `${process.env.GITHUB_CLIENT_ID}`,
-        clientSecret: `${process.env.GITHUB_CLIENT_SECRET}`,
-        callbackURL: "/api/clients/github/callback"
-      },
-      (accessToken, refreshToken, profile, done) => {
-        if (!profile.email) throw new Error('Нет почты');
-        User.findOne({ githubId: profile.id }, (err, user) => {
-          if (user) {
-            done(err, user);
-          } else {
-            new User({
-              username: profile.login,
-              email: profile.email,
-              role: Role.User,
-              isVerified: false,
-              verificationCode: randtoken.generate(16),
-              githubId: profile.id
-            })
-              .save()
-              .then(user => {
-                console.log(`new user from google: ${user}`);
                 done(err, user);
               });
           }
@@ -155,23 +88,12 @@ module.exports = {
   initialize: () => passport.initialize(),
   authenticate: () => passport.authenticate("jwt", { session: false }),
   authenticateGoogle: () =>
-    passport.authenticate("google", {
+    passport.authenticate("google-token", {
       session: false,
-      scope: ["email", "profile"]
-    }),
-  authenticateGitHub: () =>
-    passport.authenticate("github", {
-      session: false,
-      scope: ["email"]
-    }),
-  authenticateVKontakte: () =>
-    passport.authenticate("vkontakte", {
-      session: false,
-      scope: ["email"]
+      scope: ["profile", "email"],
+      state: "myState"
     }),
   jwtStrategy,
   googleStrategy,
-  githubStrategy,
-  vkontakteStrategy,
   createToken
 };

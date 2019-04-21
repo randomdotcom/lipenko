@@ -23,7 +23,7 @@ const validatePassword = function (password) {
 };
 
 const validateAdress = function (adress) {
-  const re = /^.{6,26}$/
+  const re = /^.{,26}$/
   return re.test(adress)
 }
 
@@ -51,7 +51,6 @@ var schema = new mongoose.Schema(
     },
     adress: {
       type: String,
-      required: true,
       validate: [validateAdress, "Please fill a valid adress(City, street)"]
     },
     isVerified: {
@@ -68,16 +67,12 @@ var schema = new mongoose.Schema(
     phoneNumber: {
       type: String,
       trim: true,
-      unique: true,
       validate: [validatePNumber, "Please fill a valid BY phone number"]
     },
     isBlocked: { type: Boolean, default: false },
     blockReason: { type: String },
     role: { type: String, required: true, lowercase: true },
     googleId: { type: String },
-    //vkontakteId: { type: String },
-    //githubId: { type: String },
-    //instagramId: { type: String }
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" }
@@ -102,6 +97,7 @@ schema.pre("update", function (next) {
 });
 
 schema.post("save", function (error, doc, next) {
+  console.log(error)
   if (error.name === "MongoError" && error.code === 11000) {
     next(new Error("User already exist"));
   } else {

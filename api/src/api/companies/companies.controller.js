@@ -106,13 +106,21 @@ module.exports.unblock = (req, res, next) => {
 };
 
 module.exports.rate = (req, res, next) => {
-  if ((req.body.value > 5) | (req.body.value < 0))
-    return res.send("Неверная оценка");
-
   service
     .rateCompany(req.user.id, req.body, req.params.id)
-    .then(() => {
-      res.status(httpStatus.OK).json(`Company ${req.params.id} rated`);
+    .then(rating => {
+      res.status(httpStatus.OK).json(rating);
+    })
+    .catch(err => {
+      res.status(httpStatus.CONFLICT).send(err.message);
+    });
+};
+
+module.exports.getReviews = (req, res, next) => {
+  service
+    .getReviews(req.body, req.params.id)
+    .then(reviews => {
+      res.status(httpStatus.OK).json(reviews);
     })
     .catch(err => {
       res.status(httpStatus.CONFLICT).send(err.message);

@@ -62,17 +62,6 @@ export const signOutSuccess = () => ({
   type: SIGNOUT_SUCCESS
 });
 
-export const LOAD_USER = "USER: LOAD...";
-export const loadUser = () => ({
-  type: LOAD_USER //////////////
-});
-
-export const USER_LOADED = "USER: LOADED";
-export const userLoaded = data => ({
-  type: USER_LOADED,
-  payload: data /////////////////
-});
-
 export const EDIT_USER = "USER: EDIT...";
 export const editUser = data => ({
   type: EDIT_USER,
@@ -170,17 +159,6 @@ export const EXECUTOR_SIGNIN_FAILED = "EXECUTOR: SIGNIN IS FAILED";
 export const executorSignInFailed = err => ({
   type: EXECUTOR_SIGNIN_FAILED,
   payload: err
-});
-
-export const LOAD_EXECUTOR = "EXECUTOR: LOAD...";
-export const loadExecutor = () => ({
-  type: LOAD_EXECUTOR
-});
-
-export const EXECUTOR_LOADED = "EXECUTOR: LOADED";
-export const executorLoaded = data => ({
-  type: EXECUTOR_LOADED,
-  payload: data
 });
 
 export const EDIT_MAIN_INFO_EXECUTOR = "EXECUTOR: EDIT MAIN INFO...";
@@ -286,3 +264,20 @@ export const ADMIN_PASSWORD_CHANGED = "ADMIN: PASSWORD CHANGED";
 export const adminPasswordChanged = () => ({
   type: ADMIN_PASSWORD_CHANGED
 });
+
+export const LOAD_PROFILE = "PROFILE: LOAD...";
+export const loadProfile = () => ({
+  type: LOAD_PROFILE
+});
+
+export const PROFILE_LOADED = "PROFILE: LOADED";
+export const profileLoaded = data => ({
+  type: PROFILE_LOADED,
+  payload: data
+});
+
+export const AUTH_SOCIAL = "USER: SOCIAL AUTH..";
+export const authSocial = data => ({
+  type: AUTH_SOCIAL,
+  payload: data
+})

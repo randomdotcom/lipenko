@@ -1,33 +1,32 @@
-const entity = 'clients';
-const router = require('express').Router();
+const entity = "clients";
+const router = require("express").Router();
 const controller = require(`./${entity}.controller`);
 const permit = require("../../middleware/permission");
-const { authenticateGoogle, authenticateVKontakte, authenticateGitHub} = require('../../config/passport');
+const {
+  authenticateGoogle
+} = require("../../config/passport");
 
 const Role = require("../../enums/roles.enum");
 
 router.post("/signin", controller.signin);
+router.get(
+  "/current",
+  permit([Role.User, Role.Admin, Role.Executor]),
+  controller.current
+);
 
 router.post("/register", controller.register);
 router.put("/confirm", controller.confirm);
-router.put("/newVerificationCode", controller.newVerificationCode)
+router.put("/newVerificationCode", controller.newVerificationCode);
 
-router.get("/google", authenticateGoogle());
-router.get("/google/callback", authenticateGoogle(), controller.authSocialNetwork);
+router.post("/google", authenticateGoogle(), controller.authSocialNetwork);
 
-// router.get("/github", authenticateGitHub());
-// router.get("/github/callback", authenticateGitHub(), controller.authSocialNetwork);
+router.put("/edit", permit(Role.User), controller.edit);
+router.put("/newPassword", permit(Role.User), controller.newPassword);
 
-// router.get("/vk", authenticateVKontakte());
-// router.get("/vk/callback", authenticateVKontakte(), controller.authSocialNetwork);
+router.get("/", permit(Role.Admin), controller.get);
 
-router.put('/edit', permit(Role.User), controller.edit);
-router.put('/newPassword', permit(Role.User), controller.newPassword);
-
-router.get('/', permit(Role.Admin), controller.get);
-
-router.put('/:id/block', permit(Role.Admin), controller.block);
-router.put('/:id/unblock', permit(Role.Admin), controller.unblock);
-
+router.put("/:id/block", permit(Role.Admin), controller.block);
+router.put("/:id/unblock", permit(Role.Admin), controller.unblock);
 
 module.exports = router;

@@ -27,6 +27,11 @@ async function register({ username, password }, role) {
   return admin.save().then(({ _id }) => Admin.findById(_id));
 }
 
+async function getCurrent({id}) {
+  const user = await Admin.findById(id);
+  return user;
+}
+
 async function editProfile(userId, data) {
   return await User.findById(userId, (err, admin) => {
     if (err) return res.send(err);
@@ -74,6 +79,7 @@ async function newPassword(userId, data) {
 module.exports = {
   authenticate,
   register,
+  getCurrent,
   editProfile,
   newPassword
 };

@@ -133,7 +133,6 @@ var schema = new mongoose.Schema(
       industrial: { type: Number, required: true },
       pool: { type: Number, required: true }
     },
-    ratingList: { type: Object, default: {} },
     rating: { type: Number, default: 0 },
     popularity: { type: Number, default: 0 },
     email: {

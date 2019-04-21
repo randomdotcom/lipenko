@@ -3,7 +3,7 @@ import BookingCard from "./BookingCard";
 
 const BookingList = ({ bookings }) => {
   if (!bookings["0"]) {
-    return <p>Bookings is not found</p>;
+    return <p>Bookings are not found</p>;
   } else {
     return bookings.map(booking => (
       <BookingCard booking={booking} key={booking._id} />

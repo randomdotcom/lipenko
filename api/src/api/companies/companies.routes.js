@@ -19,5 +19,6 @@ router.put('/:id/block', permit(Role.Admin), controller.block);
 router.put('/:id/unblock', permit(Role.Admin), controller.unblock);
 
 router.put('/:id/rate', permit(Role.User), controller.rate);
+router.put('/:id/reviews', controller.getReviews);
 
 module.exports = router;

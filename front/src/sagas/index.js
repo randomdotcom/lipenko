@@ -4,7 +4,8 @@ import {
   watchSignOutSaga,
   watchUserSignUpSaga,
   watchUserConfirmSaga,
-  watchUserNewVerificationCode
+  watchUserNewVerificationCode,
+  watchAuthSocial
 } from "./userAuth.saga";
 import {
   watchExecutorSignInSaga,
@@ -54,6 +55,11 @@ import {
   watchBlockCustomer,
   watchUnblockCustomer
 } from "./adminCustomers.saga";
+import {
+  watchLoadReviews,
+  watchLoadMoreReviews,
+  watchReviewCompany
+} from "./reviews.saga";
 
 export default function*() {
   yield spawn(watchUserSignInSaga);
@@ -64,6 +70,7 @@ export default function*() {
   yield spawn(watchEditUser);
   yield spawn(watchChangePasswordUser);
   yield spawn(watchConfirmBook);
+  yield spawn(watchAuthSocial);
 
   yield spawn(watchExecutorSignInSaga);
   yield spawn(watchExecutorConfirmSaga);
@@ -78,6 +85,10 @@ export default function*() {
 
   yield spawn(watchLoadBookingsSaga);
   yield spawn(watchChangeFiltersBookingsSaga);
+
+  yield spawn(watchLoadReviews);
+  yield spawn(watchLoadMoreReviews);
+  yield spawn(watchReviewCompany);
 
   yield spawn(watchLoadCompaniesSaga);
   yield spawn(watchChangeFiltersCompaniesSaga);

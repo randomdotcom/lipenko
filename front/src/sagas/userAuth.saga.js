@@ -13,12 +13,13 @@ import {
   CONFIRM_USER,
   userConfirmSuccess,
   USER_NEW_VERIFICATION_CODE,
-  userNewVerificationCodeSuccess
+  userNewVerificationCodeSuccess,
+  AUTH_SOCIAL
 } from "../actions/auth.actions";
 import { returnError, returnEvent } from "../actions/events.actions";
 
 export function* watchUserSignUpSaga() {
-  yield takeLeading(SIGNUP_USER, function* ({ payload }) {
+  yield takeLeading(SIGNUP_USER, function*({ payload }) {
     try {
       yield call(axios.post, "/api/clients/register", payload);
       yield put(userSignUpSuccess(payload.username));
@@ -30,7 +31,7 @@ export function* watchUserSignUpSaga() {
 }
 
 export function* watchUserConfirmSaga() {
-  yield takeLeading(CONFIRM_USER, function* ({ payload }) {
+  yield takeLeading(CONFIRM_USER, function*({ payload }) {
     try {
       const response = yield call(axios.put, "/api/clients/confirm", payload);
       const { token, ...user } = response.data;
@@ -45,7 +46,7 @@ export function* watchUserConfirmSaga() {
 }
 
 export function* watchUserNewVerificationCode() {
-  yield takeLeading(USER_NEW_VERIFICATION_CODE, function* ({ payload }) {
+  yield takeLeading(USER_NEW_VERIFICATION_CODE, function*({ payload }) {
     try {
       yield call(axios.put, "/api/clients/newVerificationCode", payload);
       yield put(userNewVerificationCodeSuccess());
@@ -57,7 +58,7 @@ export function* watchUserNewVerificationCode() {
 }
 
 export function* watchUserSignInSaga() {
-  yield takeLeading(SIGNIN_USER, function* ({ payload }) {
+  yield takeLeading(SIGNIN_USER, function*({ payload }) {
     try {
       const response = yield call(axios.post, "/api/clients/signin", payload);
 
@@ -79,8 +80,33 @@ export function* watchUserSignInSaga() {
   });
 }
 
+export function* watchAuthSocial() {
+  yield takeLeading(AUTH_SOCIAL, function*({ payload }) {
+    try {
+      const response = yield call(axios.post, "/api/clients/google", {
+        access_token: payload.accessToken
+      });
+
+      yield call(storeToken, {
+        token: response.data.token,
+        ...response.data.user
+      });
+
+      yield put(
+        userSignInSuccess({
+          token: response.data.token,
+          user: response.data.user
+        })
+      );
+      yield push("/profile");
+    } catch (error) {
+      yield put(returnError(error.response.data));
+    }
+  });
+}
+
 export function* watchSignOutSaga() {
-  yield takeEvery(SIGNOUT, function* () {
+  yield takeEvery(SIGNOUT, function*() {
     try {
       yield call(clearToken);
       yield put(signOutSuccess());

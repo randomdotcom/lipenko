@@ -15,8 +15,11 @@ import {
   confirmUser,
   userNewVerificationCode,
   executorNewVerificationCode,
-  signInExecutor
+  signInExecutor,
+  authSocial
 } from "../../../actions/auth.actions";
+import { returnError } from "../../../actions/events.actions";
+import GoogleAuthButton from "./GoogleAuthButton";
 
 const validationSchema = object().shape({
   username: string()
@@ -49,12 +52,12 @@ class SignIn extends Component {
   };
 
   handleNewVerificationCode = () => {
-    if (this.state.selectedForm === 'user') {
-    this.props.userNewVerificationCode(this.props.username);
+    if (this.state.selectedForm === "user") {
+      this.props.userNewVerificationCode(this.props.username);
     } else {
       this.props.executorNewVerificationCode(this.props.username);
     }
-  }
+  };
 
   handleChangeRadioButton = event => {
     this.setState({ selectedForm: event.target.value });
@@ -178,17 +181,23 @@ class SignIn extends Component {
             </>
           )}
           {!this.props.isSended && (
-            <Button
-              onClick={handleSubmit}
-              type="submit"
-              key="submit"
-              variant="contained"
-              color="primary"
-              size="large"
-              className={classes.button}
-            >
-              SIGN IN
-            </Button>
+            <>
+              <Button
+                onClick={handleSubmit}
+                type="submit"
+                key="submit"
+                variant="contained"
+                color="primary"
+                size="large"
+                className={classes.button}
+              >
+                SIGN IN
+              </Button>
+              <GoogleAuthButton
+                authSocial={this.props.authSocial}
+                returnError={this.props.authSocial}
+              />
+            </>
           )}
         </div>
       </form>
@@ -249,7 +258,9 @@ const SignInContainer = connect(
     signInUser,
     confirmUser,
     userNewVerificationCode,
-    executorNewVerificationCode
+    executorNewVerificationCode,
+    authSocial,
+    returnError
   }
 )(SignIn);
 

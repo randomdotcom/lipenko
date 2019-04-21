@@ -1,6 +1,4 @@
-import {
-  CUSTOMERS_LOADED
-} from "../actions/admin.actions";
+import { CUSTOMERS_LOADED } from "../actions/admin.actions";
 
 const initialState = {
   customers: {

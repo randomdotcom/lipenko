@@ -10,11 +10,22 @@ module.exports.signin = (req, res, next) => {
       user
         ? res.json(user)
         : res
-          .status(httpStatus.UNAUTHORIZED)
-          .send("Username or password is incorrect")
+            .status(httpStatus.UNAUTHORIZED)
+            .send("Username or password is incorrect")
     )
     .catch(err => {
       res.status(httpStatus.CONFLICT).send(err.message);
+    });
+};
+
+module.exports.current = (req, res, next) => {
+  service
+    .getCurrent(req.user.id)
+    .then(user => {
+      res.status(httpStatus.OK).json(user);
+    })
+    .catch(err => {
+      res.status(httpStatus.UNAUTHORIZED).send(err.message);
     });
 };
 
@@ -25,7 +36,7 @@ module.exports.register = (req, res, next) => {
       res.status(httpStatus.CREATED).json("Created");
     })
     .catch(err => {
-      res.status(httpStatus.CONFLICT).status(httpStatus.BAD_REQUEST).send(err.message);
+      res.status(httpStatus.BAD_REQUEST).send(err.message);
     });
 };
 

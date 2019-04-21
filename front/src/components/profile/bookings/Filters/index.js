@@ -4,7 +4,6 @@ import { parse } from "query-string";
 import {
   withStyles,
   FormControl,
-  FormLabel,
   TextField,
   MenuItem,
   Select,
@@ -33,20 +32,6 @@ class Filters extends Component {
       path
     });
   };
-
-  // handleChangeCity = event => {
-  //   this.setState({ city: event.target.value });
-
-  //   const path = this.props.pathname;
-  //   const query = this.props.search;
-
-  //   this.props.changeFiltersBookings({
-  //     query,
-  //     name: "city",
-  //     value: event.target.value,
-  //     path
-  //   });
-  // };
 
   handleChange = event => {
     this.setState({

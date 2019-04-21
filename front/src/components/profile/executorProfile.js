@@ -121,7 +121,9 @@ const styles = theme => ({
     marginTop: 20,
     backgroundColor: "whitesmoke",
     boxShadow: "0 1px 7px 1px rgba(0, 0, 0, .25)",
-    padding: 25
+    padding: 25,
+    display: "flex",
+    flexDirection: "column"
   },
   bigAvatar: {
     width: 160,

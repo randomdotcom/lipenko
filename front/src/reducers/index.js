@@ -6,6 +6,7 @@ import companies from "./companies.reducer";
 import company from "./company.reducer";
 import order from "./order.reducer";
 import admin from "./admin.reducer";
+import reviews from "./reviews.reducer";
 
 export default history =>
   combineReducers({
@@ -13,6 +14,7 @@ export default history =>
     profile,
     companies,
     company,
+    reviews,
     order,
     admin,
     events

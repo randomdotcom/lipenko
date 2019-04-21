@@ -1,7 +1,12 @@
 const { createToken } = require("../../config/passport");
 const Executor = require("../../models/executor.model");
+const Review = require("../../models/review.model");
 
-const { sendExecutorConfirmationMessage, sendProfileBlockMessage, sendProfileUnblockMessage } = require("../../config/nodemailer");
+const {
+  sendExecutorConfirmationMessage,
+  sendProfileBlockMessage,
+  sendProfileUnblockMessage
+} = require("../../config/nodemailer");
 
 var randtoken = require("rand-token");
 
@@ -307,29 +312,56 @@ async function unblockCompany(userId) {
 }
 
 async function rateCompany(userId, data, companyId) {
-  const executor = await Executor.findById(companyId, err => {
-    if (err) throw new Error(err);
+  const existReview = await Review.findOne({
+    customer: userId,
+    executor: companyId
   });
+  const company = await Executor.findById(companyId);
 
-  let ratingList = executor.ratingList;
-  ratingList[userId] = {
-    value: data.value,
-    review: data.review
+  if (!company) throw new Error("Company is not found");
+
+  if (existReview) {
+    existReview.rating = data.rating;
+    existReview.comment = data.comment;
+    await existReview.save();
+  } else {
+    const review = new Review({
+      rating: data.rating,
+      comment: data.comment,
+      customer: userId,
+      executor: companyId
+    });
+    await review.save();
+  }
+
+  const reviews = await Review.find({ executor: companyId });
+
+  const ratingSum = reviews.reduce((sum, review) => {
+    return sum + review.rating;
+  }, 0);
+
+  const rating = parseFloat(ratingSum / reviews.length).toFixed(2);
+
+  company.rating = rating;
+  await company.save();
+
+  return rating;
+}
+
+async function getReviews({ page = 1 }, companyId) {
+  const options = {
+    page: parseInt(page, 10) || 1,
+    limit: 5,
+    select: "rating comment customer updated_at",
+    sort: "-updated_at"
   };
 
-  let rating = 0;
-  for (var key in ratingList) {
-    rating += ratingList[key].value;
-  }
-  rating = rating / Object.keys(ratingList).length;
+  if (!companyId) throw new Error("Company is not found");
+  let query = { executor: companyId };
 
-  await Executor.findByIdAndUpdate(
-    companyId,
-    { $set: { rating: rating, ratingList: ratingList } },
-    err => {
-      if (err) throw new Error(err);
-    }
-  );
+  const companies = await Review.paginate(query, options);
+
+  return companies;
 }
 
 async function editMainInfoProfile(userId, data) {
@@ -457,6 +489,7 @@ module.exports = {
   blockCompany,
   unblockCompany,
   rateCompany,
+  getReviews,
   editMainInfoProfile,
   editTypesOfCleaning,
   newPassword,

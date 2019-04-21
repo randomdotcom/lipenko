@@ -27,8 +27,6 @@ initializeDb(() => {
   app.use(passport.initialize());
   passport.jwtStrategy();
   passport.googleStrategy();
-  passport.vkontakteStrategy();
-  passport.githubStrategy();
 
   app.use("/api/", router);
 

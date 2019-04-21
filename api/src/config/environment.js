@@ -11,7 +11,7 @@ const schema = joi
     JWT_ENCRYPTION: joi
       .string()
       .default("e5a3388c-9731-4043-8b11-be602d8c8919"),
-    JWT_EXPIRATION: joi.number().default(10000),
+    JWT_EXPIRATION: joi.number().default(21600000),
     MONGODB_HOST: joi.string().default("mongodb://127.0.0.1:27017/nodejs-example")
   })
   .unknown()

@@ -24,6 +24,15 @@ module.exports.signin = (req, res, next) => {
     });
 };
 
+module.exports.current = (req, res, next) => {
+  service
+    .getCurrent(req.user)
+    .then(user => res.status(httpStatus.OK).json(user))
+    .catch(err => {
+      res.status(httpStatus.UNAUTHORIZED).send(err.message);
+    });
+};
+
 module.exports.register = (req, res, next) => {
   service
     .register(req.body, Role.User)
@@ -101,14 +110,14 @@ module.exports.unblock = (req, res, next) => {
 };
 
 module.exports.edit = (req, res, next) => {
-    service
-      .editProfile(req.user.id, req.body)
-      .then(() => {
-        res.status(httpStatus.OK).json(`Profile ${req.user.id} edited`);
-      })
-      .catch(err => {
-        res.status(httpStatus.CONFLICT).send(err.message);
-      });
+  service
+    .editProfile(req.user.id, req.body)
+    .then(() => {
+      res.status(httpStatus.OK).json(`Profile ${req.user.id} edited`);
+    })
+    .catch(err => {
+      res.status(httpStatus.CONFLICT).send(err.message);
+    });
 };
 
 module.exports.newPassword = (req, res, next) => {
@@ -123,6 +132,7 @@ module.exports.newPassword = (req, res, next) => {
 };
 
 module.exports.authSocialNetwork = (req, res, next) => {
+  console.log(req.user);
   service
     .authSocialNetwork(req.user)
     .then(data => res.status(httpStatus.OK).json(data))

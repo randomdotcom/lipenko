@@ -7,7 +7,7 @@ import ConfirmEmailContainer from "./auth/ConfirmEmailContainer";
 import Companies from "./companies";
 import Company from "./companies/CompanyPage";
 import Profile from "./profile";
-import ProfileEdit from "./profile/edit";
+import ProfileEdit from "./profile/edit"; 
 import NotFound from "./NotFound";
 import withMainLayout from "../routes/MainRoute";
 import PrivateRoute from "../routes/PrivateRoute";

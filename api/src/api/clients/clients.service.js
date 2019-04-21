@@ -1,10 +1,13 @@
 const { createToken } = require("../../config/passport");
 const User = require("../../models/user.model");
+const Executor = require("../../models/executor.model");
+const Admin = require("../../models/admin.model");
 const {
   sendConfirmationMessage,
   sendProfileBlockMessage,
   sendProfileUnblockMessage
 } = require("../../config/nodemailer");
+const Role = require("../../enums/roles.enum");
 
 const randtoken = require("rand-token").generator({
   chars: "0-9"
@@ -20,7 +23,8 @@ async function authenticate({ username, password }) {
     let success = await user.comparePassword(password);
     if (success === false) throw "The password is incorrect";
 
-    if (user.isBlocked) throw `The user is blocked, reason: ${user.block}`;
+    if (user.isBlocked)
+      throw `The user is blocked, reason: ${user.blockReason}`;
 
     const data = user.toObject();
 
@@ -45,7 +49,7 @@ async function newVerificationCode({ username }) {
     .exec();
   if (user === null) throw "The user is not found";
 
-  if (user.isBlocked) throw `The user is blocked, reason: ${user.block}`;
+  if (user.isBlocked) throw `The user is blocked, reason: ${user.blockReason}`;
 
   await User.findOneAndUpdate({ username }, { $set: { verificationCode } });
 
@@ -79,6 +83,23 @@ async function register(
       resolve({ email, username, verificationCode });
     });
   });
+}
+
+async function getCurrent({ id, role }) {
+  if (role === Role.Admin) {
+    const user = await Admin.findById(id);
+    return user;
+  }
+  if (role === Role.User) {
+    const user = await User.findById(id);
+    return user;
+  }
+  if (role === Role.Executor) {
+    const user = await Executor.findById(id);
+    return user;
+  }
+
+  throw new Error("Unauthorized");
 }
 
 async function getClients({
@@ -148,7 +169,6 @@ async function blockClient(userId, data) {
       $set: { isBlocked: true, blockReason: `${data.reason}` }
     },
     (err, user) => {
-      console.log("BLOCKED");
       if (err) throw new Error(err);
       sendProfileBlockMessage(user.email, user.username, data.reason);
     }
@@ -171,7 +191,6 @@ async function unblockClient(userId) {
 
 async function editProfile(userId, data) {
   if (!userId) throw new Error("Unauthorized");
-  console.log(data);
   if (!data.username | !data.email | !data.phoneNumber | !data.adress) {
     throw new Error("Wrong data");
   }
@@ -203,28 +222,23 @@ async function newPassword(userId, data) {
   });
 }
 
-async function authSocialNetwork(data) {
-  console.log(`authSocialNetwork: ${data}`);
-  if (data.isVerified) {
-    const token = createToken(data);
+async function authSocialNetwork(user) {
+  console.log(user);
+  if (user.isBlocked)
+    throw new Error(`The user is blocked, reason: ${user.blockReason}`);
 
-    return {
-      data,
-      token
-    };
-  } else {
-    const token = data.verificationCode;
-    console.log(`authSocialNetwork, verification code: ${token}`);
+  const token = createToken(user);
 
-    sendConfirmationMessage(data.email, data.username, data.verificationCode);
-
-    throw new Error("Email confirmation required");
-  }
+  return {
+    user,
+    token
+  };
 }
 
 module.exports = {
   authenticate,
   register,
+  getCurrent,
   getClients,
   blockClient,
   unblockClient,
