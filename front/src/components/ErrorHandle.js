@@ -1,9 +1,7 @@
 import React from "react";
-import { connect } from "react-redux";
 import { Snackbar, withStyles } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import { clearError } from "../actions/events.actions";
 
 function ErrorHandle(props) {
   const { classes } = props;
@@ -38,13 +36,4 @@ const styles = theme => ({
   }
 });
 
-const mapStateToProps = state => ({
-  error: state.events.error
-});
-
-export default withStyles(styles)(
-  connect(
-    mapStateToProps,
-    { clearError }
-  )(ErrorHandle)
-);
+export default withStyles(styles)(ErrorHandle);

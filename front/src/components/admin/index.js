@@ -1,11 +1,9 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import { Formik } from "formik";
 import { string, object } from "yup";
 import { withStyles } from "@material-ui/core/styles";
 import indigo from "@material-ui/core/colors/indigo";
 import { TextField, Button, Typography } from "@material-ui/core";
-import { signInAdmin } from "../../actions/auth.actions";
 
 const validationSchema = object().shape({
   username: string()
@@ -125,11 +123,4 @@ const styles = theme => ({
   }
 });
 
-const AdminContainer = connect(
-  null,
-  {
-    signInAdmin
-  }
-)(Admin);
-
-export default withStyles(styles)(AdminContainer);
+export default withStyles(styles)(Admin);

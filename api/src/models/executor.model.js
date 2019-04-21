@@ -91,6 +91,8 @@ var schema = new mongoose.Schema(
         "The city can contain only english letters, -, numbers and must be between 3 and 12 characters"
       ]
     },
+    logoUrl: { type: String },
+    logoName: { type: String },
     workingDays: {
       0: { type: Boolean, required: true, default: false },
       1: { type: Boolean, required: true, default: false },

@@ -1,5 +1,5 @@
 import React from "react";
-import BookingCard from "./BookingCard";
+import BookingCard from "../../../../containers/profile/bookings/BookingCardContainer";
 
 const BookingList = ({ bookings }) => {
   if (!bookings["0"]) {

@@ -1,10 +1,9 @@
 import React from "react";
-import { connect } from "react-redux";
-import UserProfile from "./UserProfile";
-import ExecutorProfile from "./ExecutorProfile";
-import AdminProfile from "./AdminProfile";
+import UserProfile from "../../containers/profile/UserProfileContainer";
+import ExecutorProfile from "../../containers/profile/ExecutorProfileContainer";
+import AdminProfile from "../../containers/profile/AdminProfileContainer";
 
-function Profile(props) {
+export default function Profile(props) {
   if (props.role === "user") {
     return <UserProfile />;
   } else if (props.role === "executor") {
@@ -13,9 +12,3 @@ function Profile(props) {
     return <AdminProfile />;
   }
 }
-
-const mapStateToProps = state => ({
-  role: state.profile.role
-});
-
-export default connect(mapStateToProps)(Profile);

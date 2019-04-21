@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -10,13 +9,8 @@ import {
   DialogTitle,
   DialogContent,
   TextField,
-  DialogActions,
+  DialogActions
 } from "@material-ui/core";
-import {
-  acceptBook,
-  cancelBook,
-  confirmBook
-} from "../../../../../actions/auth.actions";
 
 class BookingCard extends Component {
   constructor(props) {
@@ -37,15 +31,15 @@ class BookingCard extends Component {
   };
 
   handleChangeReason = event => {
-    this.setState({ reason: event.target.value })
-  }
+    this.setState({ reason: event.target.value });
+  };
 
   handleAcceptBook = () => {
     this.props.acceptBook({
       orderId: this.props.booking._id,
       query: this.props.search
     });
-  }
+  };
 
   handleCancelBook = () => {
     if (this.props.role === "user") {
@@ -56,7 +50,7 @@ class BookingCard extends Component {
     } else if (this.props.role === "executor") {
       this.handleClickOpen();
     }
-  }
+  };
 
   handleCancelBookExecutor = () => {
     this.props.cancelBook({
@@ -65,14 +59,14 @@ class BookingCard extends Component {
       reason: this.state.reason
     });
     this.handleClose();
-  }
+  };
 
   handleConfirmBook = () => {
     this.props.confirmBook({
       orderId: this.props.booking._id,
       query: this.props.search
     });
-  }
+  };
 
   render() {
     const { classes, booking } = this.props;
@@ -275,12 +269,4 @@ const styles = theme => ({
   }
 });
 
-const mapStateToProps = state => ({
-  role: state.profile.role,
-  search: state.router.location.search
-});
-
-export default connect(
-  mapStateToProps,
-  { acceptBook, cancelBook, confirmBook }
-)(withStyles(styles)(BookingCard));
+export default withStyles(styles)(BookingCard);

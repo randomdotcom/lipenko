@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 24px 12px;
+  padding: 12px 0;
+}
+
+.label {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  margin-right: 12px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  width: 100%;
+  color: #929292;
+  font-size: 60pt;
+}

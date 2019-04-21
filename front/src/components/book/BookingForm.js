@@ -1,5 +1,4 @@
 import React from "react";
-import { connect } from "react-redux";
 import { Field } from "formik";
 import { Link } from "react-router-dom";
 import { TextField, Button, Typography } from "@material-ui/core";
@@ -11,10 +10,6 @@ import {
   TimePicker,
   MuiPickersUtilsProvider
 } from "material-ui-pickers";
-import {
-  resetSelectedCompany,
-  calculateTimePrice
-} from "../../actions/order.actions";
 
 function BookingForm(props) {
   const {
@@ -365,18 +360,4 @@ const styles = theme => ({
   }
 });
 
-const mapStateToProps = state => ({
-  company: state.order.company ? state.order.company : undefined,
-  isAuthenticated: state.profile.isAuthenticated,
-  availableWorkingDays: state.order.company
-    ? state.order.availableWorkingDays
-    : undefined,
-  typesOfCleaning: state.order.typesOfCleaning,
-  price: state.order.price ? state.order.price : undefined,
-  time: state.order.time ? state.order.time : undefined
-});
-
-export default connect(
-  mapStateToProps,
-  { resetSelectedCompany, calculateTimePrice }
-)(withStyles(styles)(BookingForm));
+export default withStyles(styles)(BookingForm);

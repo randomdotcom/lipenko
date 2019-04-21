@@ -3,8 +3,6 @@ import { withStyles } from "@material-ui/core/styles";
 import { Button, TextField } from "@material-ui/core";
 import { Formik } from "formik";
 import { string, object } from "yup";
-import { connect } from "react-redux";
-import { editUser, changePasswordUser } from "../../../actions/auth.actions";
 
 const validationEditProfile = object().shape({
   username: string()
@@ -260,15 +258,4 @@ const styles = theme => ({
   }
 });
 
-const mapStateToProps = state => ({
-  role: state.profile.role,
-  username: state.profile.data.username,
-  adress: state.profile.data.adress,
-  email: state.profile.data.email,
-  phoneNumber: state.profile.data.phoneNumber
-});
-
-export default connect(
-  mapStateToProps,
-  { editUser, changePasswordUser }
-)(withStyles(styles)(UserProfileEdit));
+export default withStyles(styles)(UserProfileEdit);

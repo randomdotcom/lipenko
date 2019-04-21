@@ -1,11 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import { Typography, Button, Paper, Avatar } from "@material-ui/core";
-import { connect } from "react-redux";
 import LogOutButton from "./LogOutButton";
-import { Link } from "react-router-dom";
 
-function UserProfile(props) {
+function ExecutorProfile(props) {
   const { classes } = props;
   return (
     <div className={classes.root}>
@@ -15,7 +14,7 @@ function UserProfile(props) {
             <p>{props.username}</p>
             <Avatar
               alt="Avatar"
-              src="https://static.espreso.tv/uploads/article/2596219/images/im578x383-avatar-neytiri-sad.jpg"
+              src={props.logoUrl ? props.logoUrl : process.env.REACT_APP_API_URL + 'company.jpg'}
               className={classes.bigAvatar}
             />
           </Paper>
@@ -40,7 +39,7 @@ function UserProfile(props) {
         </div>
         <div className={classes.InfoAndLogOutButton}>
           <div className={classes.logOutButton}>
-            <LogOutButton />
+            <LogOutButton handleClick={props.signOut} />
           </div>
           <div className={classes.profileInfo}>
             <Typography>
@@ -163,34 +162,4 @@ const styles = theme => ({
   }
 });
 
-const mapStateToProps = state => ({
-  role: state.profile.role,
-  username: state.profile.data.username,
-  city: state.profile.data.city,
-  email: state.profile.data.email,
-  phoneNumber: state.profile.data.phoneNumber,
-  companyName: state.profile.data.companyName,
-  description: state.profile.data.description,
-  standartSmallRoom:
-    state.profile.data.typesOfCleaning.standart.standartSmallRoom,
-  standartBigRoom: state.profile.data.typesOfCleaning.standart.standartBigRoom,
-  standartBathRoom:
-    state.profile.data.typesOfCleaning.standart.standartBathRoom,
-  generalBigRoom: state.profile.data.typesOfCleaning.general.generalBigRoom,
-  generalSmallRoom: state.profile.data.typesOfCleaning.general.generalSmallRoom,
-  generalBathRoom: state.profile.data.typesOfCleaning.general.generalBathRoom,
-  afterRepairBigRoom:
-    state.profile.data.typesOfCleaning.afterRepair.afterRepairBigRoom,
-  afterRepairSmallRoom:
-    state.profile.data.typesOfCleaning.afterRepair.afterRepairSmallRoom,
-  afterRepairBathRoom:
-    state.profile.data.typesOfCleaning.afterRepair.afterRepairBathRoom,
-  bigCarpet: state.profile.data.typesOfCleaning.carpet.bigCarpet,
-  smallCarpet: state.profile.data.typesOfCleaning.carpet.smallCarpet,
-  office: state.profile.data.typesOfCleaning.office,
-  industrial: state.profile.data.typesOfCleaning.industrial,
-  furniture: state.profile.data.typesOfCleaning.furniture,
-  pool: state.profile.data.typesOfCleaning.pool
-});
-
-export default connect(mapStateToProps)(withStyles(styles)(UserProfile));
+export default withStyles(styles)(ExecutorProfile);

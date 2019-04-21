@@ -1,18 +1,12 @@
 import React, { Component } from "react";
 import List from "@material-ui/core/List";
 import { withStyles } from "@material-ui/core";
-import PagePicker from "./PagePicker";
-import { connect } from "react-redux";
-import {
-  loadCustomers,
-  changeFiltersCustomers
-} from "../../../actions/admin.actions";
+import PagePicker from "../../common/PagePicker";
 import CustomersList from "./CustomersList";
-import Filters from "./Filters";
+import Filters from "../../../containers/admin/CustomersListPage/FiltersContainer";
 
 class Customers extends Component {
   componentDidMount() {
-    console.log("dsdss");
     this.props.loadCustomers(this.props.search);
   }
 
@@ -82,16 +76,4 @@ const styles = theme => ({
   }
 });
 
-const mapStateToProps = state => ({
-  customers: state.admin.customers ? state.admin.customers.docs : undefined,
-  total: state.admin.customers ? state.admin.customers.total : undefined,
-  page: state.admin.customers ? state.admin.customers.page : undefined,
-  limit: state.admin.customers ? state.admin.customers.limit : undefined,
-  search: state.router.location.search,
-  pathname: state.router.location.pathname
-});
-
-export default connect(
-  mapStateToProps,
-  { loadCustomers, changeFiltersCustomers }
-)(withStyles(styles)(Customers));
+export default withStyles(styles)(Customers);

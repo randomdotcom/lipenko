@@ -9,8 +9,10 @@ import {
   CHANGE_PASSWORD_EXECUTOR,
   executorPasswordChanged,
   ACCEPT_BOOK,
-  bookAccepted
-} from "../actions/auth.actions";
+  bookAccepted,
+  UPLOAD_LOGO,
+  logoUploaded
+} from "../actions/executor.actions";
 import { loadBookings } from "../actions/bookings.actions";
 import { returnError, returnEvent } from "../actions/events.actions";
 import { getAuthHeader } from "../services/jwtHeader";
@@ -25,6 +27,35 @@ export function* watchEditMainInfoExecutor() {
       yield put(push("/profile"));
       yield put(returnEvent("Your profile is changed"));
     } catch (error) {
+      yield put(returnError(error.response.data));
+    }
+  });
+}
+
+export function* watchUploadLogoExecutor() {
+  yield takeLeading(UPLOAD_LOGO, function*({ payload }) {
+    try {
+      const data = new FormData();
+      data.append("logo", payload);
+
+      const headers = getAuthHeader();
+      const response = yield call(
+        axios.put,
+        "/api/companies/edit/uploadLogo",
+        data,
+        {
+          headers: {
+            ...headers,
+            "Content-Type": "multipart/form-data"
+          }
+        }
+      );
+
+      const { logoUrl, logoName } = response.data;
+      yield put(logoUploaded({ logoUrl, logoName }));
+      yield put(returnEvent("Your logo is uploaded!"));
+    } catch (error) {
+      console.log(error);
       yield put(returnError(error.response.data));
     }
   });

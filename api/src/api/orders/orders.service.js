@@ -149,7 +149,7 @@ async function createOrder({
     order.save(err => {
       if (err) reject(err);
 
-      resolve({email: executor.email, orderId});
+      resolve({ email: executor.email });
     });
   });
 }
@@ -170,7 +170,6 @@ async function getOrders(
     type
   }
 ) {
-  
   const id = user.id;
   const role = user.role;
 

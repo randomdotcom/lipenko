@@ -1,16 +1,13 @@
 import React, { Component } from "react";
 import List from "@material-ui/core/List";
 import { withStyles } from "@material-ui/core";
-import PagePicker from "./PagePicker";
-import { connect } from "react-redux";
-import {
-  loadCompanies,
-  changeFiltersCompanies
-} from "../../actions/companies.actions";
+import PagePicker from "../common/PagePicker";
 import CompaniesList from "./CompaniesList";
-import Filters from "./Filters";
-import Search from "./Search";
-import Sort from "./Sort";
+import Filters from "../../containers/companies/FiltersContainer";
+import Search from "../../containers/companies/SearchContainer";
+import Sort from "../../containers/companies/SortContainer";
+import Loading from "../common/Loading";
+import "./styles.css";
 
 class Companies extends Component {
   componentDidMount() {
@@ -34,13 +31,18 @@ class Companies extends Component {
     return (
       <div className={classes.root}>
         <Search />
-        <div className={classes.listAndFilters}>
+        <div className='listAndFilters'>
           <div className={classes.sortAndList}>
             <Sort />
             <List className={classes.list}>
-              {this.props.companies ? (
-                <CompaniesList companies={this.props.companies} role={this.props.role} />
-              ) : null}
+              {!!this.props.companies ? (
+                <CompaniesList
+                  companies={this.props.companies}
+                  role={this.props.role}
+                />
+              ) : (
+                <Loading />
+              )}
             </List>
           </div>
           <Filters />
@@ -65,8 +67,7 @@ const styles = theme => ({
     paddingTop: 8
   },
   listAndFilters: {
-    display: "flex",
-    justifyContent: "space-between"
+    
   },
   list: {
     width: "100%",
@@ -80,16 +81,4 @@ const styles = theme => ({
   }
 });
 
-const mapStateToProps = state => ({
-  companies: state.companies.docs,
-  total: state.companies.total,
-  page: state.companies.page,
-  limit: state.companies.limit,
-  search: state.router.location.search,
-  pathname: state.router.location.pathname
-});
-
-export default connect(
-  mapStateToProps,
-  { loadCompanies, changeFiltersCompanies }
-)(withStyles(styles)(Companies));
+export default withStyles(styles)(Companies);

@@ -1,6 +1,6 @@
 export function calculatePrice({ values, typesOfCleaning }) {
   let price;
-  console.log(typesOfCleaning)
+  console.log(typesOfCleaning);
   if ((values.type === "office") | (values.type === "industrial")) {
     price = values.squareMeters * typesOfCleaning[`${values.type}`];
   } else {
@@ -12,7 +12,7 @@ export function calculatePrice({ values, typesOfCleaning }) {
       values.bathRooms *
         typesOfCleaning[`${values.type}`][`${values.type}BathRoom`];
   }
-  console.log('1')
+  console.log("1");
   if (values.service.indexOf("pool") !== -1) price += typesOfCleaning.pool;
   if (values.service.indexOf("furniture") !== -1)
     price += typesOfCleaning.furniture;

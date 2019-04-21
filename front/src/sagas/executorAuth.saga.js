@@ -18,10 +18,9 @@ import {
   CONFIRM_EXECUTOR,
   executorConfirmSuccess,
   EXECUTOR_NEW_VERIFICATION_CODE,
-  executorNewVerificationCodeSuccess,
-  SIGNOUT,
-  signOutSuccess
-} from "../actions/auth.actions";
+  executorNewVerificationCodeSuccess
+} from "../actions/executorAuth.actions";
+import { SIGNOUT, signOutSuccess } from "../actions/common.actions";
 import { returnError, returnEvent } from "../actions/events.actions";
 
 export function* watchExecutorSignUpSaga() {

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -13,10 +12,6 @@ import {
   DialogActions,
   TextField
 } from "@material-ui/core";
-import {
-  blockCustomer,
-  unblockCustomer
-} from "../../../../../actions/admin.actions";
 
 class CustomerCard extends Component {
   constructor(props) {
@@ -160,11 +155,4 @@ const styles = theme => ({
   }
 });
 
-const mapStateToProps = state => ({
-  search: state.router.location.search
-});
-
-export default connect(
-  mapStateToProps,
-  { unblockCustomer, blockCustomer }
-)(withStyles(styles)(CustomerCard));
+export default withStyles(styles)(CustomerCard);

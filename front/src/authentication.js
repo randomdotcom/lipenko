@@ -1,9 +1,7 @@
-import {
-  userSignInSuccess,
-  executorSignInSuccess,
-  adminSignInSuccess,
-  loadProfile
-} from "./actions/auth.actions";
+import { userSignInSuccess } from "./actions/userAuth.actions";
+import { executorSignInSuccess } from "./actions/executorAuth.actions";
+import { adminSignInSuccess } from "./actions/adminAuth.actions";
+import { loadProfile } from "./actions/common.actions";
 
 const AUTH_TOKEN_KEY = "auth token";
 const USER_KEY = "user";
@@ -25,7 +23,7 @@ export const initializePreviousToken = store => {
 
 export const storeToken = data => {
   const { token, ...user } = data;
-  
+
   localStorage.setItem(AUTH_TOKEN_KEY, token);
   localStorage.setItem(USER_KEY, JSON.stringify(user));
 };

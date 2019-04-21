@@ -1,20 +1,25 @@
+import { SIGNOUT_SUCCESS, PROFILE_LOADED } from "../actions/common.actions";
 import {
   USER_SIGNIN_SUCCESS,
   USER_SIGNIN_NEED_CONFIRM,
   USER_SIGNUP_SUCCESS,
-  SIGNOUT_SUCCESS,
-  USER_CONFIRM_SUCCESS,
-  USER_EDITED,
+  USER_CONFIRM_SUCCESS
+} from "../actions/userAuth.actions";
+import { USER_EDITED } from "../actions/user.actions";
+import {
   EXECUTOR_SIGNIN_SUCCESS,
   EXECUTOR_SIGNIN_NEED_CONFIRM,
   EXECUTOR_SIGNUP_SUCCESS,
-  EXECUTOR_CONFIRM_SUCCESS,
+  EXECUTOR_CONFIRM_SUCCESS
+} from "../actions/executorAuth.actions";
+import {
   EXECUTOR_TOC_EDITED,
   EXECUTOR_MAIN_INFO_EDITED,
-  ADMIN_SIGNIN_SUCCESS,
-  ADMIN_EDITED,
-  PROFILE_LOADED
-} from "../actions/auth.actions";
+  LOGO_UPLOADED
+} from "../actions/executor.actions";
+import { ADMIN_SIGNIN_SUCCESS } from "../actions/adminAuth.actions";
+import { ADMIN_EDITED } from "../actions/admin.actions";
+
 import { BOOKINGS_LOADED } from "../actions/bookings.actions";
 
 const initialState = {
@@ -22,19 +27,11 @@ const initialState = {
   isSended: false,
   role: "",
   data: {},
-  bookings: {
-    docs: {}
-  }
+  bookings: {}
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    // case USER_LOADED: {
-    //   const user = action.payload;
-    //   // user.orders.forEach(o => (o.date = new Date(o.date))); // преобр даты?
-
-    //   return { ...state, ...user };
-    // }
     case ADMIN_SIGNIN_SUCCESS: {
       const user = action.payload.user;
       return {
@@ -51,7 +48,6 @@ export default (state = initialState, action) => {
     }
     case USER_SIGNIN_SUCCESS:
     case USER_CONFIRM_SUCCESS: {
-      console.log(action.payload)
       const user = action.payload.user;
       return {
         ...state,
@@ -105,7 +101,8 @@ export default (state = initialState, action) => {
           city: user.city,
           companyName: user.companyName,
           description: user.description,
-          typesOfCleaning: user.typesOfCleaning
+          typesOfCleaning: user.typesOfCleaning,
+          logoUrl: user.logoUrl
         }
       };
     }
@@ -165,6 +162,17 @@ export default (state = initialState, action) => {
         role: role,
         data: {
           ...user
+        }
+      };
+    }
+    case LOGO_UPLOADED: {
+      const { logoUrl, logoName } = action.payload;
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          logoUrl,
+          logoName
         }
       };
     }

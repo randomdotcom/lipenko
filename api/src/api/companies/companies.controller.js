@@ -136,6 +136,15 @@ module.exports.editMain = (req, res, next) => {
     .catch(err => res.status(httpStatus.CONFLICT).send(err.message));
 };
 
+module.exports.uploadLogo = (req, res, next) => {
+  service
+    .uploadLogo(req.user.id, req.files)
+    .then(data => {
+      res.status(httpStatus.OK).json(data);
+    })
+    .catch(err => res.status(httpStatus.CONFLICT).send(err.message));
+};
+
 module.exports.editTypesOfCleaning = (req, res, next) => {
   service
     .editTypesOfCleaning(req.user.id, req.body)

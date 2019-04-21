@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import { Formik } from "formik";
 import { string, object } from "yup";
 import { withStyles } from "@material-ui/core/styles";
@@ -10,15 +9,6 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import VerificationCodeField from "../VerificationCodeField";
-import {
-  signInUser,
-  confirmUser,
-  userNewVerificationCode,
-  executorNewVerificationCode,
-  signInExecutor,
-  authSocial
-} from "../../../actions/auth.actions";
-import { returnError } from "../../../actions/events.actions";
 import GoogleAuthButton from "./GoogleAuthButton";
 
 const validationSchema = object().shape({
@@ -246,22 +236,4 @@ const styles = theme => ({
   }
 });
 
-const mapStateToProps = state => ({
-  isSended: state.profile.isSended,
-  username: state.profile.data ? state.profile.data.username : undefined
-});
-
-const SignInContainer = connect(
-  mapStateToProps,
-  {
-    signInExecutor,
-    signInUser,
-    confirmUser,
-    userNewVerificationCode,
-    executorNewVerificationCode,
-    authSocial,
-    returnError
-  }
-)(SignIn);
-
-export default withStyles(styles)(SignInContainer);
+export default withStyles(styles)(SignIn);

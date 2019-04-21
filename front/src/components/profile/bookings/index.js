@@ -1,16 +1,12 @@
 import React, { Component } from "react";
 import List from "@material-ui/core/List";
 import { withStyles } from "@material-ui/core";
-import PagePicker from "./PagePicker";
-import { connect } from "react-redux";
-import {
-  loadBookings,
-  changeFiltersBookings
-} from "../../../actions/bookings.actions";
+import PagePicker from "../../common/PagePicker";
 import BookingsList from "./BookingsList";
-import Filters from "./Filters";
-import Search from "./Search";
-import Sort from "./Sort";
+import Filters from "../../../containers/profile/bookings/FiltersContainer";
+import Search from "../../../containers/profile/bookings/SearchContainer";
+import Sort from "../../../containers/profile/bookings/SortContainer";
+import Loading from "../../common/Loading";
 
 class Bookings extends Component {
   componentDidMount() {
@@ -40,7 +36,9 @@ class Bookings extends Component {
             <List className={classes.list}>
               {this.props.bookings ? (
                 <BookingsList bookings={this.props.bookings} />
-              ) : null}
+              ) : (
+                <Loading />
+              )}
             </List>
           </div>
           <Filters />
@@ -80,16 +78,4 @@ const styles = theme => ({
   }
 });
 
-const mapStateToProps = state => ({
-  bookings: state.profile.bookings ? state.profile.bookings.docs : undefined,
-  total: state.profile.bookings ? state.profile.bookings.total : undefined,
-  page: state.profile.bookings ? state.profile.bookings.page : undefined,
-  limit: state.profile.bookings ? state.profile.bookings.limit : undefined,
-  search: state.router.location.search,
-  pathname: state.router.location.pathname
-});
-
-export default connect(
-  mapStateToProps,
-  { loadBookings, changeFiltersBookings }
-)(withStyles(styles)(Bookings));
+export default withStyles(styles)(Bookings);

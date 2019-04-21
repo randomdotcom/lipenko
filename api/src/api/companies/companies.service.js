@@ -1,13 +1,12 @@
 const { createToken } = require("../../config/passport");
 const Executor = require("../../models/executor.model");
 const Review = require("../../models/review.model");
-
+const { uploadImage } = require("../../services/images");
 const {
   sendExecutorConfirmationMessage,
   sendProfileBlockMessage,
   sendProfileUnblockMessage
 } = require("../../config/nodemailer");
-
 var randtoken = require("rand-token");
 
 async function authenticate({ username, password }) {
@@ -242,7 +241,7 @@ async function getCompanies({
     page: parseInt(page, 10) || 1,
     limit: parseInt(perPage, 10) || 10,
     select:
-      "companyName description city rating typesOfCleaning workingDays popularity isBlocked blockReason isVerified",
+      "companyName description city rating typesOfCleaning workingDays popularity isBlocked blockReason isVerified logoUrl",
     sort
   };
 
@@ -316,7 +315,9 @@ async function rateCompany(userId, data, companyId) {
     customer: userId,
     executor: companyId
   });
-  const company = await Executor.findById(companyId);
+  const company = await Executor.findById(companyId)
+    .select("+password")
+    .exec();
 
   if (!company) throw new Error("Company is not found");
 
@@ -342,8 +343,7 @@ async function rateCompany(userId, data, companyId) {
 
   const rating = parseFloat(ratingSum / reviews.length).toFixed(2);
 
-  company.rating = rating;
-  await company.save();
+  await Executor.findByIdAndUpdate(companyId, { $set: { rating } });
 
   return rating;
 }
@@ -386,6 +386,21 @@ async function editMainInfoProfile(userId, data) {
     companyName: data.companyName,
     description: data.description
   });
+}
+
+async function uploadLogo(userId, files) {
+  if (!files) throw new Error("File upload is failed");
+  let logoName, logoUrl;
+
+  if (files.logo) {
+    await uploadImage(files.logo).then(image => {
+      logoUrl = image.logoUrl;
+      logoName = image.logoName;
+    });
+  }
+
+  await Executor.findByIdAndUpdate(userId, { $set: { logoName, logoUrl } });
+  return { logoUrl, logoName };
 }
 
 async function newPassword(userId, data) {
@@ -491,6 +506,7 @@ module.exports = {
   rateCompany,
   getReviews,
   editMainInfoProfile,
+  uploadLogo,
   editTypesOfCleaning,
   newPassword,
   getCompanyById,

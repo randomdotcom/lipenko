@@ -1,8 +1,8 @@
 import React from "react";
-import CustomerCard from "./CustomerCard";
+import CustomerCard from "../../../../containers/admin/CustomersListPage/CustomerCardContainer";
 
 const CustomersList = ({ customers }) => {
-  if (!customers['0']) {
+  if (!customers["0"]) {
     return <p>Customers are not found</p>;
   } else {
     return customers.map(customer => (

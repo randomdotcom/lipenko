@@ -1,9 +1,8 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import { Typography, Avatar, Button, Paper } from "@material-ui/core";
-import { connect } from 'react-redux'
-import LogOutButton from './LogOutButton'
-import { Link } from 'react-router-dom'
+import LogOutButton from "./LogOutButton";
 
 function UserProfile(props) {
   const { classes } = props;
@@ -13,14 +12,34 @@ function UserProfile(props) {
         <div className={classes.AvatarAndEdit}>
           <Paper className={classes.AvatarAndUsername}>
             <p className={classes.username}>{props.username}</p>
-            <Avatar alt="Avatar" src="https://static.espreso.tv/uploads/article/2596219/images/im578x383-avatar-neytiri-sad.jpg" className={classes.bigAvatar} />
+            <Avatar
+              alt="Avatar"
+              src="https://static.espreso.tv/uploads/article/2596219/images/im578x383-avatar-neytiri-sad.jpg"
+              className={classes.bigAvatar}
+            />
           </Paper>
-          <Button component={Link} to="/profile/edit" className={classes.editButton} variant="contained" color="secondary">edit</Button>
-          <Button component={Link} to="/profile/bookings" className={classes.editButton} variant="contained" color="primary">my bookings</Button>
+          <Button
+            component={Link}
+            to="/profile/edit"
+            className={classes.editButton}
+            variant="contained"
+            color="secondary"
+          >
+            edit
+          </Button>
+          <Button
+            component={Link}
+            to="/profile/bookings"
+            className={classes.editButton}
+            variant="contained"
+            color="primary"
+          >
+            my bookings
+          </Button>
         </div>
         <div className={classes.InfoAndLogOutButton}>
           <div className={classes.logOutButton}>
-          <LogOutButton />
+            <LogOutButton handleClick={props.signOut} />
           </div>
           <div className={classes.profileInfo}>
             <Typography>
@@ -48,7 +67,7 @@ const styles = theme => ({
     backgroundColor: "whitesmoke",
     boxShadow: "0 1px 7px 1px rgba(0, 0, 0, .25)",
     padding: 25,
-    fontSize: '1.2rem'
+    fontSize: "1.2rem"
   },
   bigAvatar: {
     width: 160,
@@ -59,45 +78,37 @@ const styles = theme => ({
     marginBottom: 10
   },
   profileInfo: {
-    marginLeft: 20,
+    marginLeft: 20
   },
   logOutButton: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    width: '100%'
+    display: "flex",
+    justifyContent: "flex-end",
+    width: "100%"
   },
   InfoAndLogOutButton: {
-    width: '100%'
+    width: "100%"
   },
   AvatarAndUsername: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
     paddingLeft: 15,
     paddingBottom: 15,
-    paddingRight: 15,
+    paddingRight: 15
   },
   AvatarAndEdit: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
   },
   editButton: {
     marginTop: 10,
-    width: '100%',
-    fontWeight: 'bold'
+    width: "100%",
+    fontWeight: "bold"
   },
   AvatarAndInfo: {
-    display: 'flex',
+    display: "flex"
   }
-})
-
-const mapStateToProps = state => ({
-  role: state.profile.role,
-  username: state.profile.data.username,
-  adress: state.profile.data.adress,
-  email: state.profile.data.email,
-  phoneNumber: state.profile.data.phoneNumber
 });
 
-export default connect(mapStateToProps)(withStyles(styles)(UserProfile))
+export default withStyles(styles)(UserProfile);

@@ -2,20 +2,19 @@ import axios from "axios";
 import { push } from "connected-react-router";
 import { call, put, take, takeLeading, takeEvery } from "redux-saga/effects";
 import { storeToken, clearToken } from "../authentication";
+import { SIGNOUT, signOutSuccess } from "../actions/common.actions";
 import {
   SIGNIN_USER,
   userSignInSuccess,
   userSignInNeedConfirm,
   SIGNUP_USER,
   userSignUpSuccess,
-  SIGNOUT,
-  signOutSuccess,
   CONFIRM_USER,
   userConfirmSuccess,
   USER_NEW_VERIFICATION_CODE,
   userNewVerificationCodeSuccess,
   AUTH_SOCIAL
-} from "../actions/auth.actions";
+} from "../actions/userAuth.actions";
 import { returnError, returnEvent } from "../actions/events.actions";
 
 export function* watchUserSignUpSaga() {

@@ -1,7 +1,7 @@
 import { COMPANIES_LOADED } from "../actions/companies.actions";
 
 const initialState = {
-  docs: {}
+
 }
 
 export default (state = initialState, action) => {

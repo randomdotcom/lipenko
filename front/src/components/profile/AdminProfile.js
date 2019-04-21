@@ -1,11 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import { Typography, Button, Paper, Avatar } from "@material-ui/core";
-import { connect } from 'react-redux'
-import LogOutButton from './LogOutButton'
-import {Link} from 'react-router-dom'
+import LogOutButton from "./LogOutButton";
 
-function UserProfile(props) {
+function AdminProfile(props) {
   const { classes } = props;
   return (
     <div className={classes.root}>
@@ -13,14 +12,34 @@ function UserProfile(props) {
         <div className={classes.AvatarAndEdit}>
           <Paper className={classes.AvatarAndUsername}>
             <p>{props.username}</p>
-            <Avatar alt="Avatar" src="https://static.espreso.tv/uploads/article/2596219/images/im578x383-avatar-neytiri-sad.jpg" className={classes.bigAvatar} />
+            <Avatar
+              alt="Avatar"
+              src="https://static.espreso.tv/uploads/article/2596219/images/im578x383-avatar-neytiri-sad.jpg"
+              className={classes.bigAvatar}
+            />
           </Paper>
-          <Button component={Link} to="/profile/edit" className={classes.button} variant="contained" color="secondary">edit</Button>
-          <Button component={Link} to="/admin/customers" className={classes.button} variant="outlined" color="primary">customers list</Button>
+          <Button
+            component={Link}
+            to="/profile/edit"
+            className={classes.button}
+            variant="contained"
+            color="secondary"
+          >
+            edit
+          </Button>
+          <Button
+            component={Link}
+            to="/admin/customers"
+            className={classes.button}
+            variant="outlined"
+            color="primary"
+          >
+            customers list
+          </Button>
         </div>
         <div className={classes.InfoAndLogOutButton}>
           <div className={classes.logOutButton}>
-            <LogOutButton />
+            <LogOutButton handleClick={props.signOut} />
           </div>
           <div className={classes.profileInfo}>
             <Typography>
@@ -48,43 +67,37 @@ const styles = theme => ({
     height: 160
   },
   profileInfo: {
-    marginLeft: 20,
+    marginLeft: 20
   },
   logOutButton: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    width: '100%'
+    display: "flex",
+    justifyContent: "flex-end",
+    width: "100%"
   },
   InfoAndLogOutButton: {
-    width: '100%'
+    width: "100%"
   },
   AvatarAndUsername: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
     paddingLeft: 15,
     paddingBottom: 15,
-    paddingRight: 15,
+    paddingRight: 15
   },
   AvatarAndEdit: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
   },
   button: {
     marginTop: 10,
-    width: '100%',
-    fontWeight: 'bold'
+    width: "100%",
+    fontWeight: "bold"
   },
   AvatarAndInfo: {
-    display: 'flex',
+    display: "flex"
   }
-})
-
-const mapStateToProps = state => ({
-  role: state.profile.role,
-  username: state.profile.data.username,
-  email: state.profile.data.email,
 });
 
-export default connect(mapStateToProps)(withStyles(styles)(UserProfile))
+export default withStyles(styles)(AdminProfile);

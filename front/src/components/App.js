@@ -1,25 +1,24 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import { Route, Switch, Redirect } from "react-router-dom";
-import Admin from "./admin";
-import Auth from "./auth";
-import ConfirmEmailContainer from "./auth/ConfirmEmailContainer";
-import Companies from "./companies";
-import Company from "./companies/CompanyPage";
-import Profile from "./profile";
-import ProfileEdit from "./profile/edit"; 
+import Admin from "../containers/admin";
+import Auth from "../containers/auth";
+import ConfirmEmailContainer from "../containers/auth/ConfirmEmailContainer";
+import Companies from "../containers/companies";
+import Company from "../containers/companyPage";
+import Profile from "../containers/profile";
+import ProfileEdit from "../containers/profile/edit";
 import NotFound from "./NotFound";
 import withMainLayout from "../routes/MainRoute";
 import PrivateRoute from "../routes/PrivateRoute";
 import AdminRoute from "../routes/AdminRoute";
-import Book from "./book";
+import Book from "../containers/book";
 import NotAuthRoute from "../routes/NotAuthRoute";
-import Bookings from "./profile/bookings";
-import ErrorHandle from "./ErrorHandle";
-import EventHandle from "./EventHandle";
-import CustomersList from "./admin/CustomersListPage";
+import Bookings from "../containers/profile/bookings";
+import ErrorHandle from "../containers/ErrorHandleContainer";
+import EventHandle from "../containers/EventHandleContainer";
+import CustomersList from "../containers/admin/CustomersListPage";
 
-class App extends Component {
+export default class App extends Component {
   MainRedirect = () => <Redirect to="/companies" />;
 
   render() {
@@ -86,10 +85,3 @@ class App extends Component {
     );
   }
 }
-
-const mapStateToProps = state => ({
-  isAuthenticated: state.profile.isAuthenticated,
-  role: state.profile.role
-});
-
-export default connect(mapStateToProps)(App);

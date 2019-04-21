@@ -1,5 +1,5 @@
 import React from "react";
-import Main from "../components/main";
+import Main from "../containers/HeaderContainer";
 
 const withMainLayout = Component => props => {
   return (

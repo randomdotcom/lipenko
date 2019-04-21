@@ -3,8 +3,6 @@ import { withStyles } from "@material-ui/core/styles";
 import { Button, TextField } from "@material-ui/core";
 import { Formik } from "formik";
 import { string, object } from "yup";
-import { connect } from "react-redux";
-import { editAdmin, changePasswordAdmin } from "../../../actions/auth.actions";
 
 const validationEditProfile = object().shape({
   username: string()
@@ -38,7 +36,7 @@ const validationNewPassword = object().shape({
     .matches(/^[\S]{5,18}$/, "The password cannot contain spaces"),
   confirmNewPassword: string()
     .required("Enter your password again")
-    .test("passwords-match", "Passwords must match ya fool", function (value) {
+    .test("passwords-match", "Passwords must match ya fool", function(value) {
       return this.parent.newPassword === value;
     })
 });
@@ -51,10 +49,7 @@ class AdminProfileEdit extends Component {
         <Formik
           initialValues={{ username, email }}
           validationSchema={validationEditProfile}
-          onSubmit={(
-            { username, email },
-            { setFieldError }
-          ) => {
+          onSubmit={({ username, email }, { setFieldError }) => {
             try {
               this.props.editAdmin({ username, email });
             } catch (errors) {
@@ -222,15 +217,4 @@ const styles = theme => ({
   }
 });
 
-const mapStateToProps = state => ({
-  role: state.profile.role,
-  username: state.profile.data.username,
-  adress: state.profile.data.adress,
-  email: state.profile.data.email,
-  phoneNumber: state.profile.data.phoneNumber
-});
-
-export default connect(
-  mapStateToProps,
-  { editAdmin, changePasswordAdmin }
-)(withStyles(styles)(AdminProfileEdit));
+export default withStyles(styles)(AdminProfileEdit);

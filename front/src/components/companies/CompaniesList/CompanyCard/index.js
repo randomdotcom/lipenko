@@ -13,7 +13,7 @@ function CompanyCard(props) {
       <ListItem alignItems="flex-start">
         <Avatar
           alt="Logo"
-          src="http://tabakup.by/wp-content/uploads/2018/10/logo-klining.jpg"
+          src={company.logoUrl ? company.logoUrl : process.env.REACT_APP_API_URL + 'public/company.jpg'}
           className={classes.logo}
         />
         <ListItemText

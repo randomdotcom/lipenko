@@ -3,11 +3,11 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { ConnectedRouter as Router } from "connected-react-router";
 import axios from "axios";
-import App from "./components/App";
+import App from "./containers/AppContainer";
 import * as serviceWorker from "./serviceWorker";
 import store, { history } from "./redux";
 import { initializePreviousToken } from "./authentication";
-import './index.css'
+import "./index.css";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 initializePreviousToken(store);
@@ -15,7 +15,7 @@ initializePreviousToken(store);
 ReactDOM.render(
   <Provider store={store}>
     <Router history={history}>
-      <App className='root'/>
+      <App className="root" />
     </Router>
   </Provider>,
   document.getElementById("root")

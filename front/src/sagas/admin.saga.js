@@ -5,9 +5,7 @@ import {
   EDIT_ADMIN,
   adminEdited,
   CHANGE_PASSWORD_ADMIN,
-  adminPasswordChanged
-} from "../actions/auth.actions";
-import {
+  adminPasswordChanged,
   BLOCK_COMPANY,
   companyBlocked,
   UNBLOCK_COMPANY,
@@ -49,7 +47,12 @@ export function* watchBlockCompany() {
   yield takeLeading(BLOCK_COMPANY, function*({ payload }) {
     try {
       const headers = getAuthHeader();
-      yield call(axios.put, `/api/companies/${payload.companyId}/block`, payload, { headers });
+      yield call(
+        axios.put,
+        `/api/companies/${payload.companyId}/block`,
+        payload,
+        { headers }
+      );
 
       yield put(companyBlocked(payload));
       yield put(returnEvent("The company is blocked"));
@@ -63,7 +66,12 @@ export function* watchUnblockCompany() {
   yield takeLeading(UNBLOCK_COMPANY, function*({ payload }) {
     try {
       const headers = getAuthHeader();
-      yield call(axios.put, `/api/companies/${payload.companyId}/unblock`, payload, { headers });
+      yield call(
+        axios.put,
+        `/api/companies/${payload.companyId}/unblock`,
+        payload,
+        { headers }
+      );
 
       yield put(companyUnblocked());
       yield put(returnEvent("The company is unblocked"));

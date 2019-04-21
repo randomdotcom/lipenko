@@ -3,11 +3,8 @@ import { push } from "connected-react-router";
 import { call, put, take, takeLeading } from "redux-saga/effects";
 import { storeToken } from "../authentication";
 import { returnError } from "../actions/events.actions";
-import {
-  SIGNOUT,
-  SIGNIN_ADMIN,
-  adminSignInSuccess
-} from "../actions/auth.actions";
+import { SIGNOUT } from "../actions/common.actions";
+import { SIGNIN_ADMIN, adminSignInSuccess } from "../actions/adminAuth.actions";
 
 export function* watchAdminSignInSaga() {
   yield takeLeading(SIGNIN_ADMIN, function*({ payload }) {

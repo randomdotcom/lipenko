@@ -3,7 +3,7 @@ const entity = "orders";
 const httpStatus = require("http-status");
 const service = require(`./${entity}.service`);
 const Status = require("../../enums/status.enum");
-const Order = require("../../models/order.model");
+const { sendOrderStatusMessage } = require("../../config/nodemailer");
 
 module.exports.get = (req, res, next) => {
   service

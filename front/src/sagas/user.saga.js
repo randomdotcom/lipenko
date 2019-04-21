@@ -6,11 +6,10 @@ import {
   userEdited,
   CHANGE_PASSWORD_USER,
   userPasswordChanged,
-  CANCEL_BOOK,
-  bookCanceled,
   CONFIRM_BOOK,
   bookConfirmed
-} from "../actions/auth.actions";
+} from "../actions/user.actions";
+import { CANCEL_BOOK, bookCanceled } from "../actions/common.actions";
 import { loadBookings } from "../actions/bookings.actions";
 import { returnError, returnEvent } from "../actions/events.actions";
 import { getAuthHeader } from "../services/jwtHeader";
