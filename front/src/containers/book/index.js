@@ -31,7 +31,7 @@ const mapStateToProps = state => ({
   availableWorkingDays: state.order.company
     ? state.order.availableWorkingDays
     : undefined,
-  customer: state.profile.data.id ? state.profile.data.id : undefined
+  customer: state.profile.data._id ? state.profile.data._id : undefined
 });
 
 export default connect(

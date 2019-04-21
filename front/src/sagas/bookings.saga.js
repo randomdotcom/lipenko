@@ -14,13 +14,14 @@ import { getAuthHeader } from "../services/jwtHeader";
 export function* watchLoadBookingsSaga() {
   yield takeLatest(LOAD_BOOKINGS, function*({ payload }) {
     try {
-      const query = payload;
+      const query = payload[0] === '?' ? payload : '?' + payload;
 
       const headers = yield call(getAuthHeader);
-
-      const response = yield call(axios.get, `/api/orders?${query}`, {
+      
+      const response = yield call(axios.get, `/api/orders${query}`, {
         headers
       });
+
       yield put(bookingsLoaded(response.data));
     } catch (error) {
       yield put(returnError(error.response.data));

@@ -22,7 +22,7 @@ module.exports.create = (req, res) => {
   service
     .createOrder(req.body)
     .then(data => {
-      sendOrderStatusMessage(data.email, data.orderId, null, Status.Done);
+      sendOrderStatusMessage(data.email, data.orderId, null, Status.New);
     })
     .then(() => {
       res.status(httpStatus.CREATED).json("Created");

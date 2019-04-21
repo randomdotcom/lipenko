@@ -149,7 +149,7 @@ async function createOrder({
     order.save(err => {
       if (err) reject(err);
 
-      resolve({ email: executor.email });
+      resolve({ email: executor.email, orderId: order._id });
     });
   });
 }
@@ -165,11 +165,12 @@ async function getOrders(
     furniture,
     pool,
     sortBy,
-    companyId,
+    orderId,
     companyName,
     type
   }
 ) {
+  
   const id = user.id;
   const role = user.role;
 
@@ -193,7 +194,7 @@ async function getOrders(
     page: parseInt(page, 10) || 1,
     limit: parseInt(perPage, 10) || 10,
     select:
-      "type city adress companyName smallRooms bigRooms bathRooms squareMeters startDate cleaningDays expectedTime regularity service recurrence endDate customer executor price time averageTime status",
+      "_id type city adress companyName smallRooms bigRooms bathRooms squareMeters startDate cleaningDays expectedTime regularity service recurrence endDate customer executor price time averageTime status",
     sort
   };
 
@@ -204,10 +205,11 @@ async function getOrders(
   } else if (role === Role.User) {
     query.customer = id;
   }
+
   if (companyName) query.companyName = { $regex: companyName };
   if (adress) query.adress = { $regex: adress };
   if (city) query.city = { $regex: city };
-  if (companyId) query.executor = companyId;
+  if (orderId) query._id = orderId;
   if (type) query.type = `${type}`;
   if (carpet) query["service.carpet"] = true;
   if (furniture) query["service.furniture"] = true;

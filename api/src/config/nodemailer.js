@@ -33,7 +33,7 @@ const sendExecutorConfirmationMessage = (to, username, token) => {
     <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 30pt; font-family: 'Roboto', sans-serif;">
       <p>${username}, ваш код для регистрации:</p>
       <div style="display: flex;">
-        <a href="http://localhost:3000/confirm?token=${token}">http://localhost:3000/confirm?token=${token}</p>
+        <a href="http://${process.env.WEB}/confirm?token=${token}">http://localhost:3000/confirm?token=${token}</p>
       </div>
     </div>` // plain text body
   };
@@ -66,12 +66,12 @@ const sendProfileUnblockMessage = (to, username) => {
 const sendOrderStatusMessage = (to, orderId, reason, status) => {
   const html = reason ? 
   `<div style="width: 100%, display: flex, justify-content: center"><h2>Заказ <a href="http://${
-    process.env.HOST
-  }/api/orders/${orderId}">${orderId}</a> изменил статус: ${status}. Причина: ${reason}</h2>` 
+    process.env.WEB
+  }/profile/bookings?orderId=${orderId}">${orderId}</a> изменил статус: ${status}. Причина: ${reason}</h2>` 
   : 
   `<div style="width: 100%, display: flex, justify-content: center"><h2>Заказ <a href="http://${
-    process.env.HOST
-  }/api/orders/${orderId}">${orderId}</a> изменил статус: ${status}.</h2>`
+    process.env.WEB
+  }/profile/bookings?orderId=${orderId}">${orderId}</a> изменил статус: ${status}.</h2>`
 
   const mailOptions = {
     from: `TEST API`,
