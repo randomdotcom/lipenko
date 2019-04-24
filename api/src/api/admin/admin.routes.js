@@ -1,0 +1,13 @@
+const entity = "admin";
+const router = require("express").Router();
+const controller = require(`./${entity}.controller`);
+const permit = require("../../middleware/permission");
+const Role = require("../../enums/roles.enum");
+
+router.post("/signin", controller.signin);
+router.get("/current", permit(Role.Admin), controller.current);
+router.post("/register", permit(Role.Admin), controller.register);
+router.put("/edit", permit(Role.Admin), controller.edit);
+router.put('/newPassword', permit(Role.Admin), controller.newPassword);
+
+module.exports = router;
