@@ -18,13 +18,13 @@ async function authenticate({ username, password }) {
     const user = await User.findOne({ username })
       .select("+password")
       .exec();
-    if (user === null) throw "The user is not found";
+    if (user === null) throw "Пользователь не найден";
 
     let success = await user.comparePassword(password);
-    if (success === false) throw "The password is incorrect";
+    if (success === false) throw "Неверный пароль";
 
     if (user.isBlocked)
-      throw `The user is blocked, reason: ${user.blockReason}`;
+      throw `Пользователь заблокирован, причина: ${user.blockReason}`;
 
     const data = user.toObject();
 
@@ -47,9 +47,9 @@ async function newVerificationCode({ username }) {
   const user = await User.findOne({ username })
     .select("+password")
     .exec();
-  if (user === null) throw "The user is not found";
+  if (user === null) throw "Пользователь не найден";
 
-  if (user.isBlocked) throw `The user is blocked, reason: ${user.blockReason}`;
+  if (user.isBlocked) throw `Пользователь заблокирован, причина: ${user.blockReason}`;
 
   await User.findOneAndUpdate({ username }, { $set: { verificationCode } });
 
@@ -142,13 +142,13 @@ async function confirmEmail({ username, verificationCode }) {
       { username: username },
       { $inc: { attempts: 1 } }
     );
-    if (!user) throw new Error("User does not exist");
+    if (!user) throw new Error("Пользователь не существует");
 
     if (user.attempts >= 4) {
       await User.deleteOne({ username: username });
-      throw new Error("Too many attempts. Account deleted");
+      throw new Error("Слишком много попыток. Аккаунт удален");
     }
-    throw new Error("Verification code is incorrect");
+    throw new Error("Неверный код подтверждения");
   }
   const data = user.toObject();
 
@@ -207,10 +207,10 @@ async function newPassword(userId, data) {
   const user = await User.findById(userId)
     .select("+password")
     .exec();
-  if (user === null) throw new Error("The user is not found");
+  if (user === null) throw new Error("Пользователь не найден");
 
   let success = await user.comparePassword(data.oldPassword);
-  if (success === false) throw new Error("The password is incorrect");
+  if (success === false) throw new Error("Неверный пароль");
 
   user.password = data.newPassword;
   return new Promise((resolve, reject) => {
@@ -225,7 +225,7 @@ async function newPassword(userId, data) {
 async function authSocialNetwork(user) {
   console.log(user);
   if (user.isBlocked)
-    throw new Error(`The user is blocked, reason: ${user.blockReason}`);
+    throw new Error(`Пользователь заблокирован, причина: ${user.blockReason}`);
 
   const token = createToken(user);
 

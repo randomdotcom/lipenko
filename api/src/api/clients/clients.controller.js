@@ -16,7 +16,7 @@ module.exports.signin = (req, res, next) => {
       } else {
         res
           .status(httpStatus.UNAUTHORIZED)
-          .json({ error: "Username or password is incorrect" });
+          .json({ error: "Неверное имя пользователя или пароль" });
       }
     })
     .catch(err => {

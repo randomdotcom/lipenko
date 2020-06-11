@@ -10,15 +10,13 @@ const transporter = nodemailer.createTransport({
 
 const sendUserConfirmationMessage = (to, username, token) => {
   const mailOptions = {
-    from: `TEST API`, // sender address
+    from: `CLEANING PLATFORM`, // sender address
     to: `${to}`, // list of receivers
-    subject: "TEST API - Код для подтверждения регистрации", // Subject line
+    subject: "CLEANING PLATFORM - Код для подтверждения регистрации", // Subject line
     html: `
-    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 30pt; font-family: 'Roboto', sans-serif;">
-      <p>${username}, ваш код для регистрации:</p>
-      <div style="display: flex;">
-        <p style="background-color: #1f1f1f; border-radius: 15px; color: #f2f2f2; padding: 5px; padding-left: 8px; padding-right: 8px;">${token}</p>
-      </div>
+    <div style="display: flex; justify-content: center; align-items: center; font-size: 20pt; font-family: 'Roboto', sans-serif;">
+      <span>${username}, ваш код для регистрации:</span>
+      <span style="background-color: #1f1f1f; border-radius: 8px; color: #f2f2f2; padding: 6px; padding-horizontal: 20px;">${token}</span>
     </div>` // plain text body
   };
 
@@ -26,12 +24,12 @@ const sendUserConfirmationMessage = (to, username, token) => {
 };
 const sendExecutorConfirmationMessage = (to, username, token) => {
   const mailOptions = {
-    from: `TEST API`, // sender address
+    from: `CLEANING PLATFORM`, // sender address
     to: `${to}`, // list of receivers
-    subject: "TEST API - Код для подтверждения регистрации", // Subject line
+    subject: "CLEANING PLATFORM - Код для подтверждения регистрации", // Subject line
     html: `
-    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 30pt; font-family: 'Roboto', sans-serif;">
-      <p>${username}, ваш код для регистрации:</p>
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 20pt; font-family: 'Roboto', sans-serif;">
+      <p>${username}, ваша ссылка для подтверждения регистрации:</p>
       <div style="display: flex;">
         <a href="http://${process.env.WEB}/confirm?token=${token}">http://localhost:3000/confirm?token=${token}</p>
       </div>
@@ -43,9 +41,9 @@ const sendExecutorConfirmationMessage = (to, username, token) => {
 
 const sendProfileBlockMessage = (to, username, reason) => {
   const mailOptions = {
-    from: `TEST API`, // sender address
+    from: `CLEANING PLATFORM`, // sender address
     to: `${to}`, // list of receivers
-    subject: "TEST API - Изменение статуса аккаунта", // Subject line
+    subject: "CLEANING PLATFORM - Изменение статуса аккаунта", // Subject line
     html: `<div style="width: 100%, display: flex, justify-content: center"><h2>Аккаунт <b>${username}</b> был заблокирован, Причина: ${reason}</h2>` // plain text body
   };
 
@@ -54,9 +52,9 @@ const sendProfileBlockMessage = (to, username, reason) => {
 
 const sendProfileUnblockMessage = (to, username) => {
   const mailOptions = {
-    from: `TEST API`, // sender address
+    from: `CLEANING PLATFORM`, // sender address
     to: `${to}`, // list of receivers
-    subject: "TEST API - Изменение статуса аккаунта", // Subject line
+    subject: "CLEANING PLATFORM - Изменение статуса аккаунта", // Subject line
     html: `<div style="width: 100%, display: flex, justify-content: center"><h2>Аккаунт <b>${username}</b> был разблокирован</h2>` // plain text body
   };
 
@@ -64,19 +62,27 @@ const sendProfileUnblockMessage = (to, username) => {
 };
 
 const sendOrderStatusMessage = (to, orderId, reason, status) => {
-  const html = reason ? 
-  `<div style="width: 100%, display: flex, justify-content: center"><h2>Заказ <a href="http://${
-    process.env.WEB
-  }/profile/bookings?orderId=${orderId}">${orderId}</a> изменил статус: ${status}. Причина: ${reason}</h2>` 
-  : 
-  `<div style="width: 100%, display: flex, justify-content: center"><h2>Заказ <a href="http://${
-    process.env.WEB
-  }/profile/bookings?orderId=${orderId}">${orderId}</a> изменил статус: ${status}.</h2>`
+  const html = reason
+    ? `<div style="width: 100%, display: flex, justify-content: center"><h2><a href="http://${process.env.WEB}/profile/bookings?orderId=${orderId}">Заказ</a> изменил статус: ${status}. Причина: ${reason}</h2>`
+    : `<div style="width: 100%, display: flex, justify-content: center"><h2><a href="http://${process.env.WEB}/profile/bookings?orderId=${orderId}">Заказ</a> изменил статус: ${status}.</h2>`;
 
   const mailOptions = {
-    from: `TEST API`,
+    from: `CLEANING PLATFORM`,
     to: `${to}`,
-    subject: "TEST API - Изменение статуса чистки",
+    subject: "CLEANING PLATFORM - Изменение статуса чистки",
+    html
+  };
+
+  transporter.sendMail(mailOptions);
+};
+
+const sendOrderCreatedMessage = (to, orderId) => {
+  const html = `<div style="width: 100%, display: flex, justify-content: center"><h2>Здравствуйте, вам поступил <a href="http://${process.env.WEB}/profile/bookings?orderId=${orderId}">новый заказ</a></h2>`;
+
+  const mailOptions = {
+    from: `CLEANING PLATFORM`,
+    to: `${to}`,
+    subject: "CLEANING PLATFORM - Поступил новый заказ",
     html
   };
 
@@ -88,5 +94,6 @@ module.exports = {
   sendExecutorConfirmationMessage,
   sendProfileBlockMessage,
   sendProfileUnblockMessage,
-  sendOrderStatusMessage
+  sendOrderStatusMessage,
+  sendOrderCreatedMessage
 };

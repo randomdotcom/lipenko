@@ -2,42 +2,42 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const mongoosePaginate = require("mongoose-paginate");
 
-const validateEmail = function(email) {
+const validateEmail = function (email) {
   const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   return re.test(email);
 };
 
-const validatePNumber = function(phoneNumber) {
+const validatePNumber = function (phoneNumber) {
   const re = /\+375(29|33|44|25)\d{7}$/;
   return re.test(phoneNumber);
 };
 
-const validateUsername = function(username) {
+const validateUsername = function (username) {
   const re = /^[a-zA-Z][a-zA-Z0-9-_\.]{1,9}$/;
   return re.test(username);
 };
 
-const validatePassword = function(password) {
+const validatePassword = function (password) {
   const re = /^[\S]{5,18}$/;
   return re.test(password);
 };
 
-const validateCompanyName = function(companyName) {
+const validateCompanyName = function (companyName) {
   const re = /^(.){3,20}$/;
   return re.test(companyName);
 };
 
-const validateDescription = function(description) {
+const validateDescription = function (description) {
   const re = /^(.){0,80}$/;
   return re.test(description);
 };
 
-const validateCity = function(city) {
-  const re = /^[A-Za-z-]{3,14}$/;
+const validateCity = function (city) {
+  const re = /^[А-Яа-я-]{3,14}$/;
   return re.test(city);
 };
 
-const validateWorkingDayes = function(workingDays) {
+const validateWorkingDayes = function (workingDays) {
   if ((workingDays.length < 1) | (workingDays.length > 7)) return false;
   if ((Math.max(...workingDays) > 7) | (Math.max(...workingDays) < 0))
     return false;
@@ -143,7 +143,10 @@ var schema = new mongoose.Schema(
       lowercase: true,
       unique: true,
       required: true,
-      validate: [validateEmail, "Please fill a valid email address"]
+      validate: [
+        validateEmail,
+        "Пожалуйста, введите правильный адрес эл. почты"
+      ]
     },
     isVerified: {
       type: Boolean,
@@ -171,29 +174,29 @@ var schema = new mongoose.Schema(
 schema.plugin(mongoosePaginate);
 export const Executors = mongoose.model("Executors", schema);
 
-schema.pre("save", function(next) {
+schema.pre("save", function (next) {
   bcrypt.hash(this.password, 10, (err, hash) => {
     this.password = hash;
     next();
   });
 });
 
-schema.pre("update", function(next) {
+schema.pre("update", function (next) {
   bcrypt.hash(this.password, 10, (err, hash) => {
     this.password = hash;
     next();
   });
 });
 
-schema.post("save", function(error, doc, next) {
+schema.post("save", function (error, doc, next) {
   if (error.name === "MongoError" && error.code === 11000) {
-    next(new Error("User already exist"));
+    next(new Error("Пользователь уже существует"));
   } else {
     next(error);
   }
 });
 
-schema.methods.comparePassword = function(candidatePassword) {
+schema.methods.comparePassword = function (candidatePassword) {
   return new Promise((resolve, reject) => {
     bcrypt.compare(candidatePassword, this.password, (err, success) => {
       if (err) return reject(err);
@@ -203,7 +206,7 @@ schema.methods.comparePassword = function(candidatePassword) {
 };
 
 schema.set("toObject", {
-  transform: function(doc, ret) {
+  transform: function (doc, ret) {
     delete ret.__v;
   }
 });

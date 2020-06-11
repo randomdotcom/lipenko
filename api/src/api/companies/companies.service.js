@@ -14,13 +14,13 @@ async function authenticate({ username, password }) {
     const executor = await Executor.findOne({ username })
       .select("+password")
       .exec();
-    if (executor === null) throw "The user is not found";
+    if (executor === null) throw "Пользователь не найден";
 
     let success = await executor.comparePassword(password);
-    if (success === false) throw "The password is incorrect";
+    if (success === false) throw "Неверный пароль";
 
     if (executor.isBlocked)
-      throw `The user is blocked, reason: ${executor.block}`;
+      throw `Пользователь заблокирован, причина: ${executor.block}`;
     if (executor.isVerified === false) throw `Email confirmation required`;
 
     const data = executor.toObject();
@@ -180,13 +180,11 @@ async function confirmEmail(code) {
 async function newVerificationCode({ username }) {
   var verificationCode = randtoken.generate(6);
   console.log(username + " " + password);
-  const user = await Executor.findOne({ username })
-    .select("+password")
-    .exec();
-  if (user === null) throw new Error("The user is not found");
+  const user = await Executor.findOne({ username }).select("+password").exec();
+  if (user === null) throw new Error("Пользователь не найден");
 
   if (user.isBlocked)
-    throw new Error(`The user is blocked, reason: ${user.block}`);
+    throw new Error(`Пользователь заблокирован, причина: ${user.block}`);
 
   await Executor.findOneAndUpdate({ username }, { $set: { verificationCode } });
 
@@ -199,18 +197,22 @@ async function newVerificationCode({ username }) {
   };
 }
 
-async function getCompanies({
-  page = 1,
-  perPage = 10,
-  city,
-  sortBy,
-  name,
-  carpet,
-  furniture,
-  pool,
-  type,
-  workingDays
-}) {
+async function getCompanies(
+  {
+    page = 1,
+    perPage = 10,
+    city,
+    sortBy,
+    name,
+    carpet,
+    furniture,
+    pool,
+    type,
+    workingDays,
+    withBlocked
+  },
+  user
+) {
   let sort = {};
   if (sortBy === "price" || sortBy === "-price") {
     const typeOfSort = sortBy === "price" ? 1 : -1;
@@ -272,7 +274,8 @@ async function getCompanies({
   if (pool) query["typesOfCleaning.pool"] = { $gte: 1 };
 
   query["isVerified"] = true;
-  query["isBlocked"] = false;
+
+  if (!withBlocked) query["isBlocked"] = false;
 
   const companies = await Executor.paginate(query, options);
 
@@ -315,9 +318,7 @@ async function rateCompany(userId, data, companyId) {
     customer: userId,
     executor: companyId
   });
-  const company = await Executor.findById(companyId)
-    .select("+password")
-    .exec();
+  const company = await Executor.findById(companyId).select("+password").exec();
 
   if (!company) throw new Error("Company is not found");
 
@@ -404,13 +405,11 @@ async function uploadLogo(userId, files) {
 }
 
 async function newPassword(userId, data) {
-  const user = await Executor.findById(userId)
-    .select("+password")
-    .exec();
-  if (user === null) throw new Error("The user is not found");
+  const user = await Executor.findById(userId).select("+password").exec();
+  if (user === null) throw new Error("Пользователь не найден");
 
   let success = await user.comparePassword(data.oldPassword);
-  if (success === false) throw new Error("The password is incorrect");
+  if (success === false) throw new Error("Неверный пароль");
 
   user.password = data.newPassword;
   return new Promise((resolve, reject) => {

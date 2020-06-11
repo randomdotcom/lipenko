@@ -11,7 +11,7 @@ module.exports.signin = (req, res, next) => {
         ? res.json(user)
         : res
             .status(httpStatus.UNAUTHORIZED)
-            .send("Username or password is incorrect")
+            .send("Неверное имя пользователя или пароль")
     )
     .catch(err => {
       res.status(httpStatus.CONFLICT).send(err.message);

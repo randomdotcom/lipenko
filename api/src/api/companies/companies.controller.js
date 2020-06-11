@@ -8,7 +8,7 @@ const { sendExecutorConfirmationMessage } = require("../../config/nodemailer");
 
 module.exports.get = (req, res, next) => {
   service
-    .getCompanies(req.query)
+    .getCompanies(req.query, req.user)
     .then(companies => res.status(httpStatus.OK).json(companies))
     .catch(err => {
       res.status(httpStatus.CONFLICT).send(err.message);
@@ -35,7 +35,7 @@ module.exports.signin = (req, res, next) => {
       } else {
         res
           .status(httpStatus.UNAUTHORIZED)
-          .send("Username or password is incorrect");
+          .send("Неверное имя пользователя или пароль");
       }
     })
     .catch(err => {

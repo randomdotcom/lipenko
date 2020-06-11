@@ -17,8 +17,8 @@ var schema = new mongoose.Schema(
       lowercase: true,
       unique: true,
       required: true,
-      validate: [validateEmail, 'Please fill a valid email address'],
-      match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
+      validate: [validateEmail, 'Пожалуйста, введите правильный адрес эл. почты'],
+      match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Пожалуйста, введите правильный адрес эл. почты']
     },
     role: { type: String, required: true, lowercase: true }
   },
@@ -46,7 +46,7 @@ schema.pre("update", function(next) {
 
 schema.post("save", function(error, doc, next) {
   if (error.name === "MongoError" && error.code === 11000) {
-    next(new Error("User already exist"));
+    next(new Error("Пользователь уже существует"));
   } else {
     next(error);
   }

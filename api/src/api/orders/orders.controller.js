@@ -3,7 +3,7 @@ const entity = "orders";
 const httpStatus = require("http-status");
 const service = require(`./${entity}.service`);
 const Status = require("../../enums/status.enum");
-const { sendOrderStatusMessage } = require("../../config/nodemailer");
+const { sendOrderCreatedMessage } = require("../../config/nodemailer");
 
 module.exports.get = (req, res, next) => {
   service
@@ -22,7 +22,7 @@ module.exports.create = (req, res) => {
   service
     .createOrder(req.body)
     .then(data => {
-      sendOrderStatusMessage(data.email, data.orderId, null, Status.New);
+      sendOrderCreatedMessage(data.email, data.orderId);
     })
     .then(() => {
       res.status(httpStatus.CREATED).json("Created");

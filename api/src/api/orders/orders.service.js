@@ -15,6 +15,7 @@ async function createOrder({
   company,
   city,
   adress,
+  phoneNumber,
   type,
   smallRooms,
   bigRooms,
@@ -104,12 +105,13 @@ async function createOrder({
     case 7:
       endDate.setMonth(endDate.getMonth() + 6);
   }
-
+  console.log(customer);
   const order = new Order({
     customer,
     executor: company,
     city,
     adress,
+    phoneNumber,
     type,
     smallRooms:
       (type === "standart") | (type === "general") | (type === "afterRepair")
@@ -156,18 +158,8 @@ async function createOrder({
 
 async function getOrders(
   user,
-  {
-    page = 1,
-    perPage = 10,
-    city,
-    status,
-    sortBy,
-    orderId,
-    companyName,
-    type
-  }
+  { page = 1, perPage = 10, city, status, sortBy, orderId, companyName, type }
 ) {
-  
   const id = user.id;
   const role = user.role;
 
@@ -191,7 +183,7 @@ async function getOrders(
     page: parseInt(page, 10) || 1,
     limit: parseInt(perPage, 10) || 10,
     select:
-      "_id type city adress companyName smallRooms bigRooms bathRooms squareMeters startDate cleaningDays expectedTime regularity service recurrence endDate customer executor price time averageTime status",
+      "_id type city adress phoneNumber companyName smallRooms bigRooms bathRooms squareMeters startDate cleaningDays expectedTime regularity service recurrence endDate customer executor price time averageTime status",
     sort
   };
 
@@ -210,7 +202,7 @@ async function getOrders(
   if (type) query.type = `${type}`;
 
   const orders = await Order.paginate(query, options);
-
+  console.log(orders);
   return orders;
 }
 

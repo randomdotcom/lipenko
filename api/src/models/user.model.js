@@ -23,7 +23,7 @@ const validatePassword = function (password) {
 };
 
 const validateAdress = function (adress) {
-  const re = /^.{0,26}$/
+  const re = /^.{0,60}$/
   return re.test(adress)
 }
 
@@ -47,7 +47,7 @@ var schema = new mongoose.Schema(
       lowercase: true,
       unique: true,
       required: true,
-      validate: [validateEmail, "Please fill a valid email address"]
+      validate: [validateEmail, "Пожалуйста, введите правильный адрес эл. почты"]
     },
     adress: {
       type: String,
@@ -99,7 +99,7 @@ schema.pre("update", function (next) {
 schema.post("save", function (error, doc, next) {
   console.log(error)
   if (error.name === "MongoError" && error.code === 11000) {
-    next(new Error("User already exist"));
+    next(new Error("Пользователь уже существует"));
   } else {
     next(error);
   }
