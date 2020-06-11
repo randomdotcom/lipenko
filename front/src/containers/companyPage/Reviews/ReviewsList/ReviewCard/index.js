@@ -27,10 +27,10 @@ function ReviewCard(props) {
           secondary={
             <>
               <Typography component="span" color="textPrimary">
-                <b>Rating:</b> {review.rating}
+                <b>Оценка:</b> {review.rating}
               </Typography>
               <Typography component="span" color="textPrimary">
-                <b>Comment:</b> {review.comment}
+                <b>Комментарий:</b> {review.comment}
               </Typography>
             </>
           }

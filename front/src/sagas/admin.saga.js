@@ -22,7 +22,7 @@ export function* watchEditAdmin() {
 
       yield put(adminEdited(payload));
       yield put(push("/profile"));
-      yield put(returnEvent("Your profile is changed"));
+      yield put(returnEvent("Профиль успешно изменен"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }
@@ -36,7 +36,7 @@ export function* watchChangePasswordAdmin() {
       yield call(axios.put, "/api/admin/newPassword", payload, { headers });
 
       yield put(adminPasswordChanged());
-      yield put(returnEvent("Your password is changed"));
+      yield put(returnEvent("Пароль успешно изменен"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }
@@ -55,7 +55,7 @@ export function* watchBlockCompany() {
       );
 
       yield put(companyBlocked(payload));
-      yield put(returnEvent("The company is blocked"));
+      yield put(returnEvent("Компания заблокирована"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }
@@ -74,7 +74,7 @@ export function* watchUnblockCompany() {
       );
 
       yield put(companyUnblocked());
-      yield put(returnEvent("The company is unblocked"));
+      yield put(returnEvent("Компания разблокирована"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }

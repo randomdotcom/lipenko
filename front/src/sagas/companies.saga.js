@@ -9,12 +9,14 @@ import {
   loadCompanies
 } from "../actions/companies.actions";
 import { returnError } from "../actions/events.actions";
+import { getAuthHeader } from "../services/jwtHeader";
 
 export function* watchLoadCompaniesSaga() {
-  yield takeLatest(LOAD_COMPANIES, function*({ payload }) {
+  yield takeLatest(LOAD_COMPANIES, function* ({ payload }) {
     try {
-      let query = parse(payload);
+      let query = parse(payload.query);
       if (query.type === undefined) query.type = "standart";
+      if (payload.userRole === "admin") query.withBlocked = true;
       query = stringify(query);
 
       const response = yield call(axios.get, `/api/companies?${query}`);
@@ -26,7 +28,7 @@ export function* watchLoadCompaniesSaga() {
 }
 
 export function* watchChangeFiltersCompaniesSaga() {
-  yield takeEvery(CHANGE_FILTERS_COMPANIES, function*({ payload }) {
+  yield takeEvery(CHANGE_FILTERS_COMPANIES, function* ({ payload }) {
     try {
       const { name, value, path } = payload;
       let query = parse(payload.query);

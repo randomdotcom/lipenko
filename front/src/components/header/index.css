@@ -1,0 +1,13 @@
+@media only screen and (min-width: 1024px) {
+  .content {
+    width: 1024px;
+  }
+  .headerContainer {
+    display: flex;
+    align-items: center;
+  }
+  .contentContainer {
+    display: flex;
+    justify-content: center;
+  }
+}

@@ -67,7 +67,7 @@ export function* watchBlockCustomer() {
 
       yield put(customerBlocked(payload));
       yield put(loadCustomers(query));
-      yield put(returnEvent("The customer is blocked"));
+      yield put(returnEvent("Пользователь заблокирован"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }
@@ -86,7 +86,7 @@ export function* watchUnblockCustomer() {
 
       yield put(customerUnblocked());
       yield put(loadCustomers(query));
-      yield put(returnEvent("The customer is unblocked"));
+      yield put(returnEvent("Пользователь разблокирован"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }

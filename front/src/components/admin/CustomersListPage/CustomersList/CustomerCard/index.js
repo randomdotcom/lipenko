@@ -70,24 +70,24 @@ class CustomerCard extends Component {
             secondary={
               <>
                 <Typography component="span" color="textPrimary">
-                  <b>Adress:</b> {customer.adress}
+                  <b>Адрес:</b> {customer.adress}
                 </Typography>
                 <Typography component="span" color="textPrimary">
-                  <b>Email:</b> {customer.email}
+                  <b>Эл. почта:</b> {customer.email}
                 </Typography>
                 <Typography component="span" color="textPrimary">
-                  <b>Phone number:</b> {customer.phoneNumber}
+                  <b>Номер телефона:</b> {customer.phoneNumber}
                 </Typography>
                 {customer.isBlocked ? (
                   <>
-                    <div>Blocked, reason: {customer.blockReason}</div>
+                    <div>Заблокирован, причина: {customer.blockReason}</div>
                     <Button
                       onClick={this.handleUnblockCustomer}
                       variant="outlined"
                       color="secondary"
                       className={classes.button}
                     >
-                      <b>unblock customer</b>
+                      <b>РАЗБЛОКИРОВАТЬ</b>
                     </Button>
                   </>
                 ) : (
@@ -97,7 +97,7 @@ class CustomerCard extends Component {
                     color="secondary"
                     className={classes.button}
                   >
-                    <b>block customer</b>
+                    <b>ЗАБЛОКИРОВАТЬ</b>
                   </Button>
                 )}
               </>
@@ -109,7 +109,9 @@ class CustomerCard extends Component {
           onClose={this.handleClose}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">Cancel book</DialogTitle>
+          <DialogTitle id="form-dialog-title">
+            Блокировка пользователя
+          </DialogTitle>
           <DialogContent>
             <TextField
               autoFocus
@@ -117,18 +119,18 @@ class CustomerCard extends Component {
               id="name"
               value={this.state.reason}
               onChange={this.handleChangeReason}
-              label="Reason"
+              label="Причина"
               fullWidth
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleClose}>Back</Button>
+            <Button onClick={this.handleClose}>Назад</Button>
             <Button
               onClick={this.handleBlockCustomer}
               variant="outlined"
               color="secondary"
             >
-              Confirm
+              Заблокировать
             </Button>
           </DialogActions>
         </Dialog>

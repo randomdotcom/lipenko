@@ -46,13 +46,13 @@ class Filters extends Component {
         <TextField
           color="secondary"
           name="city"
-          label="City"
+          label="Город"
           value={this.state.city}
           onChange={this.handleChange}
           className={classes.input}
         />
         <FormControl className={classes.input}>
-          <InputLabel htmlFor="status">Cleaning status</InputLabel>
+          <InputLabel htmlFor="status">Статус заказа</InputLabel>
           <Select
             value={this.state.status}
             onChange={this.handleChange}
@@ -72,7 +72,7 @@ class Filters extends Component {
           </Select>
         </FormControl>
         <FormControl className={classes.input}>
-          <InputLabel htmlFor="type">Cleaning type</InputLabel>
+          <InputLabel htmlFor="type">Вид уборки</InputLabel>
           <Select
             value={this.state.type}
             onChange={this.handleChange}

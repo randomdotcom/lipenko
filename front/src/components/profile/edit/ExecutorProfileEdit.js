@@ -15,111 +15,74 @@ import UploadLogo from "../../../containers/profile/edit/UploadLogoContainer";
 
 const validationEditMain = object().shape({
   username: string()
-    .required("Username is required")
-    .min(2, "Username must contain atleast 2 characters")
-    .max(9, "Username must contain less then 9 characters")
+    .required("Введите имя пользователя")
+    .min(2, "Имя пользователя должно содержать хотябы 2 символа")
+    .max(9, "Имя пользователя должно содержать меньше 10 символов")
     .matches(
       /^[a-zA-Z][a-zA-Z0-9-_.]{1,9}$/,
-      "The username can contain letters, numbers, -, ., _"
+      "Имя пользователя может содержать буквы, цифры, -, ., _"
     ),
   email: string()
-    .required("Email is required")
-    .min(5, "Email must contain atleast 5 characters")
-    .max(50, "Email must contain less then 50 characters")
+    .required("Введите электронную почту")
+    .min(5, "Эл. почта должна содержать больше 4 символов")
+    .max(50, "Эл. почта должна содержать меньше 51 символов")
     .matches(
       /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-      "The email is incorrect"
+      "Эл. почта неверная"
     ),
   phoneNumber: string()
-    .required("Phone number is required")
-    .min(13, "Phone number is incorrect")
-    .max(13, "Phone number is incorrect"),
+    .required("Введите номер телефона")
+    .min(13, "Номер телефона неверный")
+    .max(13, "Номер телефона неверный"),
   city: string()
-    .required("City name is required")
-    .min(3, "City name must contain atleast 3 characters")
-    .max(14, "City name must contain less then 14 characters")
+    .required("Введите название города")
+    .min(3, "Название города должно содержать больше 2 симоволов")
+    .max(14, "Название города должно содержать меньше 14 симоволов")
     .matches(
-      /^[A-Za-z-]{3,14}$/,
-      "City name can contain only letters, -, numbers"
+      /^[А-Яа-я-]{3,14}$/,
+      "Название города может содержать только буквы, -, цифры"
     ),
   companyName: string()
-    .required("Company name is required")
-    .min(3, "Company name must contain atleast 3 characaters")
-    .max(20, "Company name must contain less then 14 characters"),
-  description: string().max(
-    80,
-    "Description msut contain less then 80 characters"
-  )
+    .required("Введите название компании")
+    .min(3, "Название компании должно содержать больше 2 символов")
+    .max(20, "Название компании должно содержать меньше 21 символа"),
+  description: string().max(80, "Описание должно содержать меньше 81 символа")
 });
 
 const validationNewPassword = object().shape({
   oldPassword: string()
-    .required("Enter your password")
-    .min(5, "Password must contain atleast 5 characters")
-    .max(18, "Password must contain less then 18 characters")
-    .matches(/^[\S]{5,18}$/, "The password cannot contain spaces"),
+    .required("Введите свой пароль")
+    .min(5, "Пароль должен содержать больше 4 символов")
+    .max(18, "Пароль должен содержать меньше 19 символов")
+    .matches(/^[\S]{5,18}$/, "Пароль не может содержать пробелы"),
   newPassword: string()
-    .required("Enter your password")
-    .min(5, "Password must contain atleast 5 characters")
-    .max(18, "Password must contain less then 18 characters")
-    .matches(/^[\S]{5,18}$/, "The password cannot contain spaces"),
+    .required("Введите свой пароль")
+    .min(5, "Пароль должен содержать больше 4 символов")
+    .max(18, "Пароль должен содержать меньше 19 символов")
+    .matches(/^[\S]{5,18}$/, "Пароль не может содержать пробелы"),
   confirmNewPassword: string()
-    .required("Enter your password again")
-    .test("passwords-match", "Passwords must match ya fool", function(value) {
+    .required("Введите свой пароль еще раз")
+    .test("passwords-match", "Пароли не совпадают", function (value) {
       return this.parent.newPassword === value;
     })
 });
 
 const validationTOC = object().shape({
-  standartSmallRoom: string()
-    .min(1, "You can type `0`")
-    .matches(/^\d{1,5}$/, "This field for money"),
-  standartBigRoom: string()
-    .min(1, "You can type `0`")
-    .matches(/^\d{1,5}$/, "This field for money"),
-  standartBathRoom: string()
-    .min(1, "You can type `0`")
-    .matches(/^\d{1,5}$/, "This field for money"),
-  generalBathRoom: string()
-    .min(1, "You can type `0`")
-    .matches(/^\d{1,5}$/, "This field for money"),
-  generalBigRoom: string()
-    .min(1, "You can type `0`")
-    .matches(/^\d{1,5}$/, "This field for money"),
-  generalSmallRoom: string()
-    .min(1, "You can type `0`")
-    .matches(/^\d{1,5}$/, "This field for money"),
-  afterRepairBathRoom: string()
-    .min(1, "You can type `0`")
-    .matches(/^\d{1,5}$/, "This field for money"),
-  afterRepairBigRoom: string()
-    .min(1, "You can type `0`")
-    .matches(/^\d{1,5}$/, "This field for money"),
-  afterRepairSmallRoom: string()
-    .min(1, "You can type `0`")
-    .matches(/^\d{1,5}$/, "This field for money"),
-  smallCarpet: string()
-    .min(1, "You can type `0`")
-    .matches(/^\d{1,5}$/, "This field for money"),
-  bigCarpet: string()
-    .min(1, "You can type `0`")
-    .matches(/^\d{1,5}$/, "This field for money"),
-  office: string().matches(
-    /^\d{1,5}$/,
-    "Field length must be atleast 1 character, you can type `0`"
-  ),
-  furniture: string().matches(
-    /^\d{1,5}$/,
-    "Field length must be atleast 1 character, you can type `0`"
-  ),
-  industrial: string().matches(
-    /^\d{1,5}$/,
-    "Field length must be atleast 1 character, you can type `0`"
-  ),
-  pool: string().matches(
-    /^\d{1,5}$/,
-    "Field length must be atleast 1 character, you can type `0`"
-  )
+  standartSmallRoom: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  standartBigRoom: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  standartBathRoom: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  generalBathRoom: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  generalBigRoom: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  generalSmallRoom: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  afterRepairBathRoom: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  afterRepairBigRoom: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  afterRepairSmallRoom: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  smallCarpet: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  bigCarpet: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  office: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  furniture: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  industrial: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  pool: string().matches(/^\d{1,5}$/, "Неверная цена")
 });
 
 class ExecutorProfileEdit extends Component {
@@ -149,91 +112,107 @@ class ExecutorProfileEdit extends Component {
       pool
     } = this.props;
     return (
-      <div className={classes.root}>
-        <div className={classes.mainInfoAndPassword}>
-          <Formik
-            initialValues={{
-              username,
-              email,
-              phoneNumber,
-              city,
-              companyName,
-              description
-            }}
-            validationSchema={validationEditMain}
-            onSubmit={(
-              { username, email, phoneNumber, city, companyName, description },
-              { setFieldError }
-            ) => {
-              try {
-                this.props.editMainExecutor({
+      <>
+        <div className={classes.root} style={{ alignItems: "center" }}>
+          <UploadLogo />
+        </div>
+        <div className={classes.root}>
+          <div className={classes.mainInfoAndPassword}>
+            <Formik
+              initialValues={{
+                username,
+                email,
+                phoneNumber,
+                city,
+                companyName,
+                description
+              }}
+              validationSchema={validationEditMain}
+              onSubmit={(
+                {
                   username,
                   email,
                   phoneNumber,
                   city,
                   companyName,
                   description
-                });
-              } catch (errors) {
-                errors.forEach(err => {
-                  setFieldError(err.field, err.error);
-                });
-              }
-            }}
-            component={this.EditMainInfo}
-          />
+                },
+                { setFieldError }
+              ) => {
+                try {
+                  this.props.editMainExecutor({
+                    username,
+                    email,
+                    phoneNumber,
+                    city,
+                    companyName,
+                    description
+                  });
+                } catch (errors) {
+                  errors.forEach(err => {
+                    setFieldError(err.field, err.error);
+                  });
+                }
+              }}
+              component={this.EditMainInfo}
+            />
+            <Formik
+              initialValues={{
+                oldPassword: "",
+                newPassword: "",
+                confirmNewPassword: ""
+              }}
+              validationSchema={validationNewPassword}
+              onSubmit={({ oldPassword, newPassword }, { setFieldError }) => {
+                try {
+                  this.props.changePasswordExecutor({
+                    oldPassword,
+                    newPassword
+                  });
+                } catch (errors) {
+                  console.log(errors);
+                  errors.forEach(err => {
+                    setFieldError(err.field, err.error);
+                  });
+                }
+              }}
+              component={this.NewPasswordForm}
+            />
+          </div>
+        </div>
+        <div className={classes.root}>
           <Formik
             initialValues={{
-              oldPassword: "",
-              newPassword: "",
-              confirmNewPassword: ""
+              standartSmallRoom,
+              standartBigRoom,
+              standartBathRoom,
+              generalBathRoom,
+              generalBigRoom,
+              generalSmallRoom,
+              afterRepairBathRoom,
+              afterRepairBigRoom,
+              afterRepairSmallRoom,
+              smallCarpet,
+              bigCarpet,
+              office,
+              furniture,
+              industrial,
+              pool
             }}
-            validationSchema={validationNewPassword}
-            onSubmit={({ oldPassword, newPassword }, { setFieldError }) => {
+            validationSchema={validationTOC}
+            onSubmit={(values, { setFieldError }) => {
               try {
-                this.props.changePasswordExecutor({ oldPassword, newPassword });
+                this.props.editTypesOfCleaningExecutor(values);
               } catch (errors) {
-                console.log(errors);
                 errors.forEach(err => {
                   setFieldError(err.field, err.error);
                 });
               }
             }}
-            component={this.NewPasswordForm}
+            component={this.TypesOfCleaningForm}
           />
         </div>
-        <UploadLogo />
-        <Formik
-          initialValues={{
-            standartSmallRoom,
-            standartBigRoom,
-            standartBathRoom,
-            generalBathRoom,
-            generalBigRoom,
-            generalSmallRoom,
-            afterRepairBathRoom,
-            afterRepairBigRoom,
-            afterRepairSmallRoom,
-            smallCarpet,
-            bigCarpet,
-            office,
-            furniture,
-            industrial,
-            pool
-          }}
-          validationSchema={validationTOC}
-          onSubmit={(values, { setFieldError }) => {
-            try {
-              this.props.editTypesOfCleaningExecutor(values);
-            } catch (errors) {
-              errors.forEach(err => {
-                setFieldError(err.field, err.error);
-              });
-            }
-          }}
-          component={this.TypesOfCleaningForm}
-        />
-      </div>
+      </>
     );
   }
 
@@ -248,7 +227,7 @@ class ExecutorProfileEdit extends Component {
     return (
       <form className={classes.container} onSubmit={handleSubmit} noValidate>
         <TextField
-          label="Username"
+          label="Имя пользователя"
           autoComplete="username"
           className={classes.textField}
           margin="normal"
@@ -261,7 +240,7 @@ class ExecutorProfileEdit extends Component {
           error={Boolean(errors.username)}
         />
         <TextField
-          label="Email"
+          label="Электронная почта"
           autoComplete="email"
           className={classes.textField}
           margin="normal"
@@ -275,7 +254,7 @@ class ExecutorProfileEdit extends Component {
           error={Boolean(errors.email)}
         />
         <TextField
-          label="Phone number"
+          label="Номер телефона"
           autoComplete="tel"
           className={classes.textField}
           margin="normal"
@@ -288,7 +267,7 @@ class ExecutorProfileEdit extends Component {
           error={Boolean(errors.phoneNumber)}
         />
         <TextField
-          label="Company name"
+          label="Название организации"
           autoComplete="text"
           className={classes.textField}
           margin="normal"
@@ -301,7 +280,19 @@ class ExecutorProfileEdit extends Component {
           error={Boolean(errors.companyName)}
         />
         <TextField
-          label="Description"
+          label="Город"
+          className={classes.textField}
+          margin="normal"
+          variant="outlined"
+          name="city"
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={values.city}
+          helperText={errors.city}
+          error={Boolean(errors.city)}
+        />
+        <TextField
+          label="Информация об организации"
           autoComplete="tel"
           className={classes.textFieldFullWidth}
           margin="normal"
@@ -316,18 +307,6 @@ class ExecutorProfileEdit extends Component {
           rowsMax="4"
           fullWidth
         />
-        <TextField
-          label="City"
-          className={classes.textField}
-          margin="normal"
-          variant="outlined"
-          name="city"
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={values.city}
-          helperText={errors.city}
-          error={Boolean(errors.city)}
-        />
         <Button
           key="submit"
           type="submit"
@@ -335,7 +314,7 @@ class ExecutorProfileEdit extends Component {
           color="primary"
           size="large"
         >
-          CONFIRM
+          ПОДТВЕРДИТЬ
         </Button>
       </form>
     );
@@ -352,7 +331,7 @@ class ExecutorProfileEdit extends Component {
     return (
       <form className={classes.container} onSubmit={handleSubmit} noValidate>
         <TextField
-          label="Old password"
+          label="Текущий пароль"
           autoComplete="new-password"
           className={classes.textField}
           margin="normal"
@@ -366,7 +345,7 @@ class ExecutorProfileEdit extends Component {
           error={Boolean(errors.oldPassword)}
         />
         <TextField
-          label="New password"
+          label="Новый пароль"
           autoComplete="new-password"
           className={classes.textField}
           margin="normal"
@@ -380,7 +359,7 @@ class ExecutorProfileEdit extends Component {
           error={Boolean(errors.newPassword)}
         />
         <TextField
-          label="Confirm new password"
+          label="Подтвердите пароль"
           autoComplete="new-password"
           className={classes.textField}
           margin="normal"
@@ -400,7 +379,7 @@ class ExecutorProfileEdit extends Component {
           color="primary"
           size="large"
         >
-          CHANGE PASSWORD
+          ИЗМЕНИТЬ ПАРОЛЬ
         </Button>
       </form>
     );
@@ -416,16 +395,16 @@ class ExecutorProfileEdit extends Component {
     const { classes } = this.props;
     return (
       <form className={classes.container} onSubmit={handleSubmit} noValidate>
-        <Grid container justify="center" spacing={24}>
-          <Grid item>
+        <Grid container justify="center">
+          <Grid item className={classes.expandableItems}>
             <ExpansionPanel>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                Standart cleaning
+                Обычная уборка
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <div flexwrap="true">
                   <TextField
-                    label="Price per small room"
+                    label="Цена за маленькую комнату"
                     autoComplete="tel"
                     className={classes.textField}
                     margin="normal"
@@ -438,7 +417,7 @@ class ExecutorProfileEdit extends Component {
                     error={Boolean(errors.standartSmallRoom)}
                   />
                   <TextField
-                    label="Price per big room"
+                    label="Цена за большую комнату"
                     autoComplete="tel"
                     className={classes.textField}
                     margin="normal"
@@ -451,7 +430,7 @@ class ExecutorProfileEdit extends Component {
                     error={Boolean(errors.standartBigRoom)}
                   />
                   <TextField
-                    label="Price per bathroom"
+                    label="Цена за санузел"
                     autoComplete="tel"
                     className={classes.textField}
                     margin="normal"
@@ -467,15 +446,15 @@ class ExecutorProfileEdit extends Component {
               </ExpansionPanelDetails>
             </ExpansionPanel>
           </Grid>
-          <Grid item>
+          <Grid item className={classes.expandableItems}>
             <ExpansionPanel>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                General cleaning
+                Генеральная уборка
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <div flexwrap="true">
                   <TextField
-                    label="Price per small room"
+                    label="Цена за маленькую комнату"
                     autoComplete="tel"
                     className={classes.textField}
                     margin="normal"
@@ -488,7 +467,7 @@ class ExecutorProfileEdit extends Component {
                     error={Boolean(errors.generalSmallRoom)}
                   />
                   <TextField
-                    label="Price per big room"
+                    label="Цена за большую комнату"
                     autoComplete="tel"
                     className={classes.textField}
                     margin="normal"
@@ -501,7 +480,7 @@ class ExecutorProfileEdit extends Component {
                     error={Boolean(errors.generalBigRoom)}
                   />
                   <TextField
-                    label="Price per bathroom"
+                    label="Цена за санузел"
                     autoComplete="tel"
                     className={classes.textField}
                     margin="normal"
@@ -517,15 +496,15 @@ class ExecutorProfileEdit extends Component {
               </ExpansionPanelDetails>
             </ExpansionPanel>
           </Grid>
-          <Grid item>
+          <Grid item className={classes.expandableItems}>
             <ExpansionPanel>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                After repair cleaning
+                Уборка после ремонта
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <div flexwrap="true">
                   <TextField
-                    label="Price per small room"
+                    label="Цена за маленькую комнату"
                     autoComplete="tel"
                     className={classes.textField}
                     margin="normal"
@@ -538,7 +517,7 @@ class ExecutorProfileEdit extends Component {
                     error={Boolean(errors.afterRepairSmallRoom)}
                   />
                   <TextField
-                    label="Price per big room"
+                    label="Цена за большую комнату"
                     autoComplete="tel"
                     className={classes.textField}
                     margin="normal"
@@ -551,7 +530,7 @@ class ExecutorProfileEdit extends Component {
                     error={Boolean(errors.afterRepairBigRoom)}
                   />
                   <TextField
-                    label="Price per bathroom"
+                    label="Цена за санузел"
                     autoComplete="tel"
                     className={classes.textField}
                     margin="normal"
@@ -567,52 +546,15 @@ class ExecutorProfileEdit extends Component {
               </ExpansionPanelDetails>
             </ExpansionPanel>
           </Grid>
-          <Grid item>
+          <Grid item className={classes.expandableItems}>
             <ExpansionPanel>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                Carpet cleaning
+                Другие услуги
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <div flexwrap="true">
                   <TextField
-                    label="Price per small carpet"
-                    autoComplete="tel"
-                    className={classes.textField}
-                    margin="normal"
-                    variant="outlined"
-                    name="smallCarpet"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.smallCarpet}
-                    helperText={errors.smallCarpet}
-                    error={Boolean(errors.smallCarpet)}
-                  />
-                  <TextField
-                    label="Price per big carpet"
-                    autoComplete="tel"
-                    className={classes.textField}
-                    margin="normal"
-                    variant="outlined"
-                    name="bigCarpet"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.bigCarpet}
-                    helperText={errors.bigCarpet}
-                    error={Boolean(errors.bigCarpet)}
-                  />
-                </div>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-          </Grid>
-          <Grid item>
-            <ExpansionPanel>
-              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                Other cleaning
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <div flexwrap="true">
-                  <TextField
-                    label="Office cleaning, per square meter"
+                    label="Уборка офиса, цена за кв. м."
                     autoComplete="tel"
                     className={classes.textField}
                     margin="normal"
@@ -625,7 +567,7 @@ class ExecutorProfileEdit extends Component {
                     error={Boolean(errors.office)}
                   />
                   <TextField
-                    label="Furniture cleaning"
+                    label="Чистка мебели"
                     autoComplete="tel"
                     className={classes.textField}
                     margin="normal"
@@ -638,7 +580,7 @@ class ExecutorProfileEdit extends Component {
                     error={Boolean(errors.furniture)}
                   />
                   <TextField
-                    label="Industrial cleaning, per square meter"
+                    label="Промышленная уборка, цена за кв.м."
                     autoComplete="tel"
                     className={classes.textField}
                     margin="normal"
@@ -651,7 +593,7 @@ class ExecutorProfileEdit extends Component {
                     error={Boolean(errors.industrial)}
                   />
                   <TextField
-                    label="Pool cleaning, for one"
+                    label="Чистка бассейна"
                     autoComplete="tel"
                     className={classes.textField}
                     margin="normal"
@@ -667,6 +609,43 @@ class ExecutorProfileEdit extends Component {
               </ExpansionPanelDetails>
             </ExpansionPanel>
           </Grid>
+          <Grid item className={classes.expandableItems}>
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                Чистка ковров
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <div flexwrap="true">
+                  <TextField
+                    label="Цена за маленький ковер"
+                    autoComplete="tel"
+                    className={classes.textField}
+                    margin="normal"
+                    variant="outlined"
+                    name="smallCarpet"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.smallCarpet}
+                    helperText={errors.smallCarpet}
+                    error={Boolean(errors.smallCarpet)}
+                  />
+                  <TextField
+                    label="Цена за большой ковер"
+                    autoComplete="tel"
+                    className={classes.textField}
+                    margin="normal"
+                    variant="outlined"
+                    name="bigCarpet"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.bigCarpet}
+                    helperText={errors.bigCarpet}
+                    error={Boolean(errors.bigCarpet)}
+                  />
+                </div>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+          </Grid>
         </Grid>
         <Button
           key="submit"
@@ -675,7 +654,7 @@ class ExecutorProfileEdit extends Component {
           color="primary"
           size="large"
         >
-          CONFIRM
+          ПОДТВЕРДИТЬ
         </Button>
       </form>
     );
@@ -690,7 +669,8 @@ const styles = theme => ({
     backgroundColor: "whitesmoke",
     boxShadow: "0 1px 7px 1px rgba(0, 0, 0, .25)",
     padding: 25,
-    fontSize: "1.2rem"
+    fontSize: "1.2rem",
+    alignItems: "center"
   },
   mainInfoAndPassword: {
     display: "flex",
@@ -701,7 +681,16 @@ const styles = theme => ({
     flexDirection: "column",
     alignItems: "center",
     flexWrap: "wrap",
-    flexGrow: 1
+    flexGrow: 1,
+    maxWidth: 860
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 250
+  },
+  expandableItems: {
+    marginBottom: 12
   }
 });
 

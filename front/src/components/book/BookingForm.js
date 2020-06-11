@@ -4,12 +4,13 @@ import { Link } from "react-router-dom";
 import { TextField, Button, Typography } from "@material-ui/core";
 import { Select } from "material-ui-formik-components/Select";
 import { withStyles } from "@material-ui/core/styles";
-import DateFnsUtils from "@date-io/date-fns";
+import LuxonUtils from "@date-io/luxon";
 import {
   DatePicker,
   TimePicker,
   MuiPickersUtilsProvider
-} from "material-ui-pickers";
+} from "@material-ui/pickers";
+import { minsToHours } from "../../services/utils";
 
 function BookingForm(props) {
   const {
@@ -25,58 +26,95 @@ function BookingForm(props) {
     props.calculateTimePrice({ values, typesOfCleaning });
   }
 
+  const datePickerComponent = ({
+    form: { setFieldValue },
+    field: { name, value }
+  }) => (
+    <DatePicker
+      id="startDate"
+      name={name}
+      value={value}
+      onChange={value => setFieldValue(name, value)}
+      format="dd/MM/yyyy"
+      disablePast
+      className={classes.input}
+      label="Дата начала уборок"
+      showTodayButton
+      okLabel="OK"
+      cancelLabel="ОТМЕНИТЬ"
+      todayLabel="СЕГОДНЯ"
+      autoOk
+    />
+  );
+
+  const timePickerComponent = ({
+    form: { setFieldValue },
+    field: { name, value }
+  }) => (
+    <TimePicker
+      id="expectedTime"
+      value={value}
+      onChange={value => setFieldValue(name, value)}
+      className={classes.input}
+      label="Ожидаемое время уборок"
+      ampm={false}
+      okLabel="OK"
+      cancelLabel="ОТМЕНИТЬ"
+    />
+  );
+
   let availableWorkingDays = [];
   if (props.availableWorkingDays) {
     if (props.availableWorkingDays["0"])
-      availableWorkingDays.push({ value: 0, label: "Sunday" });
+      availableWorkingDays.push({ value: 0, label: "Воскресенье" });
     if (props.availableWorkingDays["1"])
-      availableWorkingDays.push({ value: 1, label: "Monday" });
+      availableWorkingDays.push({ value: 1, label: "Понедельник" });
     if (props.availableWorkingDays["2"])
-      availableWorkingDays.push({ value: 2, label: "Tuesday" });
+      availableWorkingDays.push({ value: 2, label: "Вторник" });
     if (props.availableWorkingDays["3"])
-      availableWorkingDays.push({ value: 3, label: "Wednesday" });
+      availableWorkingDays.push({ value: 3, label: "Среда" });
     if (props.availableWorkingDays["4"])
-      availableWorkingDays.push({ value: 4, label: "Thursday" });
+      availableWorkingDays.push({ value: 4, label: "Четверг" });
     if (props.availableWorkingDays["5"])
-      availableWorkingDays.push({ value: 5, label: "Friday" });
+      availableWorkingDays.push({ value: 5, label: "Пятница" });
     if (props.availableWorkingDays["6"])
-      availableWorkingDays.push({ value: 6, label: "Saturday" });
+      availableWorkingDays.push({ value: 6, label: "Суббота" });
   }
 
   let availableServices = [];
   let availableTypes = [];
   if (typesOfCleaning) {
     if (typesOfCleaning.pool > 0)
-      availableServices.push({ value: "pool", label: "Pool cleaning" });
+      availableServices.push({ value: "pool", label: "Чистка бассейна" });
     if (typesOfCleaning.carpet.isAvailable)
-      availableServices.push({ value: "carpet", label: "Carpet cleaning" });
+      availableServices.push({ value: "carpet", label: "Чистка ковров" });
     if (typesOfCleaning.furniture > 0)
       availableServices.push({
         value: "furniture",
-        label: "Furniture cleaning"
+        label: "Чистка мебели"
       });
 
     if (typesOfCleaning.standart.isAvailable)
-      availableTypes.push({ value: "standart", label: "Standart" });
+      availableTypes.push({ value: "standart", label: "Обычная" });
     if (typesOfCleaning.general.isAvailable)
-      availableTypes.push({ value: "general", label: "General" });
+      availableTypes.push({ value: "general", label: "Генеральная" });
     if (typesOfCleaning.afterRepair.isAvailable)
-      availableTypes.push({ value: "afterRepair", label: "After repair" });
+      availableTypes.push({ value: "afterRepair", label: "После ремонта" });
     if (typesOfCleaning.office > 0)
-      availableTypes.push({ value: "office", label: "Office" });
+      availableTypes.push({ value: "office", label: "Чистка офиса" });
     if (typesOfCleaning.industrial > 0)
-      availableTypes.push({ value: "industrial", label: "Industrial" });
+      availableTypes.push({ value: "industrial", label: "Промышленная" });
   }
 
   return (
     <div className={classes.root}>
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <MuiPickersUtilsProvider utils={LuxonUtils}>
         <form className={classes.container} onSubmit={handleSubmit}>
           {!props.company ? (
             <TextField
               required
               id="city"
-              label="City"
+              label="Город"
               className={classes.input}
               value={values.city}
               onChange={handleChange}
@@ -86,7 +124,7 @@ function BookingForm(props) {
           <TextField
             required
             id="adress"
-            label="Adress"
+            label="Адрес"
             className={classes.input}
             value={values.adress}
             onChange={handleChange}
@@ -96,17 +134,17 @@ function BookingForm(props) {
             required
             fullWidth={false}
             name="type"
-            label="Type of cleaning"
+            label="Вид уборки"
             className={classes.input}
             options={
               props.company
                 ? availableTypes
                 : [
-                    { value: "standart", label: "Standart" },
-                    { value: "general", label: "General" },
-                    { value: "afterRepair", label: "After repair" },
-                    { value: "office", label: "Office" },
-                    { value: "industrial", label: "Industrial" }
+                    { value: "standart", label: "Обычная" },
+                    { value: "general", label: "Генеральная" },
+                    { value: "afterRepair", label: "После ремонта" },
+                    { value: "office", label: "Чистка офиса" },
+                    { value: "industrial", label: "Промышленная" }
                   ]
             }
             component={Select}
@@ -118,7 +156,7 @@ function BookingForm(props) {
               <TextField
                 required
                 id="smallRooms"
-                label="Small rooms count"
+                label="Кол-во маленьких комнат"
                 className={classes.input}
                 value={values.smallRooms}
                 onChange={handleChange}
@@ -127,7 +165,7 @@ function BookingForm(props) {
               <TextField
                 required
                 id="bigRooms"
-                label="Big rooms count"
+                label="Кол-во больших комнат"
                 className={classes.input}
                 value={values.bigRooms}
                 onChange={handleChange}
@@ -136,7 +174,7 @@ function BookingForm(props) {
               <TextField
                 required
                 id="bathRooms"
-                label="Bathrooms count"
+                label="Кол-во санузлов"
                 className={classes.input}
                 value={values.bathRooms}
                 onChange={handleChange}
@@ -147,7 +185,7 @@ function BookingForm(props) {
             <TextField
               required
               id="squareMeters"
-              label="Size (square meters)"
+              label="Размер (кв. м.)"
               className={classes.input}
               value={values.squareMeters}
               onChange={handleChange}
@@ -157,14 +195,14 @@ function BookingForm(props) {
           <Field
             multiple
             name="service"
-            label="Other service"
+            label="Другие услуги"
             options={
               props.company
                 ? availableServices
                 : [
-                    { value: "pool", label: "Pool cleaning" },
-                    { value: "carpet", label: "Carpet cleaning" },
-                    { value: "furniture", label: "Furniture cleaning" }
+                    { value: "pool", label: "Чистка бассейна" },
+                    { value: "carpet", label: "Чистка ковров" },
+                    { value: "furniture", label: "Чистка мебели" }
                   ]
             }
             component={Select}
@@ -174,7 +212,7 @@ function BookingForm(props) {
               <TextField
                 required
                 id="smallCarpets"
-                label="Small carpet count"
+                label="Кол-во маленьких ковров"
                 className={classes.input}
                 value={values.smallCarpets}
                 onChange={handleChange}
@@ -183,7 +221,7 @@ function BookingForm(props) {
               <TextField
                 required
                 id="bigCarpets"
-                label="Big carpet count"
+                label="Кол-во больших ковров"
                 className={classes.input}
                 value={values.bigCarpets}
                 onChange={handleChange}
@@ -191,38 +229,25 @@ function BookingForm(props) {
               />
             </>
           ) : null}
-          <DatePicker
-            id="startDate"
-            value={values.startDate}
-            onChange={handleChange}
-            disablePast
-            className={classes.input}
-            label="Start date"
-          />
-          <TimePicker
-            id="expectedTime"
-            value={values.exptectedTime}
-            onChange={handleChange}
-            className={classes.input}
-            label="Expected time of cleaning"
-          />
+          <Field component={datePickerComponent} name="startDate" />
+          <Field component={timePickerComponent} name="expectedTime" />
           <Field
             multiple
             fullWidth={false}
             className={classes.input}
             name="cleaningDays"
-            label="Cleaning days"
+            label="Дни уборок"
             options={
               props.company
                 ? availableWorkingDays
                 : [
-                    { value: 0, label: "Sunday" },
-                    { value: 1, label: "Monday" },
-                    { value: 2, label: "Tuesday" },
-                    { value: 3, label: "Wednesday" },
-                    { value: 4, label: "Thursday" },
-                    { value: 5, label: "Friday" },
-                    { value: 6, label: "Saturday" }
+                    { value: 0, label: "Воскресенье" },
+                    { value: 1, label: "Понедельник" },
+                    { value: 2, label: "Вторник" },
+                    { value: 3, label: "Среда" },
+                    { value: 4, label: "Четверг" },
+                    { value: 5, label: "Пятница" },
+                    { value: 6, label: "Суббота" }
                   ]
             }
             component={Select}
@@ -232,12 +257,12 @@ function BookingForm(props) {
             fullWidth={false}
             className={classes.input}
             name="regularity"
-            label="Regularity"
+            label="Регулярность"
             options={[
-              { value: 0, label: "Once" },
-              { value: 1, label: "Every week" },
-              { value: 2, label: "Every 2 weeks" },
-              { value: 3, label: "Every month" }
+              { value: 0, label: "Один раз" },
+              { value: 1, label: "Каждую неделю" },
+              { value: 2, label: "Каждые 2 недели" },
+              { value: 3, label: "Каждый месяц" }
             ]}
             component={Select}
           />
@@ -247,30 +272,45 @@ function BookingForm(props) {
               fullWidth={false}
               className={classes.input}
               name="recurrence"
-              label="Recurrence"
+              label="Длительность"
               options={[
-                { value: 1, label: "2 weeks" },
-                { value: 2, label: "1 month" },
-                { value: 3, label: "2 month" },
-                { value: 4, label: "3 month" },
-                { value: 5, label: "4 month" },
-                { value: 6, label: "5 month" },
-                { value: 7, label: "6 month" }
+                { value: 1, label: "2 недели" },
+                { value: 2, label: "1 месяц" },
+                { value: 3, label: "2 месяца" },
+                { value: 4, label: "3 месяца" },
+                { value: 5, label: "4 месяца" },
+                { value: 6, label: "5 месяцев" },
+                { value: 7, label: "6 месяцев" }
               ]}
               component={Select}
             />
           ) : null}
 
           {props.isAuthenticated ? null : (
-            <TextField
-              required
-              id="email"
-              label="Email"
-              className={classes.input}
-              value={values.email}
-              onChange={handleChange}
-              margin="normal"
-            />
+            <>
+              <TextField
+                required
+                id="email"
+                label="Электронная почта"
+                className={classes.input}
+                value={values.email}
+                onChange={handleChange}
+                margin="normal"
+              />
+              <TextField
+                required
+                label="Номер телефона"
+                autoComplete="tel"
+                className={classes.input}
+                margin="normal"
+                id="phoneNumber"
+                name="phoneNumber"
+                onChange={handleChange}
+                value={values.phoneNumber}
+                helperText={errors.phoneNumber}
+                error={Boolean(errors.phoneNumber)}
+              />
+            </>
           )}
           {props.company ? (
             <>
@@ -280,15 +320,15 @@ function BookingForm(props) {
                 color="primary"
                 fullWidth
               >
-                Calculate time and price
+                Рассчитать время и цену
               </Button>
               {props.time && props.price ? (
                 <div className={classes.priceAndTime}>
                   <Typography className={classes.calcTitle}>
-                    <b>Price:</b> {props.price}
+                    <b>Цена за уборку:</b> {props.price}р
                   </Typography>
                   <Typography className={classes.calcTitle}>
-                    <b>Time:</b> {props.time}
+                    <b>Время:</b> {minsToHours(props.time)}
                   </Typography>
                 </div>
               ) : null}
@@ -299,12 +339,12 @@ function BookingForm(props) {
                 fullWidth
                 className={classes.button}
               >
-                Confirm booking finally
+                Подтвердить заказ
               </Button>
             </>
           ) : (
             <Button type="submit" variant="contained" color="primary" fullWidth>
-              Look offers
+              Смотреть предложения
             </Button>
           )}
           {props.company ? (
@@ -314,10 +354,10 @@ function BookingForm(props) {
                 color="primary"
                 to={{ pathname: `/companies/${props.company}` }}
               >
-                go to selected company
+                Перейти к компании
               </Button>
               <Button onClick={props.resetSelectedCompany} color="secondary">
-                reset selected company
+                Сбросить компанию
               </Button>
             </>
           ) : null}

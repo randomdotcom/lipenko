@@ -4,7 +4,7 @@ import { Button } from "@material-ui/core";
 export default function LogOutButton(props) {
   return (
     <Button variant="contained" onClick={props.handleClick}>
-      Log Out
+      ВЫЙТИ
     </Button>
   );
 }

@@ -50,8 +50,8 @@ class Auth extends Component {
           textColor="primary"
           centered
         >
-          <Tab label="Sign In" />
-          <Tab label="Sign Up" />
+          <Tab label="Вход" />
+          <Tab label="Регистрация" />
         </Tabs>
         <SwipeableViews
           axis={theme.direction === "rtl" ? "x-reverse" : "x"}

@@ -14,7 +14,7 @@ export default function({ authSocial, returnError }) {
           "819223369500-aupgq5mbr3nemhukfim72qq4kbgrjqta.apps.googleusercontent.com"
         }
         onSuccess={response => authSocial(response)}
-        buttonText="Sign in with Google"
+        buttonText="Войти через Google"
         onFailure={onFailure}
       />
     </div>

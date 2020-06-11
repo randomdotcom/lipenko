@@ -11,6 +11,11 @@ import {
   TextField,
   DialogActions
 } from "@material-ui/core";
+import {
+  getTranslatedCleaningTypeName,
+  minsToHours,
+  getTranslatedBookingStatusName
+} from "../../../../../services/utils";
 
 class BookingCard extends Component {
   constructor(props) {
@@ -86,13 +91,13 @@ class BookingCard extends Component {
       endDate.getFullYear();
 
     const Days = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday"
+      "Воскресенье",
+      "Понедельник",
+      "Вторник",
+      "Среда",
+      "Четверг",
+      "Пятница",
+      "Суббота"
     ];
     let days = [];
     booking.cleaningDays.forEach(day => {
@@ -101,22 +106,22 @@ class BookingCard extends Component {
     days = days.join(",");
 
     const RegularityNames = [
-      "Ones",
-      "Every week",
-      "Every 2 week",
-      "Every month"
+      "Один раз",
+      "Каждую неделю",
+      "Каждые 2 недели",
+      "Каждый месяц"
     ];
     const regularity = RegularityNames[booking.regularity];
 
     const RecurrenceNames = [
-      "None",
-      "For 2 weeks",
-      "For month",
-      "For 2 months",
-      "For 3 months",
-      "For 4 months",
-      "For 5 months",
-      "For 6 months"
+      "-",
+      "2 недели",
+      "месяц",
+      "2 месяца",
+      "3 месяца",
+      "4 месяца",
+      "5 месяцев",
+      "6 месяцев"
     ];
     const recurrence = RecurrenceNames[booking.recurrence];
 
@@ -124,59 +129,65 @@ class BookingCard extends Component {
       <div className={classes.listItem}>
         <ListItem alignItems="flex-start">
           <ListItemText
-            primary={booking.type}
+            primary={getTranslatedCleaningTypeName(booking.type)}
             secondary={
               <>
-                <Typography component="span" color="textPrimary">
-                  <b>City:</b> {booking.city}
+                <Typography component="div" color="textPrimary">
+                  <b>Город:</b> {booking.city}
                 </Typography>
-                <Typography component="span" color="textPrimary">
-                  <b>Adress:</b> {booking.adress}
+                <Typography component="div" color="textPrimary">
+                  <b>Адрес:</b> {booking.adress}
+                </Typography>
+                <Typography component="div" color="textPrimary">
+                  <b>Номер телефона:</b> {booking.phoneNumber}
                 </Typography>
                 {(booking.type === "office") |
                 (booking.type === "industrial") ? (
-                  <Typography component="span" color="textPrimary">
-                    <b>Square meters:</b> {booking.squareMeters}
+                  <Typography component="div" color="textPrimary">
+                    <b>Квадратных метров:</b> {booking.squareMeters}
                   </Typography>
                 ) : (
                   <>
-                    <Typography component="span" color="textPrimary">
-                      <b>Small rooms count:</b> {booking.smallRooms}
+                    <Typography component="div" color="textPrimary">
+                      <b>Кол-во маленьких комнат:</b> {booking.smallRooms}
                     </Typography>
-                    <Typography component="span" color="textPrimary">
-                      <b>Big rooms count:</b> {booking.bigRooms}
+                    <Typography component="div" color="textPrimary">
+                      <b>Кол-во больших комнат:</b> {booking.bigRooms}
                     </Typography>
-                    <Typography component="span" color="textPrimary">
-                      <b>Bath rooms count:</b> {booking.bathRooms}
+                    <Typography component="div" color="textPrimary">
+                      <b>Кол-во санузлов:</b> {booking.bathRooms}
                     </Typography>
                   </>
                 )}
-                <Typography component="span" color="textPrimary">
-                  <b>Start date:</b> {startDateFormat}
+                <Typography component="div" color="textPrimary">
+                  <b>Дата начала уборок:</b> {startDateFormat}
                 </Typography>
-                <Typography component="span" color="textPrimary">
-                  <b>Cleaning days:</b> {days}
+                <Typography component="div" color="textPrimary">
+                  <b>Дни уборок:</b> {days}
                 </Typography>
-                <Typography component="span" color="textPrimary">
-                  <b>End date:</b> {endDateFormat}
+                <Typography component="div" color="textPrimary">
+                  <b>Дата окончания уборок:</b> {endDateFormat}
                 </Typography>
-                <Typography component="span" color="textPrimary">
-                  <b>Regularity:</b> {regularity}
+                <Typography component="div" color="textPrimary">
+                  <b>Регулярность:</b> {regularity}
                 </Typography>
-                <Typography component="span" color="textPrimary">
-                  <b>Recurrence:</b> {recurrence}
+                <Typography component="div" color="textPrimary">
+                  <b>Длительность:</b> {recurrence}
                 </Typography>
-                <Typography component="span" color="textPrimary">
-                  <b>Company name:</b> {booking.companyName}
+                {this.props.role !== "executor" && (
+                  <Typography component="div" color="textPrimary">
+                    <b>Название организации:</b> {booking.companyName}
+                  </Typography>
+                )}
+                <Typography component="div" color="textPrimary">
+                  <b>Цена за уборку:</b> {booking.price}р
                 </Typography>
-                <Typography component="span" color="textPrimary">
-                  <b>Price:</b> {booking.price}rub
+                <Typography component="div" color="textPrimary">
+                  <b>Время:</b> {minsToHours(booking.time)}
                 </Typography>
-                <Typography component="span" color="textPrimary">
-                  <b>Time:</b> {booking.time}min
-                </Typography>
-                <Typography component="span" color="textPrimary">
-                  <b>Status:</b> {booking.status}
+                <Typography component="div" color="textPrimary">
+                  <b>Статус:</b>{" "}
+                  {getTranslatedBookingStatusName(booking.status)}
                 </Typography>
                 {(this.props.role === "executor") &
                 (booking.status === "new") ? (
@@ -187,7 +198,7 @@ class BookingCard extends Component {
                     className={classes.button}
                     onClick={this.handleAcceptBook}
                   >
-                    Accept
+                    Принять
                   </Button>
                 ) : null}
                 {(this.props.role === "user") &
@@ -200,7 +211,7 @@ class BookingCard extends Component {
                     className={classes.button}
                     onClick={this.handleConfirmBook}
                   >
-                    Confirm
+                    Заказ выполнен
                   </Button>
                 ) : null}
                 {booking.status === "new" ? (
@@ -211,7 +222,7 @@ class BookingCard extends Component {
                     className={classes.button}
                     onClick={this.handleCancelBook}
                   >
-                    Cancel
+                    Отменить
                   </Button>
                 ) : null}
                 <Dialog
@@ -219,7 +230,9 @@ class BookingCard extends Component {
                   onClose={this.handleClose}
                   aria-labelledby="form-dialog-title"
                 >
-                  <DialogTitle id="form-dialog-title">Cancel book</DialogTitle>
+                  <DialogTitle id="form-dialog-title">
+                    Отмена заказа
+                  </DialogTitle>
                   <DialogContent>
                     <TextField
                       autoFocus
@@ -227,18 +240,18 @@ class BookingCard extends Component {
                       id="name"
                       value={this.state.reason}
                       onChange={this.handleChangeReason}
-                      label="Reason"
+                      label="Причина"
                       fullWidth
                     />
                   </DialogContent>
                   <DialogActions>
-                    <Button onClick={this.handleClose}>Back</Button>
+                    <Button onClick={this.handleClose}>Назад</Button>
                     <Button
                       onClick={this.handleCancelBookExecutor}
                       variant="outlined"
                       color="secondary"
                     >
-                      Confirm
+                      Подтвердить отмену
                     </Button>
                   </DialogActions>
                 </Dialog>

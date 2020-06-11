@@ -36,14 +36,15 @@ export default class Book extends Component {
           service: service ? service : [],
           smallCarpets: smallCarpets ? smallCarpets : 0,
           bigCarpets: bigCarpets ? bigCarpets : 0,
-          startDate: startDate ? startDate : Date.now(),
-          expectedTime: expectedTime ? expectedTime : Date.now(),
+          startDate: startDate ? startDate : new Date(),
+          expectedTime: expectedTime ? expectedTime : new Date(),
           cleaningDays: cleaningDays ? cleaningDays : [],
           regularity: regularity ? regularity : 0,
           recurrence: recurrence ? recurrence : 0,
           email: email ? email : "",
           price: 0,
-          average: 0
+          average: 0,
+          phoneNumber: ""
         }}
         onSubmit={(values, { setFieldError }) => {
           try {
@@ -52,7 +53,10 @@ export default class Book extends Component {
                 ...values,
                 company: this.props.company,
                 customer: this.props.customer,
-                city: this.props.city
+                city: this.props.city,
+                phoneNumber: this.props.phoneNumber
+                  ? this.props.phoneNumber
+                  : values.phoneNumber
               });
             } else {
               this.props.lookOffers(values);

@@ -31,10 +31,14 @@ const mapStateToProps = state => ({
   availableWorkingDays: state.order.company
     ? state.order.availableWorkingDays
     : undefined,
-  customer: state.profile.data._id ? state.profile.data._id : undefined
+  customer: state.profile.data._id ? state.profile.data._id : undefined,
+  phoneNumber: state.profile.data.phoneNumber
+    ? state.profile.data.phoneNumber
+    : undefined
 });
 
-export default connect(
-  mapStateToProps,
-  { lookOffers, bookCleaning, resetSelectedCompany }
-)(Book);
+export default connect(mapStateToProps, {
+  lookOffers,
+  bookCleaning,
+  resetSelectedCompany
+})(Book);

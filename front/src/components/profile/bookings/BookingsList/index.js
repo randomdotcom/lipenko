@@ -3,8 +3,9 @@ import BookingCard from "../../../../containers/profile/bookings/BookingCardCont
 
 const BookingList = ({ bookings }) => {
   if (!bookings["0"]) {
-    return <p>Bookings are not found</p>;
+    return <p>Заказы не найдены</p>;
   } else {
+    console.log(bookings);
     return bookings.map(booking => (
       <BookingCard booking={booking} key={booking._id} />
     ));

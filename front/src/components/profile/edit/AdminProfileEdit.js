@@ -6,37 +6,37 @@ import { string, object } from "yup";
 
 const validationEditProfile = object().shape({
   username: string()
-    .required("Username is required")
-    .min(2, "Username must contain atleast 2 characters")
-    .max(9, "Username must contain less then 9 characters")
+    .required("Введите имя пользователя")
+    .min(2, "Имя пользователя должно содержать хотябы 2 символа")
+    .max(9, "Имя пользователя должно содержать меньше 10 символов")
     .matches(
       /^[a-zA-Z][a-zA-Z0-9-_.]{1,9}$/,
-      "The username can contain letters, numbers, -, ., _"
+      "Имя пользователя может содержать буквы, цифры, -, ., _"
     ),
   email: string()
-    .required("Email is required")
-    .min(5, "Email must contain atleast 5 characters")
-    .max(50, "Email must contain less then 50 characters")
+    .required("Введите электронную почту")
+    .min(5, "Эл. почта должна содержать больше 4 символов")
+    .max(50, "Эл. почта должна содержать меньше 51 символов")
     .matches(
       /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-      "The email is incorrect"
+      "Эл. почта неверная"
     )
 });
 
 const validationNewPassword = object().shape({
   oldPassword: string()
-    .required("Enter your password")
-    .min(5, "Password must contain atleast 5 characters")
-    .max(18, "Password must contain less then 18 characters")
-    .matches(/^[\S]{5,18}$/, "The password cannot contain spaces"),
+    .required("Введите свой пароль")
+    .min(5, "Пароль должен содержать больше 4 символов")
+    .max(18, "Пароль должен содержать меньше 19 символов")
+    .matches(/^[\S]{5,18}$/, "Пароль не может содержать пробелы"),
   newPassword: string()
-    .required("Enter your password")
-    .min(5, "Password must contain atleast 5 characters")
-    .max(18, "Password must contain less then 18 characters")
-    .matches(/^[\S]{5,18}$/, "The password cannot contain spaces"),
+    .required("Введите свой пароль")
+    .min(5, "Пароль должен содержать больше 4 символов")
+    .max(18, "Пароль должен содержать меньше 19 символов")
+    .matches(/^[\S]{5,18}$/, "Пароль не может содержать пробелы"),
   confirmNewPassword: string()
-    .required("Enter your password again")
-    .test("passwords-match", "Passwords must match ya fool", function(value) {
+    .required("Введите свой пароль еще раз")
+    .test("passwords-match", "Пароли не совпадают", function (value) {
       return this.parent.newPassword === value;
     })
 });
@@ -93,7 +93,7 @@ class AdminProfileEdit extends Component {
     return (
       <form className={classes.container} onSubmit={handleSubmit} noValidate>
         <TextField
-          label="Username"
+          label="Имя пользователя"
           autoComplete="username"
           className={classes.textField}
           margin="normal"
@@ -106,7 +106,7 @@ class AdminProfileEdit extends Component {
           error={Boolean(errors.username)}
         />
         <TextField
-          label="Email"
+          label="Электронная почта"
           autoComplete="email"
           className={classes.textField}
           margin="normal"
@@ -126,7 +126,7 @@ class AdminProfileEdit extends Component {
           color="primary"
           size="large"
         >
-          CONFIRM
+          ПОДТВЕРДИТЬ
         </Button>
       </form>
     );
@@ -143,7 +143,7 @@ class AdminProfileEdit extends Component {
     return (
       <form className={classes.container} onSubmit={handleSubmit} noValidate>
         <TextField
-          label="Old password"
+          label="Текущий пароль"
           autoComplete="new-password"
           className={classes.textField}
           margin="normal"
@@ -157,7 +157,7 @@ class AdminProfileEdit extends Component {
           error={Boolean(errors.oldPassword)}
         />
         <TextField
-          label="New password"
+          label="Новый пароль"
           autoComplete="new-password"
           className={classes.textField}
           margin="normal"
@@ -171,7 +171,7 @@ class AdminProfileEdit extends Component {
           error={Boolean(errors.newPassword)}
         />
         <TextField
-          label="Confirm new password"
+          label="Подтвердите пароль"
           autoComplete="new-password"
           className={classes.textField}
           margin="normal"
@@ -191,7 +191,7 @@ class AdminProfileEdit extends Component {
           color="primary"
           size="large"
         >
-          CHANGE PASSWORD
+          ИЗМЕНИТЬ ПАРОЛЬ
         </Button>
       </form>
     );

@@ -10,8 +10,4 @@ const mapStateToProps = state => ({
   phoneNumber: state.profile.data.phoneNumber
 });
 
-export default connect(
-  mapStateToProps,
-  { signOut }
-)(UserProfile);
- 
+export default connect(mapStateToProps, { signOut })(UserProfile);

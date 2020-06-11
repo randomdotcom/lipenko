@@ -13,18 +13,18 @@ import GoogleAuthButton from "./GoogleAuthButton";
 
 const validationSchema = object().shape({
   username: string()
-    .required("Username is required")
-    .min(2, "Username must contain atleast 2 characters")
-    .max(9, "Username must contain less then 9 characters")
+    .required("Введите имя пользователя")
+    .min(2, "Имя пользователя должно содержать хотябы 2 символа")
+    .max(9, "Имя пользователя должно содержать меньше 10 символов")
     .matches(
       /^[a-zA-Z][a-zA-Z0-9-_.]{1,9}$/,
-      "The username can contain letters, numbers, -, ., _"
+      "Имя пользователя может содержать буквы, цифры, -, ., _"
     ),
   password: string()
-    .required("Enter your password")
-    .min(5, "Password must contain atleast 5 characters")
-    .max(18, "Password must contain less then 18 characters")
-    .matches(/^[\S]{5,18}$/, "The password cannot contain spaces")
+    .required("Введите свой пароль")
+    .min(5, "Пароль должен содержать больше 4 символов")
+    .max(18, "Пароль должен содержать меньше 19 символов")
+    .matches(/^[\S]{5,18}$/, "Пароль не может содержать пробелы")
 });
 
 class SignIn extends Component {
@@ -104,17 +104,17 @@ class SignIn extends Component {
                 value="user"
                 control={<Radio />}
                 labelPlacement="end"
-                label="User"
+                label="Клиент"
               />
               <FormControlLabel
                 value="executor"
                 control={<Radio />}
                 labelPlacement="end"
-                label="Executor"
+                label="Компания"
               />
             </RadioGroup>
             <TextField
-              label="Username"
+              label="Имя пользователя"
               autoComplete="username"
               className={classes.textField}
               disabled={this.props.isSended}
@@ -128,7 +128,7 @@ class SignIn extends Component {
               error={Boolean(errors.username)}
             />
             <TextField
-              label="Password"
+              label="Пароль"
               autoComplete="current-password"
               className={classes.textField}
               margin="normal"
@@ -181,7 +181,7 @@ class SignIn extends Component {
                 size="large"
                 className={classes.button}
               >
-                SIGN IN
+                ВОЙТИ
               </Button>
               {this.state.selectedForm === "user" ? (
                 <GoogleAuthButton

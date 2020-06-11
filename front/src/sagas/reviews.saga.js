@@ -67,7 +67,7 @@ export function* watchReviewCompany() {
       );
 
       yield put(companyReviewed(response.data));
-      yield put(returnEvent("Review added!", "success"));
+      yield put(returnEvent("Отзыв добавлен!", "success"));
       yield put(reviewsReset());
       yield put(loadReviews({ page: 1, companyId }));
     } catch (error) {

@@ -13,18 +13,22 @@ function CompanyCard(props) {
       <ListItem alignItems="flex-start">
         <Avatar
           alt="Logo"
-          src={company.logoUrl ? company.logoUrl : process.env.REACT_APP_API_URL + 'public/company.jpg'}
+          src={
+            company.logoUrl
+              ? company.logoUrl
+              : process.env.REACT_APP_API_URL + "public/company.jpg"
+          }
           className={classes.logo}
         />
         <ListItemText
           primary={company.companyName}
           secondary={
             <>
-              <Typography component="span" color="textPrimary">
-                <b>City:</b> {company.city}
+              <Typography component="div" color="textPrimary">
+                <b>Город:</b> {company.city}
               </Typography>
-              <Typography component="span" color="textPrimary">
-                <b>Rating:</b> {company.rating}
+              <Typography component="div" color="textPrimary">
+                <b>Рейтинг:</b> {company.rating}
               </Typography>
               <Button
                 variant="outlined"
@@ -35,7 +39,7 @@ function CompanyCard(props) {
                   pathname: `/companies/${props.id}`
                 }}
               >
-                <b>order service</b>
+                <b>Подробнее</b>
               </Button>
             </>
           }
@@ -56,7 +60,8 @@ const styles = theme => ({
   logo: {
     width: 125,
     height: 125,
-    boxShadow: theme.shadows[2]
+    boxShadow: theme.shadows[2],
+    marginRight: 10
   },
   button: {
     margin: theme.spacing.unit

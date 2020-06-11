@@ -14,7 +14,7 @@ function AdminProfile(props) {
             <p>{props.username}</p>
             <Avatar
               alt="Avatar"
-              src="https://static.espreso.tv/uploads/article/2596219/images/im578x383-avatar-neytiri-sad.jpg"
+              src="https://www.ercolemoretti.it/WP2016/wp-content/uploads/2016/06/em_avatar_default-user.png"
               className={classes.bigAvatar}
             />
           </Paper>
@@ -25,7 +25,7 @@ function AdminProfile(props) {
             variant="contained"
             color="secondary"
           >
-            edit
+            Редактировать
           </Button>
           <Button
             component={Link}
@@ -34,7 +34,7 @@ function AdminProfile(props) {
             variant="outlined"
             color="primary"
           >
-            customers list
+            СПИСОК КЛИЕНТОВ
           </Button>
         </div>
         <div className={classes.InfoAndLogOutButton}>
@@ -42,12 +42,19 @@ function AdminProfile(props) {
             <LogOutButton handleClick={props.signOut} />
           </div>
           <div className={classes.profileInfo}>
-            <Typography>
-              <b>Account type:</b> {props.role}
-            </Typography>
-            <Typography>
-              <b>Email:</b> {props.email}
-            </Typography>
+            <Paper className={classes.informationView}>
+              <Typography className={classes.informationViewTitle}>
+                Основная информация
+              </Typography>
+              <Typography className={classes.informationTextContainer}>
+                <span className={classes.informationTitle}>Тип аккаунта:</span>{" "}
+                {props.role}
+              </Typography>
+              <Typography className={classes.informationTextContainer}>
+                <span className={classes.informationTitle}>Эл. почта:</span>{" "}
+                {props.email}
+              </Typography>
+            </Paper>
           </div>
         </div>
       </div>
@@ -97,6 +104,27 @@ const styles = theme => ({
   },
   AvatarAndInfo: {
     display: "flex"
+  },
+  informationView: {
+    padding: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginTop: 15
+  },
+  informationTextContainer: {
+    marginTop: 5
+  },
+  informationTitle: {
+    backgroundColor: "#ddd",
+    padding: 2,
+    paddingLeft: 3,
+    paddingRight: 3,
+    borderRadius: 3
+  },
+  informationViewTitle: {
+    textTransform: "upperCase",
+    fontWeight: "bold",
+    fontSize: 16
   }
 });
 

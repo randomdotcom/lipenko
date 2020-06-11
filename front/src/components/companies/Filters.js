@@ -84,12 +84,12 @@ class Filters extends Component {
         <FormLabel component="legend" />
         <TextField
           color="secondary"
-          label="City"
+          label="Город"
           value={this.state.city}
           onChange={this.handleChangeCity}
           className={classes.city}
         />
-        <FormLabel component="legend">Type of cleaning</FormLabel>
+        <FormLabel component="legend">Вид уборки</FormLabel>
         <RadioGroup
           className={classes.group}
           value={this.state.type}
@@ -98,36 +98,36 @@ class Filters extends Component {
           <FormControlLabel
             value="standart"
             control={<Radio color="secondary" className={classes.radio} />}
-            label="Standart"
+            label="Обычная"
             labelPlacement="start"
           />
           <FormControlLabel
             value="general"
             control={<Radio color="secondary" className={classes.radio} />}
-            label="General"
+            label="Генеральная"
             labelPlacement="start"
           />
           <FormControlLabel
             value="afterRepair"
             control={<Radio color="secondary" className={classes.radio} />}
-            label="After repair"
+            label="После ремонта"
             labelPlacement="start"
           />
           <FormControlLabel
             value="industrial"
             control={<Radio color="secondary" className={classes.radio} />}
-            label="Industrial"
+            label="Промышленная"
             labelPlacement="start"
           />
           <FormControlLabel
             value="office"
             control={<Radio color="secondary" className={classes.radio} />}
-            label="Office"
+            label="Чистка офиса"
             labelPlacement="start"
           />
         </RadioGroup>
         <FormLabel className={classes.group} component="legend">
-          Other cleanings
+          Другое
         </FormLabel>
         <FormControlLabel
           control={
@@ -137,7 +137,7 @@ class Filters extends Component {
               className={classes.padding}
             />
           }
-          label="Carpet"
+          label="Чистка ковров"
           labelPlacement="start"
         />
         <FormControlLabel
@@ -148,7 +148,7 @@ class Filters extends Component {
               className={classes.checkbox}
             />
           }
-          label="Furniture"
+          label="Чистка мебели"
           labelPlacement="start"
         />
         <FormControlLabel
@@ -159,7 +159,7 @@ class Filters extends Component {
               className={classes.checkbox}
             />
           }
-          label="Pool"
+          label="Чистка бассейнов"
           labelPlacement="start"
         />
       </FormControl>
@@ -174,7 +174,7 @@ const styles = theme => ({
   formControl: {
     margin: theme.spacing.unit * 2,
     marginTop: theme.spacing.unit * 2,
-    minWidth: 120
+    minWidth: 180
   },
   radio: {
     padding: 0,

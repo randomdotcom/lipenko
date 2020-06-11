@@ -25,7 +25,7 @@ export function* watchEditMainInfoExecutor() {
 
       yield put(executorMainInfoEdited(payload));
       yield put(push("/profile"));
-      yield put(returnEvent("Your profile is changed"));
+      yield put(returnEvent("Профиль успешно изменен"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }
@@ -53,7 +53,7 @@ export function* watchUploadLogoExecutor() {
 
       const { logoUrl, logoName } = response.data;
       yield put(logoUploaded({ logoUrl, logoName }));
-      yield put(returnEvent("Your logo is uploaded!"));
+      yield put(returnEvent("Логотип успешно изменен"));
     } catch (error) {
       console.log(error);
       yield put(returnError(error.response.data));
@@ -76,7 +76,7 @@ export function* watchEditTOCExecutor() {
 
       yield put(executorTypesOfCleaningEdited(response.data));
       yield put(push("/profile"));
-      yield put(returnEvent("Your profile is changed"));
+      yield put(returnEvent("Профиль успешно изменен"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }
@@ -93,7 +93,7 @@ export function* watchChangePasswordExecutor() {
 
       yield put(executorPasswordChanged());
       yield put(push("/profile"));
-      yield put(returnEvent("Your password is changed"));
+      yield put(returnEvent("Пароль успешно изменен"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }
@@ -117,7 +117,7 @@ export function* watchAcceptBook() {
 
       yield put(bookAccepted());
       yield put(loadBookings(query));
-      yield put(returnEvent("The book is accepted"));
+      yield put(returnEvent("Заказ успешно принят"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }

@@ -81,7 +81,7 @@ class CompanyPage extends Component {
 
   render() {
     const { classes, company, toc } = this.props;
-    console.log(company)
+    console.log(company);
     if (company.companyName) {
       return (
         <div className={classes.root}>
@@ -92,7 +92,11 @@ class CompanyPage extends Component {
                   <p>{company.companyName}</p>
                   <Avatar
                     alt="Avatar"
-                    src={company.logoUrl ? company.logoUrl : process.env.REACT_APP_API_URL+'public/company.jpg'}
+                    src={
+                      company.logoUrl
+                        ? company.logoUrl
+                        : process.env.REACT_APP_API_URL + "public/company.jpg"
+                    }
                     className={classes.bigAvatar}
                   />
                 </Paper>
@@ -103,7 +107,7 @@ class CompanyPage extends Component {
                     color="primary"
                     className={classes.button}
                   >
-                    <b>Book cleaning</b>
+                    <b>заказать уборку</b>
                   </Button>
                 ) : null}
                 {this.props.role === "user" && !company.isBlocked ? (
@@ -114,7 +118,7 @@ class CompanyPage extends Component {
                     color="primary"
                     className={classes.button}
                   >
-                    <b>Review company</b>
+                    <b>ОСТАВИТЬ ОТЗЫВ</b>
                   </Button>
                 ) : null}
                 {this.props.role === "admin" && !company.isBlocked ? (
@@ -125,19 +129,19 @@ class CompanyPage extends Component {
                     color="secondary"
                     className={classes.button}
                   >
-                    <b>block company</b>
+                    <b>ЗАБЛОКИРОВАТЬ</b>
                   </Button>
                 ) : null}
                 {this.props.role === "admin" && company.isBlocked === true ? (
                   <>
-                    <span>Blocked, reason: {company.blockReason}</span>
+                    <span>Заблокирована, причина: {company.blockReason}</span>
                     <Button
                       onClick={this.handleUnblockCompany}
                       variant="outlined"
                       color="secondary"
                       className={classes.button}
                     >
-                      <b>unblock company</b>
+                      <b>РАЗБЛОКИРОВАТЬ</b>
                     </Button>
                   </>
                 ) : null}
@@ -146,76 +150,188 @@ class CompanyPage extends Component {
                 <div className={classes.profileInfo}>
                   {company.isBlocked && this.props.role !== "admin" ? (
                     <span>
-                      Company is blocked, reason: {company.blockReason}
+                      Компания заблокирована, причина: {company.blockReason}
                     </span>
                   ) : (
                     <>
-                      <Typography>
-                        <b>Rating:</b> {company.rating}
-                      </Typography>
-                      <Typography>
-                        <b>City:</b> {company.city}
-                      </Typography>
-                      <Typography>
-                        <b>Description:</b> {company.description}
-                      </Typography>
-                      <Typography>
-                        <b>Phone number:</b> {company.phoneNumber}
-                      </Typography>
-                      <Typography>
-                        <b>TypesOfCleaning</b>
-                      </Typography>
-                      <Typography>
-                        <b>Standart small room:</b>{" "}
-                        {toc.standart.standartSmallRoom}
-                      </Typography>
-                      <Typography>
-                        <b>Standart big room:</b> {toc.standart.standartBigRoom}
-                      </Typography>
-                      <Typography>
-                        <b>Standart bathroom:</b>{" "}
-                        {toc.standart.standartBathRoom}
-                      </Typography>
-                      <Typography>
-                        <b>General small room:</b>{" "}
-                        {toc.general.generalSmallRoom}
-                      </Typography>
-                      <Typography>
-                        <b>General big room:</b> {toc.general.generalBigRoom}
-                      </Typography>
-                      <Typography>
-                        <b>General bathroom:</b> {toc.general.generalBathRoom}
-                      </Typography>
-                      <Typography>
-                        <b>After repair small room:</b>{" "}
-                        {toc.afterRepair.afterRepairSmallRoom}
-                      </Typography>
-                      <Typography>
-                        <b>After repair big room:</b>{" "}
-                        {toc.afterRepair.afterRepairBigRoom}
-                      </Typography>
-                      <Typography>
-                        <b>After repair bathroom:</b>{" "}
-                        {toc.afterRepair.afterRepairBathRoom}
-                      </Typography>
-                      <Typography>
-                        <b>Carpet small:</b> {toc.carpet.smallCarpet}
-                      </Typography>
-                      <Typography>
-                        <b>Carpet big:</b> {toc.carpet.bigCarpet}
-                      </Typography>
-                      <Typography>
-                        <b>Office:</b> {toc.office}
-                      </Typography>
-                      <Typography>
-                        <b>Furniture:</b> {toc.furniture}
-                      </Typography>
-                      <Typography>
-                        <b>Industrial:</b> {toc.industrial}
-                      </Typography>
-                      <Typography>
-                        <b>Pool:</b> {toc.pool}
-                      </Typography>
+                      <Paper className={classes.informationView}>
+                        <Typography className={classes.informationViewTitle}>
+                          Основная информация
+                        </Typography>
+                        <Typography
+                          className={classes.informationTextContainer}
+                        >
+                          <span className={classes.informationTitle}>
+                            Рейтинг:
+                          </span>{" "}
+                          {company.rating}
+                        </Typography>
+                        <Typography
+                          className={classes.informationTextContainer}
+                        >
+                          <span className={classes.informationTitle}>
+                            Город:
+                          </span>{" "}
+                          {company.city}
+                        </Typography>
+                        <Typography
+                          className={classes.informationTextContainer}
+                        >
+                          <span className={classes.informationTitle}>
+                            Информация:
+                          </span>{" "}
+                          {company.description}
+                        </Typography>
+                        <Typography
+                          className={classes.informationTextContainer}
+                        >
+                          <span className={classes.informationTitle}>
+                            Номер телефона:
+                          </span>{" "}
+                          {company.phoneNumber}
+                        </Typography>
+                      </Paper>
+
+                      <Paper className={classes.informationView}>
+                        <Typography className={classes.informationViewTitle}>
+                          Прайс лист
+                        </Typography>
+
+                        <Typography
+                          className={classes.informationTextContainer}
+                        >
+                          <span className={classes.informationTitle}>
+                            Обычная - мал. комната:
+                          </span>{" "}
+                          {toc.standart.standartSmallRoom}р
+                        </Typography>
+
+                        <Typography
+                          className={classes.informationTextContainer}
+                        >
+                          <span className={classes.informationTitle}>
+                            Обычная - бол. комната:
+                          </span>{" "}
+                          {toc.standart.standartBigRoom}р
+                        </Typography>
+
+                        <Typography
+                          className={classes.informationTextContainer}
+                        >
+                          <span className={classes.informationTitle}>
+                            Обычная - санузел:
+                          </span>{" "}
+                          {toc.standart.standartBathRoom}р
+                        </Typography>
+
+                        <Typography
+                          className={classes.informationTextContainer}
+                        >
+                          <span className={classes.informationTitle}>
+                            Генеральная - мал. комната:
+                          </span>{" "}
+                          {toc.general.generalSmallRoom}р
+                        </Typography>
+
+                        <Typography
+                          className={classes.informationTextContainer}
+                        >
+                          <span className={classes.informationTitle}>
+                            Генеральная - бол. комната:
+                          </span>{" "}
+                          {toc.general.generalBigRoom}р
+                        </Typography>
+
+                        <Typography
+                          className={classes.informationTextContainer}
+                        >
+                          <span className={classes.informationTitle}>
+                            Генеральная - санузел:
+                          </span>{" "}
+                          {toc.general.generalBathRoom}р
+                        </Typography>
+
+                        <Typography
+                          className={classes.informationTextContainer}
+                        >
+                          <span className={classes.informationTitle}>
+                            После ремонта - мал. комната:
+                          </span>{" "}
+                          {toc.afterRepair.afterRepairSmallRoom}р
+                        </Typography>
+
+                        <Typography
+                          className={classes.informationTextContainer}
+                        >
+                          <span className={classes.informationTitle}>
+                            После ремонта - бол. комната:
+                          </span>{" "}
+                          {toc.afterRepair.afterRepairBigRoom}р
+                        </Typography>
+
+                        <Typography
+                          className={classes.informationTextContainer}
+                        >
+                          <span className={classes.informationTitle}>
+                            После ремонта - санузел:
+                          </span>{" "}
+                          {toc.afterRepair.afterRepairBathRoom}р
+                        </Typography>
+
+                        <Typography
+                          className={classes.informationTextContainer}
+                        >
+                          <span className={classes.informationTitle}>
+                            Офисная, за кв. м.:
+                          </span>{" "}
+                          {toc.office}р
+                        </Typography>
+
+                        <Typography
+                          className={classes.informationTextContainer}
+                        >
+                          <span className={classes.informationTitle}>
+                            Промышленная, за кв.м.:
+                          </span>{" "}
+                          {toc.industrial}р
+                        </Typography>
+
+                        <Typography
+                          className={classes.informationTextContainer}
+                        >
+                          <span className={classes.informationTitle}>
+                            Мал. ковер:
+                          </span>{" "}
+                          {toc.carpet.smallCarpet}р
+                        </Typography>
+
+                        <Typography
+                          className={classes.informationTextContainer}
+                        >
+                          <span className={classes.informationTitle}>
+                            Бол. ковер:
+                          </span>{" "}
+                          {toc.carpet.bigCarpet}р
+                        </Typography>
+
+                        <Typography
+                          className={classes.informationTextContainer}
+                        >
+                          <span className={classes.informationTitle}>
+                            Чистка мебели:
+                          </span>{" "}
+                          {toc.furniture}р
+                        </Typography>
+
+                        <Typography
+                          className={classes.informationTextContainer}
+                        >
+                          <span className={classes.informationTitle}>
+                            Чистка бассейна:
+                          </span>{" "}
+                          {toc.pool}р
+                        </Typography>
+                      </Paper>
                     </>
                   )}
                 </div>
@@ -230,7 +346,9 @@ class CompanyPage extends Component {
             onClose={this.handleCloseBlockDialog}
             aria-labelledby="form-dialog-title"
           >
-            <DialogTitle id="form-dialog-title">Block company</DialogTitle>
+            <DialogTitle id="form-dialog-title">
+              Блокировка компании
+            </DialogTitle>
             <DialogContent>
               <TextField
                 autoFocus
@@ -238,18 +356,18 @@ class CompanyPage extends Component {
                 name="reason"
                 value={this.state.reason}
                 onChange={this.handleChange}
-                label="Reason"
+                label="Причина"
                 fullWidth
               />
             </DialogContent>
             <DialogActions>
-              <Button onClick={this.handleCloseBlockDialog}>Back</Button>
+              <Button onClick={this.handleCloseBlockDialog}>Назад</Button>
               <Button
                 onClick={this.handleBlockCompany}
                 variant="outlined"
                 color="secondary"
               >
-                Confirm
+                ЗАБЛОКИРОВАТЬ
               </Button>
             </DialogActions>
           </Dialog>
@@ -258,14 +376,14 @@ class CompanyPage extends Component {
             onClose={this.handleCloseReviewDialog}
             aria-labelledby="form-dialog-title"
           >
-            <DialogTitle id="form-dialog-title">Review company</DialogTitle>
+            <DialogTitle id="form-dialog-title">ОЦЕНИТЬ КОМПАНИЮ</DialogTitle>
             <DialogContent>
               <TextField
                 autoFocus
                 name="rating"
                 value={this.state.rating}
                 onChange={this.handleChange}
-                label="Rating(between 0 and 5)"
+                label="Оценка(0-5)"
                 fullWidth
               />
               <TextField
@@ -273,18 +391,18 @@ class CompanyPage extends Component {
                 name="comment"
                 value={this.state.comment}
                 onChange={this.handleChange}
-                label="Comment"
+                label="Комментарий"
                 fullWidth
               />
             </DialogContent>
             <DialogActions>
-              <Button onClick={this.handleCloseReviewDialog}>Back</Button>
+              <Button onClick={this.handleCloseReviewDialog}>Назад</Button>
               <Button
                 onClick={this.handleReviewCompany}
                 variant="outlined"
                 color="secondary"
               >
-                Confirm
+                Отправить
               </Button>
             </DialogActions>
           </Dialog>
@@ -341,6 +459,27 @@ const styles = theme => ({
   },
   AvatarAndInfo: {
     display: "flex"
+  },
+  informationView: {
+    padding: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginTop: 15
+  },
+  informationTextContainer: {
+    marginTop: 5
+  },
+  informationTitle: {
+    backgroundColor: "#ddd",
+    padding: 2,
+    paddingLeft: 3,
+    paddingRight: 3,
+    borderRadius: 3
+  },
+  informationViewTitle: {
+    textTransform: "upperCase",
+    fontWeight: "bold",
+    fontSize: 16
   }
 });
 

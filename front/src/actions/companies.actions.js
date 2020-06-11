@@ -1,7 +1,7 @@
 export const LOAD_COMPANIES = "COMPANIES: LOAD...";
-export const loadCompanies = query => ({
+export const loadCompanies = (query, userRole) => ({
   type: LOAD_COMPANIES,
-  payload: query
+  payload: { query, userRole }
 });
 
 export const COMPANIES_LOADED = "COMPANIES: LOADED";

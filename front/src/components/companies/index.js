@@ -11,7 +11,7 @@ import "./styles.css";
 
 class Companies extends Component {
   componentDidMount() {
-    this.props.loadCompanies(this.props.search);
+    this.props.loadCompanies(this.props.search, this.props.userRole);
   }
 
   handleQueryChange = current => {
@@ -31,7 +31,7 @@ class Companies extends Component {
     return (
       <div className={classes.root}>
         <Search />
-        <div className='listAndFilters'>
+        <div className="listAndFilters">
           <div className={classes.sortAndList}>
             <Sort />
             <List className={classes.list}>
@@ -62,13 +62,13 @@ const styles = theme => ({
   root: {
     marginTop: 20,
     backgroundColor: "whitesmoke",
-    boxShadow: "0 1px 7px 1px rgba(0, 0, 0, .25)",
+    border: "1px solid #dedede",
+    boxShadow: "0px 0px 25px 5px rgba(0,0,0,0.1)",
     padding: 25,
-    paddingTop: 8
+    paddingTop: 8,
+    height: "100%"
   },
-  listAndFilters: {
-    
-  },
+  listAndFilters: {},
   list: {
     width: "100%",
     paddingTop: 0

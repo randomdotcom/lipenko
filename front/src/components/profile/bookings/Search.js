@@ -52,7 +52,7 @@ class Search extends Component {
         <InputBase
           onChange={this.handleChange}
           className={classes.input}
-          placeholder="Search For Company"
+          placeholder="Поиск компаний"
         />
         <IconButton
           className={classes.iconButton}

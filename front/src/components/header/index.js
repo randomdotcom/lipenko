@@ -10,6 +10,7 @@ import {
 import { Link, NavLink } from "react-router-dom";
 import indigo from "@material-ui/core/colors/indigo";
 import { withRouter } from "react-router-dom";
+import "./index.css";
 
 const Main = ({
   role,
@@ -25,8 +26,8 @@ const Main = ({
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
-        <Toolbar>
+      <AppBar position="static" className="headerContainer">
+        <Toolbar className="content">
           <Typography
             variant="h6"
             color="inherit"
@@ -41,9 +42,9 @@ const Main = ({
                 onClick={handleClickBookCleaning}
               >
                 {role === "user" ? (
-                  <span>book cleaning</span>
+                  <span>заказать уборку</span>
                 ) : (
-                  <span>book cleaning as guest</span>
+                  <span>заказать уборку как гость</span>
                 )}
               </Button>
             ) : null}
@@ -53,7 +54,7 @@ const Main = ({
             to="/companies"
             activeClassName={classes.activeNavLink}
           >
-            Companies
+            КОМПАНИИ
           </Button>
           {isAuthenticated ? (
             <Button
@@ -65,12 +66,14 @@ const Main = ({
             </Button>
           ) : (
             <Button component={Link} to="/auth" color="inherit">
-              Login
+              Вход
             </Button>
           )}
         </Toolbar>
       </AppBar>
-      {children}
+      <div className="contentContainer">
+        <div className="content">{children}</div>
+      </div>
     </div>
   );
 };

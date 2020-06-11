@@ -7,18 +7,18 @@ import { TextField, Button, Typography } from "@material-ui/core";
 
 const validationSchema = object().shape({
   username: string()
-    .required("Username is required")
-    .min(2, "Username must contain atleast 2 characters")
-    .max(9, "Username must contain less then 9 characters")
+    .required("Введите имя пользователя")
+    .min(2, "Имя пользователя должно содержать хотябы 2 символа")
+    .max(9, "Имя пользователя должно содержать меньше 10 символов")
     .matches(
       /^[a-zA-Z][a-zA-Z0-9-_.]{1,9}$/,
-      "The username can contain letters, numbers, -, ., _"
+      "Имя пользователя может содержать буквы, цифры, -, ., _"
     ),
   password: string()
-    .required("Enter your password")
-    .min(5, "Password must contain atleast 5 characters")
-    .max(18, "Password must contain less then 18 characters")
-    .matches(/^[\S]{5,18}$/, "The password cannot contain spaces")
+    .required("Введите свой пароль")
+    .min(5, "Пароль должен содержать больше 4 символов")
+    .max(18, "Пароль должен содержать меньше 19 символов")
+    .matches(/^[\S]{5,18}$/, "Пароль не может содержать пробелы")
 });
 
 class Admin extends Component {
@@ -48,11 +48,11 @@ class Admin extends Component {
     const { classes } = this.props;
     return (
       <form className={classes.authForm} onSubmit={handleSubmit}>
-        <Typography className={classes.formTitle}>ADMIN LOGIN</Typography>
+        <Typography className={classes.formTitle}>АВТОРИЗАЦИЯ</Typography>
         <div className={classes.inputs}>
           <TextField
             fullWidth
-            label="Username"
+            label="Имя пользователя"
             autoComplete="username"
             className={classes.textField}
             disabled={this.props.isSended}
@@ -67,7 +67,7 @@ class Admin extends Component {
           />
           <TextField
             fullWidth
-            label="Password"
+            label="Пароль"
             autoComplete="password"
             className={classes.textField}
             disabled={this.props.isSended}
@@ -82,7 +82,9 @@ class Admin extends Component {
             error={Boolean(errors.password)}
           />
         </div>
-        <Button type="submit" className={classes.button}>SIGNIN</Button>
+        <Button type="submit" className={classes.button}>
+          ВОЙТИ
+        </Button>
       </form>
     );
   };
@@ -97,7 +99,7 @@ const styles = theme => ({
     width: "100%"
   },
   authForm: {
-    backgroundColor: indigo[500],
+    backgroundColor: indigo[300],
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between"

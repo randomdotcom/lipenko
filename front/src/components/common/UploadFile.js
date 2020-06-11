@@ -4,8 +4,10 @@ import { Button, Paper } from "@material-ui/core";
 
 export function UploadFile({ handleChange, handleClick }) {
   return (
-    <Paper className='container'>
-      <label htmlFor="file" className='label'>UPLOAD YOUR LOGO</label>
+    <div>
+      <label htmlFor="file" className="label">
+        НОВОЕ ИЗОБРАЖЕНИЕ ПРОФИЛЯ
+      </label>
       <input
         type="file"
         name="logo"
@@ -13,7 +15,9 @@ export function UploadFile({ handleChange, handleClick }) {
         className="fileInput"
         onChange={handleChange}
       />
-      <Button variant="contained" color="primary" onClick={handleClick}>Upload</Button>
-    </Paper>
+      <Button variant="contained" color="primary" onClick={handleClick}>
+        ПОДТВЕРДИТЬ
+      </Button>
+    </div>
   );
 }

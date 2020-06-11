@@ -3,6 +3,6 @@ import './styles.css'
 
 export default function(props) {
     return(
-        <div className="loading">LOADING</div>
+        <div className="loading">ЗАГРУЗКА</div>
     )
 }

@@ -15,103 +15,69 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const validationSchema = object().shape({
   username: string()
-    .required("Username is required")
-    .min(2, "Username must contain atleast 2 characters")
-    .max(9, "Username must contain less then 9 characters")
+    .required("Введите имя пользователя")
+    .min(2, "Имя пользователя должно содержать хотябы 2 символа")
+    .max(9, "Имя пользователя должно содержать меньше 10 символов")
     .matches(
       /^[a-zA-Z][a-zA-Z0-9-_.]{1,9}$/,
-      "The username can contain letters, numbers, -, ., _"
+      "Имя пользователя может содержать буквы, цифры, -, ., _"
     ),
   password: string()
-    .required("Enter your password")
-    .min(5, "Password must contain atleast 5 characters")
-    .max(18, "Password must contain less then 18 characters")
-    .matches(/^[\S]{5,18}$/, "The password cannot contain spaces"),
+    .required("Введите свой пароль")
+    .min(5, "Пароль должен содержать больше 4 символов")
+    .max(18, "Пароль должен содержать меньше 19 символов")
+    .matches(/^[\S]{5,18}$/, "Пароль не может содержать пробелы"),
   confirmPassword: string()
-    .required("Enter your password again")
-    .test("passwords-match", "Passwords must match ya fool", function(value) {
+    .required("Введите свой пароль еще раз")
+    .test("passwords-match", "Пароли не совпадают", function (value) {
       return this.parent.password === value;
     }),
   email: string()
-    .required("Email is required")
-    .min(5, "Email must contain atleast 5 characters")
-    .max(50, "Email must contain less then 50 characters")
+    .required("Введите электронную почту")
+    .min(5, "Эл. почта должна содержать больше 4 символов")
+    .max(50, "Эл. почта должна содержать меньше 51 символов")
     .matches(
       /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-      "The email is incorrect"
+      "Эл. почта неверная"
     ),
   phoneNumber: string()
-    .required("Phone number is required")
-    .min(13, "Phone number is incorrect")
-    .max(13, "Phone number is incorrect"),
+    .required("Введите номер телефона")
+    .min(13, "Номер телефона неверный")
+    .max(13, "Номер телефона неверный"),
   city: string()
-    .required("City name is required")
-    .min(3, "City name must contain atleast 3 characters")
-    .max(14, "City name must contain less then 14 characters")
+    .required("Введите название города")
+    .min(3, "Название города должно содержать больше 2 симоволов")
+    .max(14, "Название города должно содержать меньше 14 симоволов")
     .matches(
-      /^[A-Za-z-]{3,14}$/,
-      "City name can contain only letters, -, numbers"
+      /^[А-Яа-я-]{3,14}$/,
+      "Название города может содержать только буквы, -, цифры"
     ),
   companyName: string()
-    .required("Company name is required")
-    .min(3, "Company name must contain atleast 3 characaters")
-    .max(20, "Company name must contain less then 14 characters"),
+    .required("Введите название компании")
+    .min(3, "Название компании должно содержать больше 2 символов")
+    .max(20, "Название компании должно содержать меньше 21 символа"),
   description: string().max(
     80,
-    "Description must contain less then 80 characters"
+    "Информация об организации должна содержать меньше 80 символов"
   ),
   workingDays: array()
-    .min(1, "Company must have atleast 1 working day")
-    .max(7, "Wrong data, 7 days at week"),
-  standartSmallRoom: string()
-    .min(1, "You can type `0`")
-    .matches(/^\d{1,5}$/, "This field for money"),
-  standartBigRoom: string()
-    .min(1, "You can type `0`")
-    .matches(/^\d{1,5}$/, "This field for money"),
-  standartBathRoom: string()
-    .min(1, "You can type `0`")
-    .matches(/^\d{1,5}$/, "This field for money"),
-  generalBathRoom: string()
-    .min(1, "You can type `0`")
-    .matches(/^\d{1,5}$/, "This field for money"),
-  generalBigRoom: string()
-    .min(1, "You can type `0`")
-    .matches(/^\d{1,5}$/, "This field for money"),
-  generalSmallRoom: string()
-    .min(1, "You can type `0`")
-    .matches(/^\d{1,5}$/, "This field for money"),
-  afterRepairBathRoom: string()
-    .min(1, "You can type `0`")
-    .matches(/^\d{1,5}$/, "This field for money"),
-  afterRepairBigRoom: string()
-    .min(1, "You can type `0`")
-    .matches(/^\d{1,5}$/, "This field for money"),
-  afterRepairSmallRoom: string()
-    .min(1, "You can type `0`")
-    .matches(/^\d{1,5}$/, "This field for money"),
-  smallCarpet: string()
-    .min(1, "You can type `0`")
-    .matches(/^\d{1,5}$/, "This field for money"),
-  bigCarpet: string()
-    .min(1, "You can type `0`")
-    .matches(/^\d{1,5}$/, "This field for money"),
-  office: string().matches(
-    /^\d{1,5}$/,
-    "Field length must be atleast 1 character, you can type `0`"
-  ),
-  furniture: string().matches(
-    /^\d{1,5}$/,
-    "Field length must be atleast 1 character, you can type `0`"
-  ),
-  industrial: string().matches(
-    /^\d{1,5}$/,
-    "Field length must be atleast 1 character, you can type `0`"
-  ),
-  pool: string().matches(
-    /^\d{1,5}$/,
-    "Field length must be atleast 1 character, you can type `0`"
-  )
+    .min(1, "Компания должна иметь хотябы 1 рабочий день")
+    .max(7, "Неверные данные"),
+  standartSmallRoom: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  standartBigRoom: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  standartBathRoom: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  generalBathRoom: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  generalBigRoom: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  generalSmallRoom: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  afterRepairBathRoom: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  afterRepairBigRoom: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  afterRepairSmallRoom: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  smallCarpet: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  bigCarpet: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  office: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  furniture: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  industrial: string().matches(/^\d{1,5}$/, "Неверная цена"),
+  pool: string().matches(/^\d{1,5}$/, "Неверная цена")
 });
 
 class ExecutorSignUp extends Component {
@@ -174,7 +140,7 @@ class ExecutorSignUp extends Component {
             setFieldTouched
           }) => (
             <form className={classes.container} onSubmit={handleSubmit}>
-              <Grid container justify="center" spacing={24}>
+              <Grid container justify="center" direction="column" spacing={24}>
                 <Grid
                   item
                   justify="center"
@@ -182,7 +148,7 @@ class ExecutorSignUp extends Component {
                   className={classes.mainInfo}
                 >
                   <TextField
-                    label="Username"
+                    label="Имя пользователя"
                     autoComplete="username"
                     className={classes.textField}
                     margin="normal"
@@ -195,7 +161,7 @@ class ExecutorSignUp extends Component {
                     error={Boolean(errors.username)}
                   />
                   <TextField
-                    label="Password"
+                    label="Пароль"
                     autoComplete="new-password"
                     className={classes.textField}
                     margin="normal"
@@ -209,7 +175,7 @@ class ExecutorSignUp extends Component {
                     error={Boolean(errors.password)}
                   />
                   <TextField
-                    label="Confirm password"
+                    label="Подтверждение пароля"
                     autoComplete="new-password"
                     className={classes.textField}
                     margin="normal"
@@ -223,7 +189,7 @@ class ExecutorSignUp extends Component {
                     error={Boolean(errors.confirmPassword)}
                   />
                   <TextField
-                    label="Email"
+                    label="Электронная почта"
                     autoComplete="email"
                     className={classes.textField}
                     margin="normal"
@@ -237,7 +203,7 @@ class ExecutorSignUp extends Component {
                     error={Boolean(errors.email)}
                   />
                   <TextField
-                    label="Phone number"
+                    label="Номер телефона"
                     autoComplete="tel"
                     className={classes.textField}
                     margin="normal"
@@ -250,7 +216,7 @@ class ExecutorSignUp extends Component {
                     error={Boolean(errors.phoneNumber)}
                   />
                   <TextField
-                    label="Company name"
+                    label="Название организации"
                     autoComplete="text"
                     className={classes.textField}
                     margin="normal"
@@ -263,7 +229,7 @@ class ExecutorSignUp extends Component {
                     error={Boolean(errors.companyName)}
                   />
                   <TextField
-                    label="Descrition"
+                    label="Информация об организации"
                     autoComplete="tel"
                     className={classes.textFieldFullWidth}
                     margin="normal"
@@ -279,7 +245,7 @@ class ExecutorSignUp extends Component {
                     fullWidth
                   />
                   <TextField
-                    label="City"
+                    label="Город"
                     className={classes.textField}
                     margin="normal"
                     variant="outlined"
@@ -293,32 +259,37 @@ class ExecutorSignUp extends Component {
                   <Field
                     required
                     multiple
-                    variant="outlined"
+                    // variant="outlined"
                     className={classes.input}
                     name="workingDays"
-                    label="Working days"
+                    label="Рабочие дни"
                     options={[
-                      { value: 0, label: "Sunday" },
-                      { value: 1, label: "Monday" },
-                      { value: 2, label: "Tuesday" },
-                      { value: 3, label: "Wednesday" },
-                      { value: 4, label: "Thursday" },
-                      { value: 5, label: "Friday" },
-                      { value: 6, label: "Saturday" }
+                      { value: 0, label: "Воскресенье" },
+                      { value: 1, label: "Понедельник" },
+                      { value: 2, label: "Вторник" },
+                      { value: 3, label: "Среда" },
+                      { value: 4, label: "Четверг" },
+                      { value: 5, label: "Пятница" },
+                      { value: 6, label: "Суббота" }
                     ]}
                     component={Select}
                   />
                 </Grid>
-                <Grid container justify="center" spacing={24}>
-                  <Grid item>
+                <Grid
+                  container
+                  justify="center"
+                  direction="column"
+                  className={classes.mainInfo}
+                >
+                  <Grid item justify="center" direction="column" className={classes.expandableItems}>
                     <ExpansionPanel>
                       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                        Standart cleaning
+                        Обычная уборка
                       </ExpansionPanelSummary>
                       <ExpansionPanelDetails>
                         <div flexwrap="true">
                           <TextField
-                            label="Price per small room"
+                            label="Цена за маленькую комнату"
                             autoComplete="tel"
                             className={classes.textField}
                             margin="normal"
@@ -331,7 +302,7 @@ class ExecutorSignUp extends Component {
                             error={Boolean(errors.standartSmallRoom)}
                           />
                           <TextField
-                            label="Price per big room"
+                            label="Цена за большую комнату"
                             autoComplete="tel"
                             className={classes.textField}
                             margin="normal"
@@ -344,7 +315,7 @@ class ExecutorSignUp extends Component {
                             error={Boolean(errors.standartBigRoom)}
                           />
                           <TextField
-                            label="Price per bathroom"
+                            label="Цена за санузел"
                             autoComplete="tel"
                             className={classes.textField}
                             margin="normal"
@@ -360,15 +331,15 @@ class ExecutorSignUp extends Component {
                       </ExpansionPanelDetails>
                     </ExpansionPanel>
                   </Grid>
-                  <Grid item>
+                  <Grid item className={classes.expandableItems}>
                     <ExpansionPanel>
                       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                        General cleaning
+                        Генеральная уборка
                       </ExpansionPanelSummary>
                       <ExpansionPanelDetails>
                         <div flexwrap="true">
                           <TextField
-                            label="Price per small room"
+                            label="Цена за маленькую комнату"
                             autoComplete="tel"
                             className={classes.textField}
                             margin="normal"
@@ -381,7 +352,7 @@ class ExecutorSignUp extends Component {
                             error={Boolean(errors.generalSmallRoom)}
                           />
                           <TextField
-                            label="Price per big room"
+                            label="Цена за большую комнату"
                             autoComplete="tel"
                             className={classes.textField}
                             margin="normal"
@@ -394,7 +365,7 @@ class ExecutorSignUp extends Component {
                             error={Boolean(errors.generalBigRoom)}
                           />
                           <TextField
-                            label="Price per bathroom"
+                            label="Цена за санузел"
                             autoComplete="tel"
                             className={classes.textField}
                             margin="normal"
@@ -410,15 +381,15 @@ class ExecutorSignUp extends Component {
                       </ExpansionPanelDetails>
                     </ExpansionPanel>
                   </Grid>
-                  <Grid item>
+                  <Grid item className={classes.expandableItems}>
                     <ExpansionPanel>
                       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                        After repair cleaning
+                        Уборка после ремонта
                       </ExpansionPanelSummary>
                       <ExpansionPanelDetails>
                         <div flexwrap="true">
                           <TextField
-                            label="Price per small room"
+                            label="Цена за маленькую комнату"
                             autoComplete="tel"
                             className={classes.textField}
                             margin="normal"
@@ -431,7 +402,7 @@ class ExecutorSignUp extends Component {
                             error={Boolean(errors.afterRepairSmallRoom)}
                           />
                           <TextField
-                            label="Price per big room"
+                            label="Цена за большую комнату"
                             autoComplete="tel"
                             className={classes.textField}
                             margin="normal"
@@ -444,7 +415,7 @@ class ExecutorSignUp extends Component {
                             error={Boolean(errors.afterRepairBigRoom)}
                           />
                           <TextField
-                            label="Price per bathroom"
+                            label="Цена за санузел"
                             autoComplete="tel"
                             className={classes.textField}
                             margin="normal"
@@ -460,15 +431,15 @@ class ExecutorSignUp extends Component {
                       </ExpansionPanelDetails>
                     </ExpansionPanel>
                   </Grid>
-                  <Grid item>
+                  <Grid item className={classes.expandableItems}>
                     <ExpansionPanel>
                       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                        Carpet cleaning
+                        Чистка ковров
                       </ExpansionPanelSummary>
                       <ExpansionPanelDetails>
                         <div flexwrap="true">
                           <TextField
-                            label="Price per small carpet"
+                            label="Цена за маленький ковер"
                             autoComplete="tel"
                             className={classes.textField}
                             margin="normal"
@@ -481,7 +452,7 @@ class ExecutorSignUp extends Component {
                             error={Boolean(errors.smallCarpet)}
                           />
                           <TextField
-                            label="Price per big carpet"
+                            label="Цена за большой ковер"
                             autoComplete="tel"
                             className={classes.textField}
                             margin="normal"
@@ -497,15 +468,15 @@ class ExecutorSignUp extends Component {
                       </ExpansionPanelDetails>
                     </ExpansionPanel>
                   </Grid>
-                  <Grid item>
+                  <Grid item className={classes.expandableItems}>
                     <ExpansionPanel>
                       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                        Other cleaning
+                        Другие услуги
                       </ExpansionPanelSummary>
                       <ExpansionPanelDetails>
                         <div flexwrap="true">
                           <TextField
-                            label="Office cleaning, per square meter"
+                            label="Уборка офиса, цена за кв. м."
                             autoComplete="tel"
                             className={classes.textField}
                             margin="normal"
@@ -518,7 +489,7 @@ class ExecutorSignUp extends Component {
                             error={Boolean(errors.office)}
                           />
                           <TextField
-                            label="Furniture cleaning"
+                            label="Чистка мебели"
                             autoComplete="tel"
                             className={classes.textField}
                             margin="normal"
@@ -531,7 +502,7 @@ class ExecutorSignUp extends Component {
                             error={Boolean(errors.furniture)}
                           />
                           <TextField
-                            label="Industrial cleaning, per square meter"
+                            label="Промышленная уборка, цена за кв.м."
                             autoComplete="tel"
                             className={classes.textField}
                             margin="normal"
@@ -544,7 +515,7 @@ class ExecutorSignUp extends Component {
                             error={Boolean(errors.industrial)}
                           />
                           <TextField
-                            label="Pool cleaning, for one"
+                            label="Чистка бассейна"
                             autoComplete="tel"
                             className={classes.textField}
                             margin="normal"
@@ -570,7 +541,7 @@ class ExecutorSignUp extends Component {
                   size="large"
                   className={classes.button}
                 >
-                  SIGN UP
+                  ЗАРЕГИСТРИРОВАТЬСЯ
                 </Button>
               </Grid>
             </form>
@@ -603,7 +574,10 @@ const styles = theme => ({
     marginRight: theme.spacing.unit
   },
   mainInfo: {
-    maxWidth: 560
+    maxWidth: 860
+  },
+  expandableItems: {
+    marginBottom: 12
   }
 });
 

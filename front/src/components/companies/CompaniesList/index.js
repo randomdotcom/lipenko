@@ -3,7 +3,7 @@ import CompanyCard from "./CompanyCard";
 
 const CompaniesList = ({ companies }) => {
   if (!companies['0']) {
-    return <p>Companies are not found</p>;
+    return <p>Компании не найдены</p>;
   } else {
     return companies.map(company => (
       <CompanyCard company={company} id={company._id} key={company._id} />

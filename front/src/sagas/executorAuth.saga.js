@@ -24,11 +24,11 @@ import { SIGNOUT, signOutSuccess } from "../actions/common.actions";
 import { returnError, returnEvent } from "../actions/events.actions";
 
 export function* watchExecutorSignUpSaga() {
-  yield takeLeading(SIGNUP_EXECUTOR, function*({ payload }) {
+  yield takeLeading(SIGNUP_EXECUTOR, function* ({ payload }) {
     try {
       yield call(axios.post, "/api/companies/register", payload);
       yield put(executorSignUpSuccess());
-      yield put(returnEvent("Verification link is sended by e-mail"));
+      yield put(returnEvent("Ссылка для подтверждения аккаунта отправлена на почту"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }
@@ -36,7 +36,7 @@ export function* watchExecutorSignUpSaga() {
 }
 
 export function* watchExecutorConfirmSaga() {
-  yield takeLeading(CONFIRM_EXECUTOR, function*({ payload }) {
+  yield takeLeading(CONFIRM_EXECUTOR, function* ({ payload }) {
     try {
       const response = yield call(axios.put, "/api/companies/confirm", payload);
 
@@ -51,13 +51,13 @@ export function* watchExecutorConfirmSaga() {
 }
 
 export function* watchExecutorNewVerificationCode() {
-  yield throttle(120000, EXECUTOR_NEW_VERIFICATION_CODE, function*({
+  yield throttle(120000, EXECUTOR_NEW_VERIFICATION_CODE, function* ({
     payload
   }) {
     try {
       yield call(axios.put, "/api/companies/newVerificationCode", payload);
       yield put(executorNewVerificationCodeSuccess());
-      yield put(returnEvent("New verification code is sended by e-mail"));
+      yield put(returnEvent("Ссылка для подтверждения аккаунта отправлена на почту"));
     } catch (error) {
       yield put(returnError(error.response.data));
     }
@@ -65,7 +65,7 @@ export function* watchExecutorNewVerificationCode() {
 }
 
 export function* watchExecutorSignInSaga() {
-  yield takeLeading(SIGNIN_EXECUTOR, function*({ payload }) {
+  yield takeLeading(SIGNIN_EXECUTOR, function* ({ payload }) {
     try {
       const response = yield call(axios.post, "/api/companies/signin", payload);
 
@@ -87,7 +87,7 @@ export function* watchExecutorSignInSaga() {
 }
 
 export function* watchSignOutSaga() {
-  yield takeEvery(SIGNOUT, function*() {
+  yield takeEvery(SIGNOUT, function* () {
     try {
       yield call(clearToken);
       yield put(signOutSuccess());

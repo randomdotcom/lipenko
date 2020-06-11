@@ -26,11 +26,11 @@ function ReviewCard(props) {
           primary={<i>{reviewDate}</i>}
           secondary={
             <>
-              <Typography component="span" color="textPrimary">
-                <b>Rating:</b> {review.rating}
+              <Typography component="div" color="textPrimary">
+                <b>Оценка:</b> {review.rating}
               </Typography>
-              <Typography component="span" color="textPrimary">
-                <b>Comment:</b> {review.comment}
+              <Typography component="div" color="textPrimary">
+                <b>Комментарий:</b> {review.comment}
               </Typography>
             </>
           }

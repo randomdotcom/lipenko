@@ -29,7 +29,7 @@ function ExecutorProfile(props) {
             variant="contained"
             color="secondary"
           >
-            edit
+            Редактировать
           </Button>
           <Button
             component={Link}
@@ -38,7 +38,7 @@ function ExecutorProfile(props) {
             variant="contained"
             color="primary"
           >
-            my bookings
+            Мои заказы
           </Button>
         </div>
         <div className={classes.InfoAndLogOutButton}>
@@ -46,116 +46,174 @@ function ExecutorProfile(props) {
             <LogOutButton handleClick={props.signOut} />
           </div>
           <div className={classes.profileInfo}>
-            <Typography>
-              <b>Account type:</b> {props.role}
-            </Typography>
-            <Typography>
-              <b>Email:</b> {props.email}
-            </Typography>
-            <Typography>
-              <b>Phone number:</b> {props.phoneNumber}
-            </Typography>
-            <Typography>
-              <b>City:</b> {props.city}
-            </Typography>
-            <Typography>
-              <b>Company name:</b> {props.companyName}
-            </Typography>
-            <Typography>
-              <b>Description:</b> {props.description}
-            </Typography>
-            <Typography>
-              <b>TypesOfCleaning</b>
-            </Typography>
-            {props.standartSmallRoom ? (
-              <Typography>
-                <b>Standart small room:</b> {props.standartSmallRoom}
+            <Paper className={classes.informationView}>
+              <Typography className={classes.informationViewTitle}>
+                Основная информация
               </Typography>
-            ) : null}
+              <Typography className={classes.informationTextContainer}>
+                <span className={classes.informationTitle}>Тип аккаунта:</span>{" "}
+                {props.role}
+              </Typography>
+              <Typography className={classes.informationTextContainer}>
+                <span className={classes.informationTitle}>Эл. почта:</span>{" "}
+                {props.email}
+              </Typography>
+              <Typography className={classes.informationTextContainer}>
+                <span className={classes.informationTitle}>
+                  Номер телефона:
+                </span>{" "}
+                {props.phoneNumber}
+              </Typography>
+              <Typography className={classes.informationTextContainer}>
+                <span className={classes.informationTitle}>Город:</span>{" "}
+                {props.city}
+              </Typography>
+              <Typography className={classes.informationTextContainer}>
+                <span className={classes.informationTitle}>
+                  Название организации:
+                </span>{" "}
+                {props.companyName}
+              </Typography>
+              <Typography className={classes.informationTextContainer}>
+                <span className={classes.informationTitle}>Инфорамция:</span>{" "}
+                {props.description}
+              </Typography>
+            </Paper>
+            <Paper className={classes.informationView}>
+              <Typography className={classes.informationViewTitle}>
+                Прайс лист
+              </Typography>
+              {props.standartSmallRoom ? (
+                <Typography className={classes.informationTextContainer}>
+                  <span className={classes.informationTitle}>
+                    Обычная - мал. комната:
+                  </span>{" "}
+                  {props.standartSmallRoom}р
+                </Typography>
+              ) : null}
 
-            {props.standartBigRoom ? (
-              <Typography>
-                <b>Standart big room:</b> {props.standartBigRoom}
-              </Typography>
-            ) : null}
+              {props.standartBigRoom ? (
+                <Typography className={classes.informationTextContainer}>
+                  <span className={classes.informationTitle}>
+                    Обычная - бол. комната:
+                  </span>{" "}
+                  {props.standartBigRoom}р
+                </Typography>
+              ) : null}
 
-            {props.standartBathRoom ? (
-              <Typography>
-                <b>Standart bathroom:</b> {props.standartBathRoom}
-              </Typography>
-            ) : null}
+              {props.standartBathRoom ? (
+                <Typography className={classes.informationTextContainer}>
+                  <span className={classes.informationTitle}>
+                    Обычная - санузел:
+                  </span>{" "}
+                  {props.standartBathRoom}р
+                </Typography>
+              ) : null}
 
-            {props.generalSmallRoom ? (
-              <Typography>
-                <b>General small room:</b> {props.generalSmallRoom}
-              </Typography>
-            ) : null}
+              {props.generalSmallRoom ? (
+                <Typography className={classes.informationTextContainer}>
+                  <span className={classes.informationTitle}>
+                    Генеральная - мал. комната:
+                  </span>{" "}
+                  {props.generalSmallRoom}р
+                </Typography>
+              ) : null}
 
-            {props.generalBigRoom ? (
-              <Typography>
-                <b>General big room:</b> {props.generalBigRoom}
-              </Typography>
-            ) : null}
+              {props.generalBigRoom ? (
+                <Typography className={classes.informationTextContainer}>
+                  <span className={classes.informationTitle}>
+                    Генеральная - бол. комната:
+                  </span>{" "}
+                  {props.generalBigRoom}р
+                </Typography>
+              ) : null}
 
-            {props.generalBathRoom ? (
-              <Typography>
-                <b>General bathroom:</b> {props.generalBathRoom}
-              </Typography>
-            ) : null}
+              {props.generalBathRoom ? (
+                <Typography className={classes.informationTextContainer}>
+                  <span className={classes.informationTitle}>
+                    Генеральная - санузел:
+                  </span>{" "}
+                  {props.generalBathRoom}р
+                </Typography>
+              ) : null}
 
-            {props.afterRepairSmallRoom ? (
-              <Typography>
-                <b>After repair small room:</b> {props.afterRepairSmallRoom}
-              </Typography>
-            ) : null}
+              {props.afterRepairSmallRoom ? (
+                <Typography className={classes.informationTextContainer}>
+                  <span className={classes.informationTitle}>
+                    После ремонта - мал. комната:
+                  </span>{" "}
+                  {props.afterRepairSmallRoom}р
+                </Typography>
+              ) : null}
 
-            {props.afterRepairBigRoom ? (
-              <Typography>
-                <b>After repair big room:</b> {props.afterRepairBigRoom}
-              </Typography>
-            ) : null}
+              {props.afterRepairBigRoom ? (
+                <Typography className={classes.informationTextContainer}>
+                  <span className={classes.informationTitle}>
+                    После ремонта - бол. комната:
+                  </span>{" "}
+                  {props.afterRepairBigRoom}р
+                </Typography>
+              ) : null}
 
-            {props.afterRepairBathRoom ? (
-              <Typography>
-                <b>After repair bathroom:</b> {props.afterRepairBathRoom}
-              </Typography>
-            ) : null}
+              {props.afterRepairBathRoom ? (
+                <Typography className={classes.informationTextContainer}>
+                  <span className={classes.informationTitle}>
+                    После ремонта - санузел:
+                  </span>{" "}
+                  {props.afterRepairBathRoom}р
+                </Typography>
+              ) : null}
 
-            {props.SmallCarpet ? (
-              <Typography>
-                <b>Carpet small:</b> {props.smallCarpet}
-              </Typography>
-            ) : null}
+              {props.office ? (
+                <Typography className={classes.informationTextContainer}>
+                  <span className={classes.informationTitle}>
+                    Офисная, за кв. м.:
+                  </span>{" "}
+                  {props.office}р
+                </Typography>
+              ) : null}
 
-            {props.bigCarpet ? (
-              <Typography>
-                <b>Carpet big:</b> {props.bigCarpet}
-              </Typography>
-            ) : null}
+              {props.industrial ? (
+                <Typography className={classes.informationTextContainer}>
+                  <span className={classes.informationTitle}>
+                    Промышленная, за кв.м.:
+                  </span>{" "}
+                  {props.industrial}р
+                </Typography>
+              ) : null}
 
-            {props.office ? (
-              <Typography>
-                <b>Office:</b> {props.office}
-              </Typography>
-            ) : null}
+              {props.smallCarpet ? (
+                <Typography className={classes.informationTextContainer}>
+                  <span className={classes.informationTitle}>Мал. ковер:</span>{" "}
+                  {props.smallCarpet}р
+                </Typography>
+              ) : null}
 
-            {props.furniture ? (
-              <Typography>
-                <b>Furniture:</b> {props.furniture}
-              </Typography>
-            ) : null}
+              {props.bigCarpet ? (
+                <Typography className={classes.informationTextContainer}>
+                  <span className={classes.informationTitle}>Бол. ковер:</span>{" "}
+                  {props.bigCarpet}р
+                </Typography>
+              ) : null}
 
-            {props.industrial ? (
-              <Typography>
-                <b>Industrial:</b> {props.industrial}
-              </Typography>
-            ) : null}
+              {props.furniture ? (
+                <Typography className={classes.informationTextContainer}>
+                  <span className={classes.informationTitle}>
+                    Чистка мебели:
+                  </span>{" "}
+                  {props.furniture}р
+                </Typography>
+              ) : null}
 
-            {props.pool ? (
-              <Typography>
-                <b>Pool:</b> {props.pool}
-              </Typography>
-            ) : null}
+              {props.pool ? (
+                <Typography className={classes.informationTextContainer}>
+                  <span className={classes.informationTitle}>
+                    Чистка бассейна:
+                  </span>{" "}
+                  {props.pool}р
+                </Typography>
+              ) : null}
+            </Paper>
           </div>
         </div>
       </div>
@@ -207,6 +265,27 @@ const styles = theme => ({
   },
   AvatarAndInfo: {
     display: "flex"
+  },
+  informationView: {
+    padding: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginTop: 15
+  },
+  informationTextContainer: {
+    marginTop: 5
+  },
+  informationTitle: {
+    backgroundColor: "#ddd",
+    padding: 2,
+    paddingLeft: 3,
+    paddingRight: 3,
+    borderRadius: 3
+  },
+  informationViewTitle: {
+    textTransform: "upperCase",
+    fontWeight: "bold",
+    fontSize: 16
   }
 });
 

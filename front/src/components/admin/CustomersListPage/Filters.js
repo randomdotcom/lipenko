@@ -40,7 +40,7 @@ class Filters extends Component {
         <FormLabel component="legend" />
         <TextField
           color="secondary"
-          label="Username"
+          label="Логин"
           name="username"
           value={this.state.username}
           onChange={this.handleChangeQuery}
@@ -48,7 +48,7 @@ class Filters extends Component {
         />
         <TextField
           color="secondary"
-          label="Email"
+          label="Эл. почта"
           name="email"
           value={this.state.email}
           onChange={this.handleChangeQuery}
@@ -56,7 +56,7 @@ class Filters extends Component {
         />
         <TextField
           color="secondary"
-          label="Adress"
+          label="Адрес"
           name="adress"
           value={this.state.adress}
           onChange={this.handleChangeQuery}
@@ -64,7 +64,7 @@ class Filters extends Component {
         />
         <TextField
           color="secondary"
-          label="Phone number"
+          label="Номер телефона"
           name="phone"
           value={this.state.phone}
           onChange={this.handleChangeQuery}

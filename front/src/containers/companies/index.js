@@ -11,10 +11,11 @@ const mapStateToProps = state => ({
   page: state.companies.page,
   limit: state.companies.limit,
   search: state.router.location.search,
-  pathname: state.router.location.pathname
+  pathname: state.router.location.pathname,
+  userRole: state.profile.role
 });
 
-export default connect(
-  mapStateToProps,
-  { loadCompanies, changeFiltersCompanies }
-)(Companies);
+export default connect(mapStateToProps, {
+  loadCompanies,
+  changeFiltersCompanies
+})(Companies);

@@ -40,13 +40,13 @@ class SignUp extends Component {
                 value="user"
                 control={<Radio />}
                 labelPlacement="end"
-                label="User"
+                label="Клиент"
               />
               <FormControlLabel
                 value="executor"
                 control={<Radio />}
                 labelPlacement="end"
-                label="Executor"
+                label="Компания"
               />
             </RadioGroup>
           </>

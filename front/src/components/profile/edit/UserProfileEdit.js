@@ -6,49 +6,49 @@ import { string, object } from "yup";
 
 const validationEditProfile = object().shape({
   username: string()
-    .required("Username is required")
-    .min(2, "Username must contain atleast 2 characters")
-    .max(9, "Username must contain less then 9 characters")
+    .required("Введите имя пользователя")
+    .min(2, "Имя пользователя должно содержать хотябы 2 символа")
+    .max(9, "Имя пользователя должно содержать меньше 10 символов")
     .matches(
       /^[a-zA-Z][a-zA-Z0-9-_.]{1,9}$/,
-      "The username can contain letters, numbers, -, ., _"
+      "Имя пользователя может содержать буквы, цифры, -, ., _"
     ),
   email: string()
-    .required("Email is required")
-    .min(5, "Email must contain atleast 5 characters")
-    .max(50, "Email must contain less then 50 characters")
+    .required("Введите электронную почту")
+    .min(5, "Эл. почта должна содержать больше 4 символов")
+    .max(50, "Эл. почта должна содержать меньше 51 символов")
     .matches(
       /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-      "The email is incorrect"
+      "Эл. почта неверная"
     ),
   phoneNumber: string()
-    .required("Phone number is required")
-    .min(13, "Phone number is incorrect, example: +375296667788")
-    .max(13, "Phone number is incorrect, example: +375296667788")
+    .required("Введите номер телефона")
+    .min(13, "Номер телефона неверный, пример: +375296667788")
+    .max(13, "Номер телефона неверный, пример: +375296667788")
     .matches(
       /\+375(29|33|44|25)\d{7}$/,
-      "Phone number is incorrect, example: +375296667788"
+      "Номер телефона неверный, пример: +375296667788"
     ),
   adress: string()
-    .required("Adress is required")
-    .min(6, "Type your city and street atleast")
-    .max(26, "Adress is too long")
+    .required("Введите свой адрес")
+    .min(6, "Адрес должен содержать больше 5 символов")
+    .max(60, "Адрес слишком длинный")
 });
 
 const validationNewPassword = object().shape({
   oldPassword: string()
-    .required("Enter your password")
-    .min(5, "Password must contain atleast 5 characters")
-    .max(18, "Password must contain less then 18 characters")
-    .matches(/^[\S]{5,18}$/, "The password cannot contain spaces"),
+    .required("Введите свой пароль")
+    .min(5, "Пароль должен содержать больше 4 символов")
+    .max(18, "Пароль должен содержать меньше 19 символов")
+    .matches(/^[\S]{5,18}$/, "Пароль не может содержать пробелы"),
   newPassword: string()
-    .required("Enter your password")
-    .min(5, "Password must contain atleast 5 characters")
-    .max(18, "Password must contain less then 18 characters")
-    .matches(/^[\S]{5,18}$/, "The password cannot contain spaces"),
+    .required("Введите свой пароль")
+    .min(5, "Пароль должен содержать больше 4 символов")
+    .max(18, "Пароль должен содержать меньше 19 символов")
+    .matches(/^[\S]{5,18}$/, "Пароль не может содержать пробелы"),
   confirmNewPassword: string()
-    .required("Enter your password again")
-    .test("passwords-match", "Passwords must match ya fool", function(value) {
+    .required("Введите свой пароль еще раз")
+    .test("passwords-match", "Пароли не совпадают", function (value) {
       return this.parent.newPassword === value;
     })
 });
@@ -108,7 +108,7 @@ class UserProfileEdit extends Component {
     return (
       <form className={classes.container} onSubmit={handleSubmit} noValidate>
         <TextField
-          label="Username"
+          label="Имя пользователя"
           autoComplete="username"
           className={classes.textField}
           margin="normal"
@@ -121,7 +121,7 @@ class UserProfileEdit extends Component {
           error={Boolean(errors.username)}
         />
         <TextField
-          label="Email"
+          label="Электронная почта"
           autoComplete="email"
           className={classes.textField}
           margin="normal"
@@ -135,7 +135,7 @@ class UserProfileEdit extends Component {
           error={Boolean(errors.email)}
         />
         <TextField
-          label="Phone number"
+          label="Номер телефона"
           autoComplete="tel"
           className={classes.textField}
           margin="normal"
@@ -148,7 +148,7 @@ class UserProfileEdit extends Component {
           error={Boolean(errors.phoneNumber)}
         />
         <TextField
-          label="Your adress"
+          label="Ваш адрес"
           autoComplete="tel"
           className={classes.textField}
           margin="normal"
@@ -167,7 +167,7 @@ class UserProfileEdit extends Component {
           color="primary"
           size="large"
         >
-          CONFIRM
+          ПОДТВЕРДИТЬ
         </Button>
       </form>
     );
@@ -184,7 +184,7 @@ class UserProfileEdit extends Component {
     return (
       <form className={classes.container} onSubmit={handleSubmit} noValidate>
         <TextField
-          label="Old password"
+          label="Текущий пароль"
           autoComplete="new-password"
           className={classes.textField}
           margin="normal"
@@ -198,7 +198,7 @@ class UserProfileEdit extends Component {
           error={Boolean(errors.oldPassword)}
         />
         <TextField
-          label="New password"
+          label="Новый пароль"
           autoComplete="new-password"
           className={classes.textField}
           margin="normal"
@@ -212,7 +212,7 @@ class UserProfileEdit extends Component {
           error={Boolean(errors.newPassword)}
         />
         <TextField
-          label="Confirm new password"
+          label="Подтвердите пароль"
           autoComplete="new-password"
           className={classes.textField}
           margin="normal"
@@ -232,7 +232,7 @@ class UserProfileEdit extends Component {
           color="primary"
           size="large"
         >
-          CHANGE PASSWORD
+          ИЗМЕНИТЬ ПАРОЛЬ
         </Button>
       </form>
     );
