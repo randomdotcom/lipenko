@@ -22,6 +22,12 @@ app.use(express.urlencoded({ extended: true }));
 // app.use(express.static(path.join(__dirname, "public")));
 app.use("/public", express.static(path.resolve(__dirname, "../public")));
 
+app.use(express.static(path.join(__dirname, '../build')))
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../build', 'index.html'))
+})
+
 initializeDb(() => {
   app.use(passport.initialize());
   passport.jwtStrategy();
